@@ -17,7 +17,7 @@ public class Item {
         this.supplierID = supplierID;
     }
 
-    public void assignSupplier(Supplier s)
+    public void setSupplier(Supplier s)
     {
         supplier=s;
     }

@@ -23,7 +23,7 @@ public class Supplier {
         for (Item i: items){
             if(id==i.getSupplierID()) {
                 this.items.add(i);
-                i.assignSupplier(this);
+                i.setSupplier(this);
             }
         }
     }
