@@ -1,4 +1,4 @@
-package ServerPackage;
+package ServerPackage.ServerModels;
 
 public class ItemModel {
     private SupplierModel supplier;

@@ -1,4 +1,6 @@
-package ServerPackage;
+package ServerPackage.ServerModels;
+
+import ServerPackage.ServerModels.ItemModel;
 
 import java.util.ArrayList;
 

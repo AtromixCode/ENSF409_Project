@@ -1,4 +1,6 @@
-package ServerPackage;
+package ServerPackage.ServerModels;
+
+import ServerPackage.ServerControllers.InventoryController;
 
 import java.io.*;
 import java.util.ArrayList;

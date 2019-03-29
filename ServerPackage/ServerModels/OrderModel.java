@@ -1,4 +1,7 @@
-package ServerPackage;
+package ServerPackage.ServerModels;
+
+import ServerPackage.ServerModels.ItemModel;
+import ServerPackage.ServerModels.OrderLineModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;

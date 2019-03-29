@@ -1,10 +1,13 @@
-package ServerPackage;
+package ServerPackage.ServerControllers;
+
+import ServerPackage.ServerModels.ItemModel;
+import ServerPackage.ServerModels.OrderModel;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class InventoryController implements Constants{
+public class InventoryController{
 
     private ArrayList<ItemModel> items;
 
@@ -57,7 +60,7 @@ public class InventoryController implements Constants{
     public boolean checkIfOrder()
     {
         for (ItemModel i: items){
-            if (i.getQuantity()<THRESHOLD)
+            if (i.getQuantity()<40)
                 return true;
         }
         return false;
@@ -66,7 +69,7 @@ public class InventoryController implements Constants{
     public void generateOrder(OrderModel o, boolean stars)throws FileNotFoundException
     {
         for (ItemModel i: items){
-            if (i.getQuantity()<THRESHOLD){
+            if (i.getQuantity()<40){
                 o.addLine(i);
                 i.setQuantity(50);
             }

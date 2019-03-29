@@ -1,4 +1,4 @@
-package ServerPackage;
+package ServerPackage.ServerModels;
 
 public class OrderLineModel {
     private ItemModel item;
