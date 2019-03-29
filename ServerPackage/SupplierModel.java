@@ -1,26 +1,26 @@
-
+package ServerPackage;
 
 import java.util.ArrayList;
 
-public class Supplier {
+public class SupplierModel {
     private int id;
     private String companyName;
     private String address;
     private String salesContact;
-    private ArrayList<Item> items;
+    private ArrayList<ItemModel> items;
 
-    public Supplier(int id, String cn, String address, String sc)
+    public SupplierModel(int id, String cn, String address, String sc)
     {
         this.id = id;
         this.companyName = cn;
         this.address = address;
         this.salesContact = sc;
-        items = new ArrayList<Item>();
+        items = new ArrayList<ItemModel>();
     }
 
-    public void addItem(ArrayList<Item> items)
+    public void addItem(ArrayList<ItemModel> items)
     {
-        for (Item i: items){
+        for (ItemModel i: items){
             if(id==i.getSupplierID()) {
                 this.items.add(i);
                 i.setSupplier(this);
@@ -30,12 +30,12 @@ public class Supplier {
 
     public String info()
     {
-        return "Supplier:\t\t"+companyName;
+        return "SupplierModel:\t\t"+companyName;
     }
 
     public String toString()
     {
-        return "Supplier ID: "+ id + ", Company Name: "+ companyName +", address: "+ address +", Sales Contact: " + salesContact;
+        return "SupplierModel ID: "+ id + ", Company Name: "+ companyName +", address: "+ address +", Sales Contact: " + salesContact;
     }
 
 }

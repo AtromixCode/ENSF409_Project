@@ -1,19 +1,19 @@
-
+package ServerPackage;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Shop {
-    private ArrayList<Order> orders;
+public class ShopController {
+    private ArrayList<OrderModel> orders;
     private File orderFile;
     private String fileName;
-    private ArrayList<Supplier> suppliers;
-    private Inventory inv;
+    private ArrayList<SupplierModel> suppliers;
+    private InventoryController inv;
     private int orderIndex;
 
 
-    public Shop (Inventory i, ArrayList<Supplier> s, ArrayList<Order> orders)
+    public ShopController(InventoryController i, ArrayList<SupplierModel> s, ArrayList<OrderModel> orders)
     {
         this.suppliers = s;
         this.inv = i;
@@ -38,20 +38,20 @@ public class Shop {
         BufferedReader read = new BufferedReader(new InputStreamReader(fileIn));
         String line = read.readLine();
         while (line != null){
-            Supplier a = readValues(line);
+            SupplierModel a = readValues(line);
             suppliers.add(a);
             line = read.readLine();
         }
     }
 
-    public Supplier readValues(String r)
+    public SupplierModel readValues(String r)
     {
         Scanner s = new Scanner(r).useDelimiter(";");
         int id = s.nextInt();
         String companyName = s.next();
         String address = s.next();
         String salesContact = s.next();
-        return new Supplier (id, companyName, address, salesContact);
+        return new SupplierModel(id, companyName, address, salesContact);
     }
 
     public void createOrderFile() throws IOException
@@ -65,7 +65,7 @@ public class Shop {
     {
         boolean check = inv.checkIfOrder();
         if (check) {
-            Order o = new Order (orderFile);
+            OrderModel o = new OrderModel(orderFile);
             orders.add(o);
             orderIndex++;
             if (orderIndex==0)
@@ -75,7 +75,7 @@ public class Shop {
         }
     }
 
-    public boolean orderDateCheck(Order o)
+    public boolean orderDateCheck(OrderModel o)
     {
         if (o.getDateString().equals(orders.get(orderIndex-1).getDateString())){
             return false;
@@ -107,7 +107,7 @@ public class Shop {
 
     public void assignItemsToSupplier()
     {
-        for (Supplier s: suppliers) {
+        for (SupplierModel s: suppliers) {
             s.addItem(inv.getItems());
         }
     }

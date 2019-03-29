@@ -1,4 +1,4 @@
-
+package ServerPackage;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class FrontEnd {
         input = new Scanner(System.in);
     }
 
-    public void startProgram(Shop shop){
+    public void startProgram(ShopController shop){
         run = true;
         System.out.println("Welcome to ShopManager! Please enter the filename where your supplier information is stored:");
         try {
@@ -27,7 +27,7 @@ public class FrontEnd {
         }
     }
 
-    public void takeFileInput(Shop shop) throws IOException
+    public void takeFileInput(ShopController shop) throws IOException
     {
         String fileName = input.nextLine();
         shop.addSuppliersFromFile(fileName);
@@ -38,7 +38,7 @@ public class FrontEnd {
     }
 
 
-    public void runFrontEnd(Shop shop) {
+    public void runFrontEnd(ShopController shop) {
         try{
             mainMenu(shop);
         } catch(Exception e) {
@@ -49,7 +49,7 @@ public class FrontEnd {
     }
 
 
-    public void mainMenu(Shop shop) throws Exception
+    public void mainMenu(ShopController shop) throws Exception
         {
             while(run) {
                 switch(menu()) {
@@ -84,7 +84,7 @@ public class FrontEnd {
         return a;
     }
 
-    public void shopSell(Shop s)throws Exception
+    public void shopSell(ShopController s)throws Exception
     {
         try {
             System.out.println("Please enter the item ID and quantity sold.");
@@ -106,12 +106,12 @@ public class FrontEnd {
         if (success==1)
             System.out.println("Successfully sold item and removed quantity!");
         else if (success==2)
-            System.out.println("Item does not exist!");
+            System.out.println("ItemModel does not exist!");
         else
             System.out.println("You don't have enough quantity of this item to sell that amount!");
     }
 
-    public void shopView(Shop s)
+    public void shopView(ShopController s)
     {
         System.out.println("Here is a list of all items and their information:");
         s.printInventory();
@@ -119,7 +119,7 @@ public class FrontEnd {
     }
 
 
-    public void shopSearch(Shop s) throws Exception{
+    public void shopSearch(ShopController s) throws Exception{
         int option;
         do {
             System.out.println("Press 1 and Enter to search by item ID or Press 2 and Enter to search by item name");
@@ -133,7 +133,7 @@ public class FrontEnd {
         shopSearchDo(option, s);
     }
 
-    public void shopSearchDo(int option, Shop s) throws Exception
+    public void shopSearchDo(int option, ShopController s) throws Exception
     {
         if (option == 1)
             findItemShopID(s);
@@ -142,7 +142,7 @@ public class FrontEnd {
         pressKey();
     }
 
-    public void findItemShopID(Shop s) throws Exception
+    public void findItemShopID(ShopController s) throws Exception
     {
         System.out.println("Enter item ID");
         int id = input.nextInt();
@@ -150,7 +150,7 @@ public class FrontEnd {
         System.out.println(s.getItemInfo(id));
     }
 
-    public void findItemShopDesc(Shop s) throws Exception
+    public void findItemShopDesc(ShopController s) throws Exception
     {
         System.out.println("Enter item name");
         String name = input.nextLine();
@@ -158,7 +158,7 @@ public class FrontEnd {
     }
 
 
-    public void quitProg(Shop s)throws FileNotFoundException
+    public void quitProg(ShopController s)throws FileNotFoundException
     {
         s.closeOrderFile();
         System.out.println("Quitting ShopMaster...");
@@ -184,10 +184,10 @@ public class FrontEnd {
 
     public static void main(String[] args)
     {
-	   ArrayList<Supplier> suppliers = new ArrayList<Supplier>();
-	   ArrayList<Order> orders = new ArrayList<Order>();
-	   Inventory inventory = new Inventory();
-	   Shop s = new Shop (inventory, suppliers, orders);
+	   ArrayList<SupplierModel> suppliers = new ArrayList<SupplierModel>();
+	   ArrayList<OrderModel> orders = new ArrayList<OrderModel>();
+	   InventoryController inventory = new InventoryController();
+	   ShopController s = new ShopController(inventory, suppliers, orders);
 	   FrontEnd fe = new FrontEnd();
 	   fe.startProgram(s);
     }

@@ -1,16 +1,16 @@
-
+package ServerPackage;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Inventory implements Constants{
+public class InventoryController implements Constants{
 
-    private ArrayList<Item> items;
+    private ArrayList<ItemModel> items;
 
-    public Inventory()
+    public InventoryController()
     {
-        items = new ArrayList<Item>();
+        items = new ArrayList<ItemModel>();
     }
 
     public void addItemsFromFile(String fileName) throws IOException
@@ -19,13 +19,13 @@ public class Inventory implements Constants{
         BufferedReader read = new BufferedReader(new InputStreamReader(fileIn));
         String line = read.readLine();
         while (line != null){
-            Item a = readValues(line);
+            ItemModel a = readValues(line);
             items.add(a);
             line = read.readLine();
         }
     }
 
-    public Item readValues(String r)
+    public ItemModel readValues(String r)
     {
         Scanner s = new Scanner(r).useDelimiter(";");
         int id = s.nextInt();
@@ -33,21 +33,21 @@ public class Inventory implements Constants{
         int quantity = s.nextInt();
         double price = s.nextDouble();
         int supID = s.nextInt();
-        return new Item (id, desc, quantity, price, supID);
+        return new ItemModel(id, desc, quantity, price, supID);
     }
 
-    public Item findItem(int id)
+    public ItemModel findItem(int id)
     {
-        for (Item a: items) {
+        for (ItemModel a: items) {
             if(a.getId()==id)
                 return a;
         }
         return null;
     }
 
-    public Item findItem(String desc)
+    public ItemModel findItem(String desc)
     {
-        for (Item a: items){
+        for (ItemModel a: items){
             if (a.getDesc().equals(desc))
                 return a;
         }
@@ -56,16 +56,16 @@ public class Inventory implements Constants{
 
     public boolean checkIfOrder()
     {
-        for (Item i: items){
+        for (ItemModel i: items){
             if (i.getQuantity()<THRESHOLD)
                 return true;
         }
         return false;
     }
 
-    public void generateOrder(Order o, boolean stars)throws FileNotFoundException
+    public void generateOrder(OrderModel o, boolean stars)throws FileNotFoundException
     {
-        for (Item i: items){
+        for (ItemModel i: items){
             if (i.getQuantity()<THRESHOLD){
                 o.addLine(i);
                 i.setQuantity(50);
@@ -77,7 +77,7 @@ public class Inventory implements Constants{
 
     public int decreaseItemQuan(int id, int quantity)
     {
-        Item i = findItem(id);
+        ItemModel i = findItem(id);
         if (i!=null) {
             if (i.getQuantity() >= quantity) {
                 i.setQuantity(i.getQuantity() - quantity);
@@ -91,27 +91,27 @@ public class Inventory implements Constants{
 
     public String getItemInfo(int id)
     {
-        Item i = findItem(id);
+        ItemModel i = findItem(id);
         if (i!=null)
             return i.toString();
         else
-            return "Item not found!";
+            return "ItemModel not found!";
     }
     public String getItemInfo(String desc)
     {
-        Item i = findItem(desc);
+        ItemModel i = findItem(desc);
         if (i!=null)
             return i.toString();
         else
-            return "Item not found!";
+            return "ItemModel not found!";
     }
 
     public void printAllItems()
     {
-        for (Item i: items)
+        for (ItemModel i: items)
             System.out.println(i);
     }
-    public ArrayList<Item> getItems()
+    public ArrayList<ItemModel> getItems()
     {
         return items;
     }

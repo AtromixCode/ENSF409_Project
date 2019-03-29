@@ -1,4 +1,4 @@
-
+package ServerPackage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,19 +9,19 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class Order {
+public class OrderModel {
     private PrintWriter fileWrite;
     private File orderFile;
-    private ArrayList<OrderLine> orderLines;
+    private ArrayList<OrderLineModel> orderLines;
     private Date date;
     private SimpleDateFormat format;
     String dateString;
     private int orderID;
 
-    public Order(File file)
+    public OrderModel(File file)
     {
         orderFile = file;
-        orderLines = new ArrayList<OrderLine>();
+        orderLines = new ArrayList<OrderLineModel>();
         date = new Date ();
         format = new SimpleDateFormat("MMMM dd, yyyy");
         dateString = format.format(date);
@@ -29,9 +29,9 @@ public class Order {
     }
 
 
-    public void addLine(Item item)
+    public void addLine(ItemModel item)
     {
-        OrderLine ol = new OrderLine(item);
+        OrderLineModel ol = new OrderLineModel(item);
         orderLines.add(ol);
     }
 
@@ -43,7 +43,7 @@ public class Order {
             fileWrite.println("ORDER ID:\t\t" + orderID + "\r\n" +
                               "Date Ordered:\t\t" + dateString);
         }
-        for (OrderLine o: orderLines)
+        for (OrderLineModel o: orderLines)
             fileWrite.println(o);
         fileWrite.close();
     }

@@ -1,14 +1,14 @@
+package ServerPackage;
 
-
-public class Item {
-    private Supplier supplier;
+public class ItemModel {
+    private SupplierModel supplier;
     private int id;
     private String desc;
     private int quantity;
     private double price;
     private int supplierID;
 
-    public Item(int id, String desc, int quantity, double price, int supplierID)
+    public ItemModel(int id, String desc, int quantity, double price, int supplierID)
     {
         this.id = id;
         this.desc = desc;
@@ -17,19 +17,19 @@ public class Item {
         this.supplierID = supplierID;
     }
 
-    public void setSupplier(Supplier s)
+    public void setSupplier(SupplierModel s)
     {
         supplier=s;
     }
 
     public String toString()
     {
-        return "Item Name: " +desc+ ", Quantity: " +quantity+ ", Price " +price+ ", Item ID: "+id+", Supplier ID: "+supplierID+ ".\n";
+        return "ItemModel Name: " +desc+ ", Quantity: " +quantity+ ", Price " +price+ ", ItemModel ID: "+id+", SupplierModel ID: "+supplierID+ ".\n";
     }
 
     public String orderInfoItem()
     {
-        return "Item description:\t"+ desc +"\r\n" +
+        return "ItemModel description:\t"+ desc +"\r\n" +
                 "Amount ordered:\t\t"+(50-quantity);
     }
 

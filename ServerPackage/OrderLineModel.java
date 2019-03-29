@@ -1,10 +1,10 @@
+package ServerPackage;
 
-
-public class OrderLine {
-    private Item item;
+public class OrderLineModel {
+    private ItemModel item;
     private String orderLine;
 
-    public OrderLine(Item i)
+    public OrderLineModel(ItemModel i)
     {
         item = i;
         orderLine = "\r\n"+i.orderInfoItem()+ "\r\n" + i.orderInfoSupplier();
