@@ -64,6 +64,10 @@ class GUI {
 		for (int i=0; i<buttons.length; i++)
 		{
 			buttons[i]= new JButton(buttonNames[i]);
+			if (i<3)
+			{
+				buttons[i].setEnabled(false);
+			}
 			buttons[i].setAlignmentX(Component.CENTER_ALIGNMENT);
 			buttonPanel.add(buttons[i]);
 			buttonPanel.add(Box.createRigidArea(new Dimension(100,10)));
