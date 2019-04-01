@@ -68,5 +68,6 @@ class GUI {
 	public static void main(String args[])
 	{
 		GUI g = new GUI ();
+		System.out.println("Hi");
 	}
 }
