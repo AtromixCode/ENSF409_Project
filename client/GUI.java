@@ -6,7 +6,6 @@ import java.awt.*;
 class GUI {
 
 	private JFrame mainWindow;
-	//private JButton sellItem, orderItem, removeItem, addItem, viewOrders, viewSuppliers;
 	private JButton[] buttons = new JButton[6];
 	private String[] buttonNames = {"Sell Item", "Order Item", "Remove Item", "Add Item", "View Orders", "View Suppliers"};
 	private JList<String> itemList;
@@ -15,12 +14,13 @@ class GUI {
 	protected GUI()
 	{
 		mainWindow = new JFrame("Logistics & Information General Management Application");
-		mainWindow.setSize(500,500);
+		mainWindow.setSize(600,500);
 
 		mainWindow.add(createTitlePanel(), "North");
 		mainWindow.add(createButtonPanel(), "West");
 		mainWindow.add(createListPanel(), "Center");
 		mainWindow.setVisible(true);
+		mainWindow.setResizable(false);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
@@ -28,22 +28,29 @@ class GUI {
 	protected JPanel createTitlePanel()
 	{
 		JPanel titlePanel = new JPanel();
-		titlePanel.add (new JLabel("Logistics & Information General Management Application"));
+		JLabel titleLabel = new JLabel("Logistics & Information General Management Application");
+		titleLabel.setFont(new Font("Arial", Font.BOLD,20));
+		titlePanel.add (titleLabel);
 		return titlePanel;
 	}
 
 	protected JPanel createListPanel()
 	{
 		JPanel listPanel = new JPanel(new BorderLayout());
-		listPanel.setSize(400,500);
-		listPanel.add(new JLabel("Items"), "North");
-		JScrollPane listPane = new JScrollPane();
-		listPane.setSize(400,400);
+		JPanel labelPanel = new JPanel(new BorderLayout());
+		JLabel itemsLabel = new JLabel("Available Items");
+		itemsLabel.setFont(new Font("Arial", Font.PLAIN,16));
+		labelPanel.add(itemsLabel, "North");
+		labelPanel.add(Box.createRigidArea(new Dimension(10,10)));
+		labelPanel.add(new JLabel("Item ID:          Item Name:               Quantity:          Price:            Supplier ID:"),"South");
+		listPanel.add(labelPanel, "North");
 		itemListModel = new DefaultListModel<String>();
 		itemList = new JList<String>(itemListModel);
-		String width = "1234567890123456789012345678901234567890";
-		itemList.setPrototypeCellValue(width);
-		listPane.add(itemList);
+		for (int i=0; i<100; i++) {
+			itemListModel.addElement(1000+i+"               Knock Bits                88                      $12.67            8015");
+		}
+		itemList.setVisibleRowCount(20);
+		JScrollPane listPane = new JScrollPane(itemList);
 		listPanel.add(listPane, "Center");
 		return listPanel;
 	}
@@ -68,6 +75,5 @@ class GUI {
 	public static void main(String args[])
 	{
 		GUI g = new GUI ();
-		System.out.println("Hi");
 	}
 }
