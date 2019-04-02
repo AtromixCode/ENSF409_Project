@@ -2,13 +2,13 @@ package client.ClientControllers;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.*;
 
 import client.ClientModels.*;
 
 /**
  * When run, connects the client to the server, and allows the client
- * to send and receive lists of items, suppliers, and orders.
+ * to send and recieve lists of items, suppliers, and orders.
  * Sent lists can be created from text files.
  *
  * @author Jake Liu
@@ -144,9 +144,9 @@ public class ClientController implements SCCommunicationConstants
 	 */
 	public void terminate()
 	{
-		outputWriter.writeObject(scQuit);
 		try
 		{
+			outputWriter.writeObject(scQuit);
 			inputReader.close();
 			outputWriter.close();
 			clientSocket.close();
@@ -158,23 +158,80 @@ public class ClientController implements SCCommunicationConstants
 	}
 	
 	/**
+	 * Sends a message from the server and then reads and returns
+	 * the following reply from the server.
+	 * 
+	 * @throws IOException
+	 */
+	 /*
+	public Object retrieveObjectFromServer(String messageToServer)
+	{
+		try
+		{
+			outputWriter.writeObject(scQuery + scItem);
+			outputWriter.flush();
+		}
+		catch(IOException writeErr)
+		{
+			throw new IOException("Error: could not send opening message to the server.");
+		}
+		
+		try
+		{
+			String serverResponse = (String)inputReader.readObject();
+		
+			if(serverResponse.contains(scError))
+				throw new IOException("Error: server could not send the item list.");
+			
+			return inputReader.readObject();
+		}
+		catch(IOException readErr)
+		{
+			throw new IOException("Error: could not read the server's message.");
+		}
+		catch(ClassNotFoundException classErr)
+		{
+			throw new IOException("Error: could not properly read the object.");
+		}
+	}
+	*/
+	
+	/**
 	 * Asks the server for the items held in the database.
-	 * throws null if there is an error in the server.
+	 * throws an error if there is an error in the server interaction.
 	 *
 	 * @return An ArrayList of the items.
+	 * @throws IOException
 	 */
-	public ArrayList<ItemModel> retrieveItemListFromServer() 
+	public ArrayList<ItemModel> retrieveItemListFromServer() throws IOException
 	{
-		outputWriter.writeObject(scQuery + scItem);
+		try
+		{
+			outputWriter.writeObject(scQuery + scItem);
+			outputWriter.flush();
+		}
+		catch(IOException writeErr)
+		{
+			throw new IOException("Error: could not send opening message to the server.");
+		}
 		
-		outputWriter.flush();
+		try
+		{
+			String serverResponse = (String)inputReader.readObject();
 		
-		String serverResponse = (String)inputReader.readObject();
-		
-		if(serverResponse.contains(scError))
-			return null;
-		
-		return (ArrayList<ItemModel>)inputReader.readObject();
+			if(serverResponse.contains(scError))
+				throw new IOException("Error: server could not send the item list.");
+			
+			return (ArrayList<ItemModel>)inputReader.readObject();
+		}
+		catch(IOException readErr)
+		{
+			throw new IOException("Error: could not read the server's message.");
+		}
+		catch(ClassNotFoundException classErr)
+		{
+			throw new IOException("Error: could not properly read the object.");
+		}
 	}
 	
 	/**
@@ -182,39 +239,116 @@ public class ClientController implements SCCommunicationConstants
 	 * throws null if there is an error in the server.
 	 *
 	 * @return An ArrayList of the suppliers.
+	 * @throws IOException
 	 */
-	public ArrayList<SupplierModel> retrieveSupplierListFromServer() 
+	public ArrayList<SupplierModel> retrieveSupplierListFromServer() throws IOException
 	{
-		outputWriter.writeObject(scQuery + scSupplier);
+		try
+		{
+			outputWriter.writeObject(scQuery + scSupplier);
+			outputWriter.flush();
+		}
+		catch(IOException writeErr)
+		{
+			throw new IOException("Error: could not send opening message to the server.");
+		}
 		
-		outputWriter.flush();
-		
-		String serverResponse = (String)inputReader.readObject();
-		
-		if(serverResponse.contains(scError))
-			return null;
-		
-		return (ArrayList<SupplierModel>)inputReader.readObject();
+		try
+		{
+			String serverResponse = (String)inputReader.readObject();
+			
+			if(serverResponse.contains(scError))
+				return null;
+			
+			return (ArrayList<SupplierModel>)inputReader.readObject();
+		}
+		catch(IOException readErr)
+		{
+			throw new IOException("Error: could not read the server's message.");
+		}
+		catch(ClassNotFoundException classErr)
+		{
+			throw new IOException("Error: could not properly read the object.");
+		}
 	}
 	
+	
+	/**
+	 * Asks the server for the suppliers held in the database.
+	 * throws null if there is an error in the server.
+	 *
+	 * @return An ArrayList of the suppliers.
+	 * throws IOException
+	 */
+	 /*
+	public ArrayList<SupplierModel> retrieveSupplierListFromServer() throws IOException
+	{
+		try
+		{
+			outputWriter.writeObject(scQuery + scSupplier);
+			outputWriter.flush();
+		}
+		catch(IOException writeErr)
+		{
+			throw new IOException("Error: could not send opening message to the server.");
+		}
+		
+		try
+		{
+			String serverResponse = (String)inputReader.readObject();
+			
+			if(serverResponse.contains(scError))
+				return null;
+			
+			return (ArrayList<SupplierModel>)inputReader.readObject();
+		}
+		catch(IOException readErr)
+		{
+			throw new IOException("Error: could not read the server's message.");
+		}
+		catch(ClassNotFoundException classErr)
+		{
+			throw new IOException("Error: could not properly read the object.");
+		}
+	}
+	
+	*/
 	/**
 	 * Asks the server for the orders held in the database.
 	 * throws null if there is an error in the server.
 	 *
 	 * @return An ArrayList of the orders.
+	 * @throws IOException
 	 */
-	public ArrayList<OrderModel> retrieveOrderListFromServer()
+	public ArrayList<OrderModel> retrieveOrderListFromServer() throws IOException
 	{
-		outputWriter.writeObject(scQuery + scSupplier);
+		try
+		{
+			outputWriter.writeObject(scQuery + scOrder);
+			outputWriter.flush();	
+		}
+		catch(IOException writeErr)
+		{
+			throw new IOException("Error: could not send opening message to the server.");
+		}
 		
-		outputWriter.flush();
+		try
+		{
+			String serverResponse = (String)inputReader.readObject();
 		
-		String serverResponse = (String)inputReader.readObject();
+			if(serverResponse.contains(scError))
+				return null;
 		
-		if(serverResponse.contains(scError))
-			return null;
-		
-		return (ArrayList<OrderModel>)inputReader.readObject();
+			return (ArrayList<OrderModel>)inputReader.readObject();
+		}
+		catch(IOException readErr)
+		{
+			throw new IOException("Error: could not read the server's message.");
+		}
+		catch(ClassNotFoundException classErr)
+		{
+			throw new IOException("Error: could not properly read the object.");
+		}	
 	}
 	
 	/**
@@ -222,14 +356,22 @@ public class ClientController implements SCCommunicationConstants
 	 * server items in the database.
 	 * 
 	 * @param itemList An ArrayList of ItemModel to update the database.
+	 * @throws IOException
 	 */
-	public void sendItemListToServer(ArrayList<ItemModel> itemList)
+	public void sendItemListToServer(ArrayList<ItemModel> itemList) throws IOException
 	{
-		outputWriter.writeObject(scData + scItem);
+		try
+		{
+			outputWriter.writeObject(scData + scItem);
 		
-		outputWriter.writeObject(itemList);
+			outputWriter.writeObject(itemList);
 		
-		outputWriter.flush();
+			outputWriter.flush();
+		}
+		catch(IOException writeErr)
+		{
+			throw new IOException("Error: could not communicate to the server.");
+		}
 	}
 	
 	
@@ -238,14 +380,22 @@ public class ClientController implements SCCommunicationConstants
 	 * server Suppliers in the database.
 	 * 
 	 * @param supplierList An ArrayList of SupplierModel to update the database.
+	 * @throws IOException
 	 */
-	public void sendSupplierListToServer(ArrayList<SupplierModel> supplierList)
+	public void sendSupplierListToServer(ArrayList<SupplierModel> supplierList) throws IOException
 	{
-		outputWriter.writeObject(scData + scSupplier);
+		try
+		{
+			outputWriter.writeObject(scData + scSupplier);
 		
-		outputWriter.writeObject(supplierList);
+			outputWriter.writeObject(supplierList);
 		
-		outputWriter.flush();
+			outputWriter.flush();
+		}
+		catch(IOException writeErr)
+		{
+			throw new IOException("Error: could not communicate to the server.");
+		}
 	}
 	
 	/**
@@ -253,36 +403,62 @@ public class ClientController implements SCCommunicationConstants
 	 * server Orders in the database.
 	 * 
 	 * @param orderList An ArrayList of OrderModel to update the database.
+	 * @throws IOException
 	 */
-	public void sendOrderListToServer(ArrayList<OrderModel> orderList)
+	public void sendOrderListToServer(ArrayList<OrderModel> orderList) throws IOException
 	{
-		outputWriter.writeObject(scData + scOrder);
+		try
+		{
+			outputWriter.writeObject(scData + scOrder);
 		
-		outputWriter.writeObject(orderList);
+			outputWriter.writeObject(orderList);
 		
-		outputWriter.flush();
-
+			outputWriter.flush();
+		}
+		catch(IOException writeErr)
+		{
+			throw new IOException("Error: could not communicate to the server.");
+		}
 	}
 	
 	/**
 	 * Searches for an item in the server.
 	 * @param itemId The ID of the item being searched for.
 	 * @return The found item or null.
+	 * @throws IOException
 	 */
-	public ItemModel sendItemSearch(int itemId)
+	public ItemModel sendItemSearch(int itemId) throws IOException
 	{
-		outputWriter.writeObject(scSearch + scItem + scInt);
+		try
+		{
+			outputWriter.writeObject(scSearch + scItem + scInt);
 		
-		outputWriter.writeObject(new Integer(itemId)); //WHAT IS THIS??
+			outputWriter.writeObject(new Integer(itemId));
 		
-		outputWriter.flush();
+			outputWriter.flush();
+		}
+		catch(IOException writeErr)
+		{
+			throw new IOException("Error: could not communicate to the server.");
+		}
 		
-		String serverResponse = (String)inputReader.readObject();
+		try
+		{
+			String serverResponse = (String)inputReader.readObject();
 		
-		if(serverResponse.contains(scError))
-			return null;
+			if(serverResponse.contains(scError))
+				return null;
 		
-		return (ItemModel)inputReader.readObject();
+			return (ItemModel)inputReader.readObject();
+		}
+		catch(IOException readErr)
+		{
+			throw new IOException("Error: could not read the server's message.");
+		}
+		catch(ClassNotFoundException classErr)
+		{
+			throw new IOException("Error: could not properly read the object.");
+		}	
 	}
 	
 	
@@ -290,21 +466,40 @@ public class ClientController implements SCCommunicationConstants
 	 * Searches for an item in the server.
 	 * @param itemName The name of the item being searched for.
 	 * @return The found item or null.
+	 * @throws IOException
 	 */
-	public ItemModel sendItemSearch(String itemName)
+	public ItemModel sendItemSearch(String itemName) throws IOException
 	{
-		outputWriter.writeObject(scSearch + scItem + scString);
+		try
+		{
+			outputWriter.writeObject(scSearch + scItem + scString);
 		
-		outputWriter.writeObject(itemName);
+			outputWriter.writeObject(itemName);
 		
-		outputWriter.flush();
+			outputWriter.flush();
+		}
+		catch(IOException writeErr)
+		{
+			throw new IOException("Error: could not communicate to the server.");
+		}
 		
-		String serverResponse = (String)inputReader.readObject();
+		try
+		{
+			String serverResponse = (String)inputReader.readObject();
 		
-		if(serverResponse.contains(scError))
-			return null;
+			if(serverResponse.contains(scError))
+				return null;
 		
-		return (ItemModel)inputReader.readObject();
+			return (ItemModel)inputReader.readObject();
+		}
+		catch(IOException readErr)
+		{
+			throw new IOException("Error: could not read the server's message.");
+		}
+		catch(ClassNotFoundException classErr)
+		{
+			throw new IOException("Error: could not properly read the object.");
+		}	
 	}
 	
 	
@@ -346,7 +541,7 @@ public class ClientController implements SCCommunicationConstants
 		{
 			clientSocket = new Socket(serverName, portNum);
 			inputReader = new ObjectInputStream(clientSocket.getInputStream());
-			outputWriter = new ObjectOutputStream(cSocket.getOutputStream());
+			outputWriter = new ObjectOutputStream(clientSocket.getOutputStream());
 			outputWriter.flush();
 		}
 		catch(IOException ioErr)
@@ -363,9 +558,15 @@ public class ClientController implements SCCommunicationConstants
 	 * @param args Command line arguments when starting the program.
 	 * @throws IOException
 	 */
+	 
 	public static void main(String[] args) throws IOException
 	{
 		ClientController client = new ClientController("localhost", 8428);
-		client.communicate();
+		System.out.println("lmao");
+		
+		ItemModel wack = new ItemModel();
+		
+		System.out.println("lmao");
 	}
+	
 }
