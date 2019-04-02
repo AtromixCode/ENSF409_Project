@@ -3,121 +3,77 @@ package ServerPackage.ServerModels;
 import ServerPackage.ServerControllers.InventoryController;
 
 import java.io.*;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ShopController {
+public class ShopController implements Runnable {
+    /**
+     * The list of orders corresponding to the shop
+     */
     private ArrayList<OrderModel> orders;
-    private File orderFile;
-    private String fileName;
+
+    /**
+     * the socket used for communications with the client
+     */
+    private Socket clientSocket;
+
+    /**
+     * The list of suppliers in the shop
+     */
     private ArrayList<SupplierModel> suppliers;
+
+    /**
+     * The inventory of the shop
+     */
     private InventoryController inv;
+
+    /**
+     *
+     * TODO: ask Shamez wats dis boi do
+     * The index of the order???
+     */
     private int orderIndex;
 
+    /**
+     * The input from the socket
+     */
+    private BufferedReader socketIn;
 
-    public ShopController(InventoryController i, ArrayList<SupplierModel> s, ArrayList<OrderModel> orders)
+    /**
+     * The output to the socket
+     */
+    private PrintWriter socketOut;
+
+    /**
+     * Constructs a store and does the necessary callings to get up to date
+     * information from the database
+     * @param sc the accepted socket from the server used to communicate with the client
+     */
+    public ShopController(Socket sc)
     {
-        this.suppliers = s;
-        this.inv = i;
-        this.orders = orders;
-        fileName = "orders.txt";
-        orderFile = new File (fileName);
-        orderIndex = -1;
-    }
-
-    public void addInvFromFile(String filename) throws IOException
-    {
-        inv.addItemsFromFile(filename);
-        assignItemsToSupplier();
-        createOrderFile();
-        inventoryOrder();
-    }
-
-
-    public void addSuppliersFromFile(String fileName) throws IOException
-    {
-        FileInputStream fileIn= new FileInputStream(fileName);
-        BufferedReader read = new BufferedReader(new InputStreamReader(fileIn));
-        String line = read.readLine();
-        while (line != null){
-            SupplierModel a = readValues(line);
-            suppliers.add(a);
-            line = read.readLine();
+        clientSocket = sc;
+        try
+        {
+            socketIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            socketOut = new PrintWriter((clientSocket.getOutputStream()),true);
+        }catch (IOException e){
+            outputToClient(e.getMessage());
+            System.err.println("Error constructing the shop");
+            System.err.println(e.getMessage());
         }
     }
 
-    public SupplierModel readValues(String r)
-    {
-        Scanner s = new Scanner(r).useDelimiter(";");
-        int id = s.nextInt();
-        String companyName = s.next();
-        String address = s.next();
-        String salesContact = s.next();
-        return new SupplierModel(id, companyName, address, salesContact);
+    /**
+     * outputs to the client the given string
+     * @param s the string to output to the client
+     */
+    private void outputToClient (String s){
+        socketOut.println(s);
     }
 
-    public void createOrderFile() throws IOException
-    {
-        orderFile.createNewFile();
-        PrintWriter write = new PrintWriter(fileName);
-        write.close();
-    }
-
-    public void inventoryOrder()throws FileNotFoundException
-    {
-        boolean check = inv.checkIfOrder();
-        if (check) {
-            OrderModel o = new OrderModel(orderFile);
-            orders.add(o);
-            orderIndex++;
-            if (orderIndex==0)
-                inv.generateOrder(o, true);
-            else
-                inv.generateOrder(o, orderDateCheck(o));
-        }
-    }
-
-    public boolean orderDateCheck(OrderModel o)
-    {
-        if (o.getDateString().equals(orders.get(orderIndex-1).getDateString())){
-            return false;
-        }
-        return true;
-    }
-
-    public int sell(int id, int quantity)throws FileNotFoundException
-    {
-        int check = inv.decreaseItemQuan(id, quantity);
-        inventoryOrder();
-        return check;
-    }
-
-    public String getItemInfo(int id)
-    {
-        return inv.getItemInfo(id);
-    }
-    public String getItemInfo(String desc)
-    {
-        return inv.getItemInfo(desc);
-    }
-
-    public void printInventory()
-    {
-        inv.printAllItems();
-    }
-
-
-    public void assignItemsToSupplier()
-    {
-        for (SupplierModel s: suppliers) {
-            s.addItem(inv.getItems());
-        }
-    }
-
-    public void closeOrderFile()throws FileNotFoundException
-    {
-        PrintWriter write = new PrintWriter (new FileOutputStream(orderFile, true));
-        write.println("**********************************************************************");
-        write.close();
+    @Override
+    public void run (){
+        System.out.println("Doing shop things");
     }
 }
