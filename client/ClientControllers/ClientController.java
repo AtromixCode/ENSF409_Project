@@ -1,11 +1,10 @@
-package ClientControllers;
+package client.ClientControllers;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-import ClientModels.*;
+import client.ClientModels.*;
 
 /**
  * When run, connects the client to the server, and allows the client
@@ -199,32 +198,12 @@ public class ClientController implements SCCommunicationConstants
 	}
 	
 	/**
-	 * Asks the server for the suppliers held in the database.
-	 * throws null if there is an error in the server.
-	 *
-	 * @return An ArrayList of the suppliers.
-	 */
-	public ArrayList<SupplierModel> retrieveSupplierListFromServer() 
-	{
-		outputWriter.writeObject(scQuery + scSupplier);
-		
-		outputWriter.flush();
-		
-		String serverResponse = (String)inputReader.readObject();
-		
-		if(serverResponse.contains(scError))
-			return null;
-		
-		return (ArrayList<SupplierModel>)inputReader.readObject();
-	}
-	
-	/**
 	 * Asks the server for the orders held in the database.
 	 * throws null if there is an error in the server.
 	 *
 	 * @return An ArrayList of the orders.
 	 */
-	public ArrayList<OrderModel> retrieveSupplierListFromServer() 
+	public ArrayList<OrderModel> retrieveOrderListFromServer()
 	{
 		outputWriter.writeObject(scQuery + scSupplier);
 		
@@ -294,7 +273,7 @@ public class ClientController implements SCCommunicationConstants
 	{
 		outputWriter.writeObject(scSearch + scItem + scInt);
 		
-		outputWriter.writeObject(new Integer(itemId));
+		outputWriter.writeObject(new Integer(itemId)); //WHAT IS THIS??
 		
 		outputWriter.flush();
 		

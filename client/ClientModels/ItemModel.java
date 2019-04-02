@@ -1,4 +1,4 @@
-package ClientModels;
+package client.ClientModels;
 
 public class ItemModel {
 	private SupplierModel supplier;

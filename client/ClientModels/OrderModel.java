@@ -1,4 +1,4 @@
-package ClientModels;
+package client.ClientModels;
 
 import java.io.File;
 import java.io.PrintWriter;

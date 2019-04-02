@@ -1,4 +1,4 @@
-package client;
+package client.ClientViews;
 
 
 class GUI {

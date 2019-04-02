@@ -1,4 +1,4 @@
-package ClientControllers;
+package client.ClientControllers;
 
 /**
  * Contains constant String variables for server-client 
