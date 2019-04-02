@@ -5,11 +5,11 @@ import java.awt.*;
 
 public class SupplierView {
 
-	JFrame supplierWindow;
-	JButton addSupplier;
-	JButton closeWindow;
-	JList<String> supplierList;
-	DefaultListModel<String> supplierListModel;
+	private JFrame supplierWindow;
+	private JButton addSupplier;
+	private JButton closeWindow;
+	private JList<String> supplierList;
+	private DefaultListModel<String> supplierListModel;
 
 	protected SupplierView()
 	{
