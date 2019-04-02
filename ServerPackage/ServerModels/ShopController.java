@@ -1,5 +1,6 @@
 package ServerPackage.ServerModels;
 
+import ServerPackage.ServerControllers.DataBaseController;
 import ServerPackage.ServerControllers.InventoryController;
 
 import java.io.*;
@@ -53,6 +54,7 @@ public class ShopController implements Runnable {
     public ShopController(Socket sc)
     {
         clientSocket = sc;
+        DataBaseController data = new DataBaseController();
         try
         {
             socketIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));

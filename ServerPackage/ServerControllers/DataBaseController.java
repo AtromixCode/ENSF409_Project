@@ -9,11 +9,15 @@ public class DataBaseController {
         try {
             dataCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/shop", "root", "ENSFProjectPassword409!");
 
-            Statement myStmt = dataCon.createStatement();
-
-            ResultSet myRS = myStmt.executeQuery("select * from ");
+//            Statement myStmt = dataCon.createStatement();
+//
+//            ResultSet myRS = myStmt.executeQuery("select * from shop.items");
+//
+//            while (myRS.next()){
+//                System.out.println(myRS.getString("ItemID") + ", " + myRS.getString ("Description"));
+//            }
         }catch (java.sql.SQLException e){
-            System.err.println("Error while connecting to data base");
+            e.printStackTrace();
         }
 
     }
