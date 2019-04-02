@@ -565,7 +565,7 @@ public class ClientController implements SCCommunicationConstants
 		System.out.println("lmao");
 		
 		ItemModel wack = new ItemModel();
-		
+
 		System.out.println("lmao");
 	}
 	

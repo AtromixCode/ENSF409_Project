@@ -16,19 +16,11 @@ public class SupplierView {
 		supplierWindow = new JFrame("Logistics & Information General Management Application");
 		supplierWindow.setSize(600,500);
 		supplierWindow.setResizable(false);
-		supplierWindow.add(createLabelPanel(),"North");
 		supplierWindow.add(createButtonPanel(), "South");
 		supplierWindow.add(createListPanel(),"Center");
 		supplierWindow.setVisible(true);
 	}
 
-	protected JPanel createLabelPanel()
-	{
-		JPanel labelPanel = new JPanel();
-		JLabel titleLabel = new JLabel("Supplier List");
-		titleLabel.setFont(new Font("Arial", Font.BOLD,20));
-		return labelPanel;
-	}
 
 	protected JPanel createButtonPanel()
 	{
@@ -53,7 +45,7 @@ public class SupplierView {
 		supplierListModel = new DefaultListModel<String>();
 		supplierList = new JList<String>(supplierListModel);
 		for (int i=0; i<100; i++) {
-			supplierListModel.addElement("<html><pre>"+8000+i+"\t\tGrommet Builders\t788 30th St., SE, Calgary\tFred</pre></html>");
+			supplierListModel.addElement("<html><pre> "+(8000+i)+"\t\tGrommet Builders\t788 30th St., SE, Calgary\tFred</pre></html>");
 		}
 		supplierList.setVisibleRowCount(20);
 		JScrollPane listPane = new JScrollPane(supplierList);
