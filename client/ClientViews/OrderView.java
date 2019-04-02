@@ -15,11 +15,11 @@ public class OrderView {
 		orderWindow.add("North",createLabelPanel());
 		orderWindow.add(createDisplayPanel());
 		orderWindow.add("South", createButtonPanel());
-		orderWindow.setVisible(true);
+		orderWindow.setVisible(false);
 		orderWindow.setResizable(false);
 	}
 
-	protected JPanel createLabelPanel()
+	private JPanel createLabelPanel()
 	{
 		JPanel labelPanel = new JPanel();
 		JLabel titleLabel = new JLabel("Order History");
@@ -28,7 +28,7 @@ public class OrderView {
 		return labelPanel;
 	}
 
-	protected JPanel createDisplayPanel()
+	private JPanel createDisplayPanel()
 	{
 		JPanel displayPanel = new JPanel();
 		displayPanel.setLayout(new BorderLayout());
@@ -42,11 +42,16 @@ public class OrderView {
 		return displayPanel;
 	}
 
-	protected JPanel createButtonPanel()
+	private JPanel createButtonPanel()
 	{
 		JPanel buttonPanel = new JPanel();
 		closeWindow = new JButton("Close");
 		buttonPanel.add(closeWindow);
 		return buttonPanel;
+	}
+
+	protected void setWindowVisibility(boolean visibility)
+	{
+		orderWindow.setVisible(visibility);
 	}
 }

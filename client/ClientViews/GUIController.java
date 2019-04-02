@@ -25,6 +25,8 @@ class GUI {
 	public class SelectItem implements ListSelectionListener {
 		String data;
 		int id;
+		String item;
+		int quantity;
 
 		protected SelectItem()
 		{
@@ -40,6 +42,7 @@ class GUI {
 				data = (String) mv.getItemListModel().get(index);
 				mv.setButtonsClickable(true);
 				Scanner scan = new Scanner (data);
+				item = "";
 				scan.next();
 				id = scan.nextInt();
 			}

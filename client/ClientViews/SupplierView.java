@@ -18,11 +18,11 @@ public class SupplierView {
 		supplierWindow.setResizable(false);
 		supplierWindow.add(createButtonPanel(), "South");
 		supplierWindow.add(createListPanel(),"Center");
-		supplierWindow.setVisible(true);
+		supplierWindow.setVisible(false);
 	}
 
 
-	protected JPanel createButtonPanel()
+	private JPanel createButtonPanel()
 	{
 		JPanel buttonPanel = new JPanel();
 		addSupplier = new JButton("Add Supplier");
@@ -32,7 +32,7 @@ public class SupplierView {
 		return buttonPanel;
 	}
 
-	protected JPanel createListPanel(){
+	private JPanel createListPanel(){
 		JPanel listPanel = new JPanel(new BorderLayout());
 		JPanel labelPanel = new JPanel(new BorderLayout());
 		JLabel suppliersLabel = new JLabel("Current Suppliers");
@@ -45,7 +45,7 @@ public class SupplierView {
 		supplierListModel = new DefaultListModel<String>();
 		supplierList = new JList<String>(supplierListModel);
 		for (int i=0; i<100; i++) {
-			supplierListModel.addElement("<html><pre> "+(8000+i)+"\t\tGrommet Builders\t788 30th St., SE, Calgary\tFred</pre></html>");
+			supplierListModel.addElement("<html><pre> "+(8000+i)+"\t\tGrommet Builders\t788 30th St., SE, Calgary\tFred </pre></html>");
 		}
 		supplierList.setVisibleRowCount(20);
 		JScrollPane listPane = new JScrollPane(supplierList);

@@ -40,17 +40,17 @@ public class ClientController implements SCCommunicationConstants
 	/**
 	 * List of items held by the store.
 	 */
-	private ArrayList<ItemModel> ItemInfoList;
+	private ArrayList<ItemModel> ItemList;
 	
 	/**
 	 * List of suppliers held by the store.
 	 */
-	private ArrayList<SupplierModel> supplierInfoList;
+	private ArrayList<SupplierModel> supplierList;
 	
 	/**
 	 * List of orders held by the store.
 	 */
-	private ArrayList<OrderModel> orderInfoList;
+	private ArrayList<OrderModel> orderList;
 	
 	/**
 	 * Verifies if the client-server connection can still run

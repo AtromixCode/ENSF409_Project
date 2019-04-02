@@ -5,6 +5,6 @@ public class ItemModel {
 	private int id;
 	private String desc;
 	private int quantity;
-	private double price;
+	private float price;
 	private int supplierID;
 }

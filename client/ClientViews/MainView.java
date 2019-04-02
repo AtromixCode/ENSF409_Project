@@ -1,10 +1,8 @@
 package client.ClientViews;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Scanner;
 
@@ -29,7 +27,7 @@ public class MainView {
 
 	}
 
-	protected JPanel createTitlePanel()
+	private JPanel createTitlePanel()
 	{
 		JPanel titlePanel = new JPanel();
 		JLabel titleLabel = new JLabel("Logistics & Information General Management Application");
@@ -38,7 +36,7 @@ public class MainView {
 		return titlePanel;
 	}
 
-	protected JPanel createListPanel()
+	private JPanel createListPanel()
 	{
 		JPanel listPanel = new JPanel(new BorderLayout());
 		JPanel labelPanel = new JPanel(new BorderLayout());
@@ -52,7 +50,7 @@ public class MainView {
 		itemListModel = new DefaultListModel<String>();
 		itemList = new JList<String>(itemListModel);
 		for (int i=0; i<100; i++) {
-			itemListModel.addElement("<html><pre> "+(1000+i)+"\t\tKnock Bits\t88\t\t$12.67\t\t8015</pre></html>");
+			itemListModel.addElement("<html><pre> "+(1000+i)+"\t\tKnock Bits\t88\t\t$12.67\t\t8015 </pre></html>");
 		}
 		itemList.setVisibleRowCount(20);
 		JScrollPane listPane = new JScrollPane(itemList);
@@ -60,7 +58,7 @@ public class MainView {
 		return listPanel;
 	}
 
-	protected JPanel createButtonPanel()
+	private JPanel createButtonPanel()
 	{
 
 		JPanel buttonPanel = new JPanel();
