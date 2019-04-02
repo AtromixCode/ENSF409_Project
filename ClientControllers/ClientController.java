@@ -1,24 +1,22 @@
 package ClientControllers;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-import package.ClientModels;
+import ClientModels.*;
 
 /**
  * When run, connects the client to the server, and allows the client
- * to send and recieve lists of items, suppliers, and orders.
+ * to send and receive lists of items, suppliers, and orders.
  * Sent lists can be created from text files.
  *
  * @author Jake Liu
  * @version 1.0
  * @since March 29, 2019
  */
-public class ClientController implements SCCommuncationConstants
+public class ClientController implements SCCommunicationConstants
 {
 	/**
 	 * Client socket object.
@@ -152,7 +150,7 @@ public class ClientController implements SCCommuncationConstants
 		{
 			inputReader.close();
 			outputWriter.close();
-			cSocket.close();
+			clientSocket.close();
 		}
 		catch(IOException shutDownErr)
 		{

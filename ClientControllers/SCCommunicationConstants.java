@@ -1,3 +1,5 @@
+package ClientControllers;
+
 /**
  * Contains constant String variables for server-client 
  * message communication.
@@ -6,7 +8,7 @@
  * @version 1.0
  * @since April 1, 2019
  */
-public interface SCCommuncationConstants 
+public interface SCCommunicationConstants
 {
 	/**
 	 * A string message containing this string is asking for objects.
