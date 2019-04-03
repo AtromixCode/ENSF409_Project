@@ -3,9 +3,8 @@ package client.ClientControllers;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
+import javax.swing.DefaultListModel;
 import client.ClientModels.*;
-
-import javax.swing.*;
 
 /**
  * When run, connects the client to the server, and allows the client

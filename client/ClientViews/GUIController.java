@@ -3,8 +3,7 @@ package client.ClientViews;
 import client.ClientControllers.ClientController;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Scanner;
@@ -22,6 +21,7 @@ class GUI {
 		ov = new OrderView();
 		cc = controller;
 		mv.addListSelectionListener(new SelectItem());
+		mv.addButton5ActionListener(new ViewOrders());
 		mv.addButton6ActionListener(new ViewSuppliers());
 		mv.addButton7ActionListener(new ImportItems());
 		mv.addButton8ActionListener(new ImportSuppliers());
@@ -30,8 +30,6 @@ class GUI {
 	public class SelectItem implements ListSelectionListener {
 		String data;
 		int id;
-		String item;
-		int quantity;
 
 		protected SelectItem()
 		{
@@ -47,7 +45,6 @@ class GUI {
 				data = (String) mv.getItemListModel().get(index);
 				mv.setButtonsClickable(true);
 				Scanner scan = new Scanner (data);
-				item = "";
 				scan.next();
 				id = scan.nextInt();
 			}
@@ -57,7 +54,23 @@ class GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Selling Item "+id);
+				try {
+					int quantity = Integer.parseInt(JOptionPane.showInputDialog("Please enter the quantity sold:"));
+					if (quantity>0)
+					{
+						System.out.println("Checking if "+ quantity + " is enough and removing it here!");
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, "Please enter a number greater than 0!",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				catch (Exception ex)
+				{
+					JOptionPane.showMessageDialog(null, "Please enter an integer!",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
 
@@ -65,7 +78,23 @@ class GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Ordering Item "+id);
+				try {
+					int quantity = Integer.parseInt(JOptionPane.showInputDialog("Please enter the quantity to order:"));
+					if (quantity>0)
+					{
+						System.out.println("Ordering "+ quantity +" here!");
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, "Please enter a number greater than 0!",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				catch (Exception ex)
+				{
+					JOptionPane.showMessageDialog(null, "Please enter an integer!",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
 
@@ -73,7 +102,12 @@ class GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Removing Item "+id);
+				int a = JOptionPane.showConfirmDialog(null,
+						"Please confirm you would like to remove Item #"+id+" from the store.");
+				if (a==0)
+				{
+					System.out.println("Removing item here!");
+				}
 			}
 		}
 	}
@@ -83,6 +117,22 @@ class GUI {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
+		}
+	}
+
+	public class AddSupplier implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+		}
+	}
+
+	public class ViewOrders implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			ov.setWindowVisibility(true);
 		}
 	}
 

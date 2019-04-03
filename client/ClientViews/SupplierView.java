@@ -21,7 +21,6 @@ public class SupplierView {
 		supplierWindow.add(createButtonPanel(), "South");
 		supplierWindow.add(createListPanel(),"Center");
 		supplierWindow.setVisible(false);
-		supplierWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		addCloseButtonListener();
 	}
 

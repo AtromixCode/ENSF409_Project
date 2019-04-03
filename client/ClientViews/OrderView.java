@@ -2,6 +2,8 @@ package client.ClientViews;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class OrderView {
 	private JFrame orderWindow;
@@ -17,6 +19,7 @@ public class OrderView {
 		orderWindow.add("South", createButtonPanel());
 		orderWindow.setVisible(false);
 		orderWindow.setResizable(false);
+		addCloseButtonListener();
 	}
 
 	private JPanel createLabelPanel()
@@ -53,5 +56,14 @@ public class OrderView {
 	protected void setWindowVisibility(boolean visibility)
 	{
 		orderWindow.setVisible(visibility);
+	}
+
+	protected void addCloseButtonListener(){
+		closeWindow.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				orderWindow.setVisible(false);
+			}
+		});
 	}
 }
