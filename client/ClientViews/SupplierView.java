@@ -2,6 +2,8 @@ package client.ClientViews;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SupplierView {
 
@@ -19,6 +21,8 @@ public class SupplierView {
 		supplierWindow.add(createButtonPanel(), "South");
 		supplierWindow.add(createListPanel(),"Center");
 		supplierWindow.setVisible(false);
+		supplierWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		addCloseButtonListener();
 	}
 
 
@@ -44,18 +48,29 @@ public class SupplierView {
 		listPanel.add(labelPanel, "North");
 		supplierListModel = new DefaultListModel<String>();
 		supplierList = new JList<String>(supplierListModel);
-		for (int i=0; i<100; i++) {
-			supplierListModel.addElement("<html><pre> "+(8000+i)+"\t\tGrommet Builders\t788 30th St., SE, Calgary\tFred </pre></html>");
-		}
+//		for (int i=0; i<100; i++) {
+//			supplierListModel.addElement("<html><pre> "+(8000+i)+"\t\tGrommet Builders\t788 30th St., SE, Calgary\tFred </pre></html>");
+//		}
 		supplierList.setVisibleRowCount(20);
 		JScrollPane listPane = new JScrollPane(supplierList);
 		listPanel.add(listPane, "Center");
 		return listPanel;
 	}
 
+	protected DefaultListModel<String> getSupplierListModel(){return supplierListModel;}
+
 	protected void setSupplierWindowVisibility(boolean visible)
 	{
 		supplierWindow.setVisible(visible);
+	}
+
+	protected void addCloseButtonListener(){
+		closeWindow.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				supplierWindow.setVisible(false);
+			}
+		});
 	}
 
 

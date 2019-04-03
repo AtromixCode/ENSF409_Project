@@ -9,8 +9,8 @@ import java.util.Scanner;
 public class MainView {
 
 	private JFrame mainWindow;
-	private JButton[] buttons = new JButton[6];
-	private String[] buttonNames = {"Sell Item", "Order Item", "Remove Item", "Add Item", "View Orders", "View Suppliers"};
+	private JButton[] buttons = new JButton[8];
+	private String[] buttonNames = {"Sell Item", "Order Item", "Remove Item", "Add Item", "View Orders", "View Suppliers", "Import Items", "Import Suppliers"};
 	private JList<String> itemList;
 	private DefaultListModel<String> itemListModel;
 
@@ -49,9 +49,9 @@ public class MainView {
 		listPanel.add(labelPanel, "North");
 		itemListModel = new DefaultListModel<String>();
 		itemList = new JList<String>(itemListModel);
-		for (int i=0; i<100; i++) {
-			itemListModel.addElement("<html><pre> "+(1000+i)+"\t\tKnock Bits\t88\t\t$12.67\t\t8015 </pre></html>");
-		}
+//		for (int i=0; i<100; i++) {
+//			itemListModel.addElement("<html><pre> "+(1000+i)+"\t\tKnock Bits\t88\t\t$12.67\t\t8015 </pre></html>");
+//		}
 		itemList.setVisibleRowCount(20);
 		JScrollPane listPane = new JScrollPane(itemList);
 		listPanel.add(listPane, "Center");
@@ -80,6 +80,11 @@ public class MainView {
 	protected void setMainWindowVisibility(boolean visible)
 	{
 		mainWindow.setVisible(visible);
+	}
+
+	protected void clearText()
+	{
+		itemListModel.clear();
 	}
 
 
@@ -129,6 +134,16 @@ public class MainView {
 	protected void addButton6ActionListener(ActionListener b)
 	{
 		buttons[5].addActionListener(b);
+	}
+
+	protected void addButton7ActionListener(ActionListener b)
+	{
+		buttons[6].addActionListener(b);
+	}
+
+	protected void addButton8ActionListener(ActionListener b)
+	{
+		buttons[7].addActionListener(b);
 	}
 
 

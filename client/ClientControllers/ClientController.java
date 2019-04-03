@@ -364,7 +364,7 @@ public class ClientController implements SCCommunicationConstants
 		{
 			outputWriter.writeObject(scData + scItem);
 		
-			outputWriter.writeObject(cloneArrayList(itemList));
+			outputWriter.writeObject(itemList);
 		
 			outputWriter.flush();
 		}
@@ -388,7 +388,7 @@ public class ClientController implements SCCommunicationConstants
 		{
 			outputWriter.writeObject(scData + scSupplier);
 		
-			outputWriter.writeObject(cloneArrayList(supplierList));
+			outputWriter.writeObject(supplierList);
 		
 			outputWriter.flush();
 		}
@@ -411,39 +411,13 @@ public class ClientController implements SCCommunicationConstants
 		{
 			outputWriter.writeObject(scData + scOrder);
 		
-			outputWriter.writeObject(cloneArrayList(orderList));
+			outputWriter.writeObject(orderList);
 		
 			outputWriter.flush();
 		}
 		catch(IOException writeErr)
 		{
 			throw new IOException("Error: could not communicate to the server.");
-		}
-	}
-	
-	/**
-	 * Sends an item to the server to update. This is for new items and changed items, 
-	 * such as items that have had their quantity decreased.
-	 * @param updateItem The item to update in the server.
-	 * @throws IOException
-	 */
-	public void sendItemUpdate(ItemModel updateItem) throws IOException
-	{
-		try
-		{
-			outputWriter.writeObject(scData + scItem + scObject);
-		
-			outputWriter.writeObject((ItemModel)updateItem.clone());
-		
-			outputWriter.flush();
-		}
-		catch(IOException writeErr)
-		{
-			throw new IOException("Error: could not communicate to the server.");
-		}
-		catch(CloneNotSupportedException cnsErr)
-		{
-			throw new IOException("Error: item could not be cloned.");
 		}
 	}
 	
@@ -528,70 +502,30 @@ public class ClientController implements SCCommunicationConstants
 		}	
 	}
 	
-	/**
-	 * Sends an item to the server to remove.
-	 * Therefore, before removing an item in the client side, this method
-	 * should be used to remove the item from the server properly.
-	 * @param deleteItem The item to remove in the server.
-	 * @throws IOException
-	 */
-	public void sendDeletedItemUpdate(ItemModel deleteItem) throws IOException
-	{
-		try
-		{
-			outputWriter.writeObject(scRemove + scItem);
-		
-			outputWriter.writeObject((ItemModel)deleteItem.clone());
-		
-			outputWriter.flush();
-		}
-		catch(IOException writeErr)
-		{
-			throw new IOException("Error: could not communicate to the server.");
-		}
-		catch(CloneNotSupportedException cnsErr)
-		{
-			throw new IOException("Error: item could not be cloned.");
-		}
-	}
 	
-	/**
-	 * Tells the server to check its quanties, in order to produce
-	 * orders if necessary.
-	 * Automatically returns the possibly updated order list.
-	 * @return A list of orders after the quantity check.
-	 * @throws IOException
-	 */
-	public ArrayList<OrderModel> sendQuantityCheck() throws IOException
-	{
-		try
-		{
-			outputWriter.writeObject(scCheck + scItem);		
-			outputWriter.flush();
-			
-			return retrieveOrderListFromServer();
-		}
-		catch(IOException writeErr)
-		{
-			throw new IOException("Error: could not communicate to the server.");
-		}
-	}
 	
-	/**
-	 * Generic method that returns a cloned version of a given ArrayList.
-	 * Requires T to be cloneable.
-	 * 
-	 * @param ogList The original list to clone.
-	 * @return a cloned list.
-	 */
-	public <T> ArrayList<T> cloneArrayList(ArrayList<T> ogList)
-	{
-		ArrayList<T> cloneList = new ArrayList<T>();
-		for(T objInList : ogList)
-			cloneList.add((T)objInList);
-		
-		return cloneList;
-	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * Constructor.
@@ -624,6 +558,7 @@ public class ClientController implements SCCommunicationConstants
 	 * @param args Command line arguments when starting the program.
 	 * @throws IOException
 	 */
+	 
 	public static void main(String[] args) throws IOException
 	{
 		ClientController client = new ClientController("localhost", 8428);

@@ -1,6 +1,8 @@
 package client.ClientViews;
 
 import client.ClientControllers.ClientController;
+
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
@@ -20,6 +22,9 @@ class GUI {
 		ov = new OrderView();
 		cc = controller;
 		mv.addListSelectionListener(new SelectItem());
+		mv.addButton6ActionListener(new ViewSuppliers());
+		mv.addButton7ActionListener(new ImportItems());
+		mv.addButton8ActionListener(new ImportSuppliers());
 	}
 
 	public class SelectItem implements ListSelectionListener {
@@ -78,6 +83,42 @@ class GUI {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
+		}
+	}
+
+	public class ViewSuppliers implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			sv.setSupplierWindowVisibility(true);
+		}
+	}
+
+	public class ImportItems implements ActionListener
+	{
+		String filename;
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			filename = JOptionPane.showInputDialog("Please enter the file name:");
+			if(filename != null) {
+				JOptionPane.showMessageDialog(null, cc.readItems(filename, mv.getItemListModel()),
+						"Result", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+	}
+
+	public class ImportSuppliers implements ActionListener
+	{
+		String filename;
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			filename = JOptionPane.showInputDialog("Please enter the file name:");
+			if(filename != null) {
+				JOptionPane.showMessageDialog(null, cc.readSuppliers(filename, sv.getSupplierListModel()),
+						"Result", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 	}
 
