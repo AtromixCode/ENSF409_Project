@@ -32,7 +32,7 @@ public interface SCCommunicationConstants
 	 * The following object message can be assumed to be of the object 
 	 * type specified, or an error.
 	 */
-	static final String scSearch = "SEARCH";
+	static final String scSearch = "SEARCH;";
 	
 	/**
 	 * A string message containing this string indicates that an error has occurred
@@ -62,18 +62,41 @@ public interface SCCommunicationConstants
 	 * A string message containing this string indicates that Integer objects 
 	 * are needed to be sent or read.
 	 */
-	static final String scInt = "INT";
+	static final String scInt = "INT;";
 	
 	/**
 	 * A string message containing this string indicates that String objects 
 	 * are needed to be sent or read.
 	 */
-	static final String scString = "STRING";
+	static final String scString = "STRING;";
+	
+	/**
+	 * A string message containing this string indicates that an object 
+	 * will be needed to be sent or read.
+	 */
+	static final String scObject = "OBJECT;";
+	
+	/**
+	 * A string message containing this string indicates that objects 
+	 * are needed to be removed.
+	 */
+	static final String scRemove = "REMOVE;";
+	
+	/**
+	 * A string message containing this string indicates that objects 
+	 * are needed to be removed.
+	 */
+	static final String scCheck = "CHECK;";
+	
+	/**
+	 * A string message containing this string indicates that a request
+	 * should be able to be fulfilled.
+	 */	
+	static final String scOkay = "OKAY;";
 	
 	/**
 	 * A string message containing this string indicates that the entity is
 	 * quitting/terminating.
 	 */
-	static final String scQuit = "QUIT";
-	
+	static final String scQuit = "QUIT;";	
 }
