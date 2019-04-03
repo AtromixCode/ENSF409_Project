@@ -1,7 +1,12 @@
 package ServerPackage.ServerModels;
 
-public class ItemModel {
-    private SupplierModel supplier;
+import java.io.Serializable;
+
+public class ItemModel implements Serializable, Cloneable{
+    
+	static final long serialVersionUID = 60L;
+	
+	private SupplierModel supplier;
     private int id;
     private String desc;
     private int quantity;
@@ -58,4 +63,12 @@ public class ItemModel {
     public int getSupplierID() {
         return supplierID;
     }
+	
+	public Object clone() throws CloneNotSupportedException
+	{
+		ItemModel temp = (ItemModel)super.clone();
+		if(temp.supplier != null) 
+			temp.supplier = (SupplierModel)supplier.clone();
+		return temp;
+	}
 }

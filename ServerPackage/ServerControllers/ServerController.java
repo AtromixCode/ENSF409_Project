@@ -1,62 +1,128 @@
 package ServerPackage.ServerControllers;
 
-import ServerPackage.ServerModels.ShopController;
-
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**This class makes the connection between the back end found on the server package and to the client front
+import ServerPackage.ServerModels.*;
+
+/**
+ * This class makes the connection between the back end found on the server package and to the client front
  * end found on the client package.
  *
+ * Uses a thread pool of 10 worker threads, which allows up to 10 clients
+ * to be using the server at any one time.
+ * Each thread facilitates interaction between a client and the store.
+ *
+ * Up to 10 clients are allowed to connect to the server at a time.
+ * Because Clients can connect and disconnect at will,
+ * the server runs indefinitely until shut off with cntrl-c.
+ *
+ * @author Jake Liu
+ * @author Victor Sanchez
+ * @version 1.0
+ * @since March 29, 2019
  */
-public class ServerController {
+public class ServerController 
+{
     /**
      * the socket of the server
      */
-    private ServerSocket serverSocket;
+    private ServerSocket socket;
+
+    /**
+     * the socket to accept new clients
+     */
+    private Socket clientSocket;
 
     /**
      * the pool of threads where all the instances of the shop will run
      */
     private ExecutorService pool;
 
-
+	/**
+	 * Server Controller constructor.
+	 * Creates the server socket and the threadpool
+	 * Runs the server indefinitely.
+	 */
     public ServerController(){
-        try {
-            serverSocket = new ServerSocket(8428);
-            pool = Executors.newCachedThreadPool();
-            System.out.println("Server is running");
-        }catch (IOException e) {
-            System.err.println("Could not start the server, port already used in another server?");
+        try 
+		{
+            socket = new ServerSocket(8428, 10);
+            pool = Executors.newFixedThreadPool(10);
+        }
+		catch (IOException e) 
+		{
+            System.err.println("Could not start the server");
             System.err.println(e.getMessage());
         }
 
         runServer();
     }
 
+	/**
+	 * Runs the server so that clients can connect and interact with the shop.
+	 *
+	 * Until someone forcibly terminates the server, like with a cntrl-c command,
+	 * will continually accept connections to clients.
+	 * I/O streams on the socket are opened to each client for communcation.
+	 * A thread pool of 10 worker threads works with clients. Clients terminating
+	 * frees up worker threads to work with new clients.
+	 */
     private void runServer () {
-        try {
-            while (true) {
-                ShopController shop = new ShopController(serverSocket.accept());
-                pool.execute(shop);
-            }
-        }catch (IOException e){
-            System.err.println("There was an error accepting a new client, finishing all connections" +
-                    "with remaining clients");
-            pool.shutdown();
-            try {
-                serverSocket.close();
-            }catch (IOException ex){
-                System.err.println("Error closing the socket, unauthorized stuff going on?");
-                System.err.println(ex.getMessage());
-            }
-        }
+        try 
+		{	
+            while (true) 
+			{
+				//Accept a connection to a client.
+				clientSocket = socket.accept();
+				
+				Runnable shop = new ShopController(clientSocket);
+				
+				pool.execute(shop);
+				/*
+				//Accept a connection to an X player client
+				xSocket = sSocket.accept();
+				//Get I/O streams for the X player client socket
+				inputReaderX = new BufferedReader(new InputStreamReader(xSocket.getInputStream()));
+				outputWriterX = new PrintWriter(xSocket.getOutputStream(), true);
+				
+				//Inform the user that they have connected to the game and are waiting for the opponent.
+				outputWriterX.println("~~~~~~~~~~~~~~~ WELCOME TO THE GAME OF TIC-TAC-TOE ~~~~~~~~~~~~~~~\n");
+				outputWriterX.println("Connected to the server successfully."); 
+				outputWriterX.println("Waiting for an opponent to connect...");
+
+				//Accept a connection to an O player client
+				oSocket = sSocket.accept();
+				//Get I/O streams for the O player client socket
+				inputReaderO = new BufferedReader(new InputStreamReader(oSocket.getInputStream()));
+				outputWriterO = new PrintWriter(oSocket.getOutputStream(), true);
+				outputWriterO.println("~~~~~~~~~~~~~~~ WELCOME TO THE GAME OF TIC-TAC-TOE ~~~~~~~~~~~~~~~\n");
+				outputWriterO.println("Connected to the server successfully."); 
+				outputWriterO.println("Waiting for the \'X\' player to choose their name...");
+									  
+				//Start a new Game using the client socket I/O streams
+				Runnable ticTacToeGame = new Game(inputReaderX, outputWriterX,
+												  inputReaderO, outputWriterO);
+				
+				System.out.println("Started a new game...");
+				
+				threadPool.execute(ticTacToeGame);
+				*/
+			}
+		}
+       //close all streams.
+		catch(IOException ioErr)
+		{
+			System.out.println(ioErr.getMessage());
+		}
+		pool.shutdown();
     }
 
 
-    public static void main (String []args){
+    protected  static void main (String arg []){
         ServerController myServer = new ServerController();
     }
 
