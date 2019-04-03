@@ -8,7 +8,7 @@ package client.ClientControllers;
  * @version 1.0
  * @since April 1, 2019
  */
-public interface SCCommunicationConstants
+interface SCCommunicationConstants
 {
 	/**
 	 * A string message containing this string is asking for objects.

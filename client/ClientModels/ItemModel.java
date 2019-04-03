@@ -1,6 +1,7 @@
 package client.ClientModels;
 
 public class ItemModel {
+	static final long serialVersionUID = 60L;
 	private SupplierModel supplier;
 	private int id;
 	private String desc;

@@ -49,7 +49,7 @@ public class ClientController implements SCCommunicationConstants {
 	/**
 	 * List of orders held by the store.
 	 */
-	private ArrayList<OrderModel> orderList;
+	private ArrayList<OrderLineModel> orderList;
 
 	/**
 	 * Verifies if the client-server connection can still run
@@ -298,7 +298,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * @return An ArrayList of the orders.
 	 * @throws IOException
 	 */
-	public ArrayList<OrderModel> retrieveOrderListFromServer() throws IOException {
+	public ArrayList<OrderLineModel> retrieveOrderListFromServer() throws IOException {
 		try {
 			outputWriter.writeObject(scQuery + scOrder);
 			outputWriter.flush();
@@ -312,7 +312,7 @@ public class ClientController implements SCCommunicationConstants {
 			if (serverResponse.contains(scError))
 				return null;
 
-			return (ArrayList<OrderModel>) inputReader.readObject();
+			return (ArrayList<OrderLineModel>) inputReader.readObject();
 		} catch (IOException readErr) {
 			throw new IOException("Error: could not read the server's message.");
 		} catch (ClassNotFoundException classErr) {
@@ -363,10 +363,10 @@ public class ClientController implements SCCommunicationConstants {
 	 * Sends an Array List of Orders to the server to update the
 	 * server Orders in the database.
 	 *
-	 * @param orderList An ArrayList of OrderModel to update the database.
+	 * @param orderList An ArrayList of OrderLineModel to update the database.
 	 * @throws IOException
 	 */
-	public void sendOrderListToServer(ArrayList<OrderModel> orderList) throws IOException {
+	public void sendOrderListToServer(ArrayList<OrderLineModel> orderList) throws IOException {
 		try {
 			outputWriter.writeObject(scData + scOrder);
 
@@ -494,7 +494,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * @return A list of orders after the quantity check.
 	 * @throws IOException
 	 */
-	public ArrayList<OrderModel> sendQuantityCheck() throws IOException {
+	public ArrayList<OrderLineModel> sendQuantityCheck() throws IOException {
 		try {
 			outputWriter.writeObject(scCheck + scItem);
 			outputWriter.flush();
@@ -525,6 +525,13 @@ public class ClientController implements SCCommunicationConstants {
 		if (fileInput.readItemFile(fileName, itemList))
 		{
 			displayItems(display);
+			try {
+				sendItemListToServer(itemList);
+			}
+			catch (IOException ex)
+			{
+				return "Error sending data to server.";
+			}
 			return "Successfully loaded items from file";
 		}
 		return "There was a problem reading the file, perhaps it doesn't exist.\n" +
@@ -537,6 +544,13 @@ public class ClientController implements SCCommunicationConstants {
 		if (fileInput.readSupplierFile(fileName, supplierList))
 		{
 			displaySuppliers(display);
+			try {
+				sendSupplierListToServer(supplierList);
+			}
+			catch (IOException ex)
+			{
+				return "Error sending data to server.";
+			}
 			return "Successfully loaded suppliers from file";
 		}
 		return "There was a problem reading the file, perhaps it doesn't exist.\n" +
@@ -560,6 +574,8 @@ public class ClientController implements SCCommunicationConstants {
 			display.addElement(i.toString());
 		}
 	}
+
+	public void orderItem(){}
 
 	/**
 	 * Constructor.
