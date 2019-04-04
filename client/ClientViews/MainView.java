@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Scanner;
 
-public class MainView {
+class MainView {
 
 	private JFrame mainWindow;
 	private JButton[] buttons = new JButton[8];

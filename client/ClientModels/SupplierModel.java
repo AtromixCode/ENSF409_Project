@@ -33,8 +33,7 @@ public class SupplierModel implements Serializable, Cloneable
 		this.salesContact = sContact;
 	}
 
-	@Override
-	public String toString(){
+	public String displayString(){
 		return "<html><pre> "+id+"\t\t"+companyName+"\t\t"+address+"\t\t"+salesContact+"</pre></html>";
 	}
 }

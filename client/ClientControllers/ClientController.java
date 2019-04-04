@@ -562,7 +562,7 @@ public class ClientController implements SCCommunicationConstants {
 		display.clear();
 		for(SupplierModel s: supplierList)
 		{
-			display.addElement(s.toString());
+			display.addElement(s.displayString());
 		}
 	}
 
@@ -571,7 +571,7 @@ public class ClientController implements SCCommunicationConstants {
 		display.clear();
 		for(ItemModel i: itemList)
 		{
-			display.addElement(i.toString());
+			display.addElement(i.displayString());
 		}
 	}
 
@@ -592,9 +592,13 @@ public class ClientController implements SCCommunicationConstants {
 
 		try {
 			clientSocket = new Socket(serverName, portNum);
-			inputReader = new ObjectInputStream(clientSocket.getInputStream());
+			System.out.println("Here");
 			outputWriter = new ObjectOutputStream(clientSocket.getOutputStream());
+			System.out.println("Here2");
+			inputReader = new ObjectInputStream(clientSocket.getInputStream());
+			System.out.println("Here3");
 			outputWriter.flush();
+			System.out.println("Here4");
 		} catch (IOException ioErr) {
 			System.out.println(ioErr.getMessage());
 		}

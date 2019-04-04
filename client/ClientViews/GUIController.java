@@ -8,14 +8,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Scanner;
 
-class GUI {
+class GUIController {
 
 	private MainView mv;
 	private SupplierView sv;
 	private OrderView ov;
 	private ClientController cc;
 
-	protected GUI(ClientController controller){
+	protected GUIController (ClientController controller){
 		mv = new MainView();
 		sv = new SupplierView();
 		ov = new OrderView();
@@ -175,6 +175,6 @@ class GUI {
 	public static void main(String args[])
 	{
 		ClientController client = new ClientController("localhost", 8428);
-		GUI g = new GUI(client);
+		GUIController g = new GUIController(client);
 	}
 }

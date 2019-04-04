@@ -1,7 +1,10 @@
 package client.ClientModels;
 
-public class ItemModel {
-	static final long serialVersionUID = 60L;
+import java.io.Serializable;
+
+public class ItemModel implements Serializable, Cloneable {
+
+	static final long serialVersionUID = 1L;
 	private SupplierModel supplier;
 	private int id;
 	private String desc;
@@ -18,9 +21,13 @@ public class ItemModel {
 		this.supplierID = supplierID;
 	}
 
+	public String displayString() {
+		return "<html><pre> "+id+"\t\t"+desc+"\t\t"+quantity+"\t\t"+price+"\t\t"+supplierID+"</pre></html>";
+	}
+
 	@Override
 	public String toString() {
-		return "<html><pre> "+id+"\t\t"+desc+"\t\t"+quantity+"\t\t"+price+"\t\t"+supplierID+"</pre></html>";
+		return "ItemModel Name: " +desc+ ", Quantity: " +quantity+ ", Price " +price+ ", ItemModel ID: "+id+", SupplierModel ID: "+supplierID+ ".\n";
 	}
 
 	public Object clone() throws CloneNotSupportedException
