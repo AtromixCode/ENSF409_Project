@@ -39,7 +39,7 @@ public class ItemModel implements Serializable, Cloneable{
                 "Amount ordered:\t\t"+(50-quantity);
     }
 
-    protected String orderInfoSupplier()
+    public String orderInfoSupplier()
     {
         return supplier.info();
     }

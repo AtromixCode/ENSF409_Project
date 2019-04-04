@@ -139,8 +139,6 @@ public class InventoryController
         return items;
     }
 
-    public void setItems(ArrayList<ItemModel> items){this.items = items;}
-
     protected void updateItemList (ArrayList<ItemModel> listItem){
         items = listItem;
     }

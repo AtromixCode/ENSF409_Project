@@ -1,12 +1,9 @@
 package ServerPackage.ServerControllers;
 
-//import ServerPackage.ServerControllers.DataBaseController;
 import Models.ItemModel;
 import Models.OrderLineModel;
 import Models.OrderModel;
 import Models.SupplierModel;
-import ServerPackage.ServerControllers.InventoryController;
-import ServerPackage.ServerControllers.SCCommunicationConstants;
 
 import java.io.*;
 import java.net.Socket;
@@ -96,8 +93,10 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		{
 			String clientOpeningMessage = (String)inputReader.readObject();
 		
-			if(clientOpeningMessage.contains(scQuit))
+			if(clientOpeningMessage.contains(scQuit)) {
+				System.out.println("Client Disconnected");
 				return false;
+			}
 			
 			int opcode = 0;
 			
@@ -282,7 +281,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		try
 		{
 			tempList = (ArrayList<ItemModel>)inputReader.readObject();
-            System.out.printf(tempList.toString());
 		}
 		catch(IOException readErr)
 		{
@@ -296,6 +294,10 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		}	
 		
 		inv.updateItemList(tempList);
+		for (ItemModel i: inv.getItems())
+		{
+			System.out.println(i.toString());
+		}
 		if(!suppliers.isEmpty()){
 		    if(inv.checkIfOrder()){
 		        inv.generateOrder(order);
@@ -314,11 +316,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		try
 		{
 			tempList = (ArrayList<SupplierModel>)inputReader.readObject();
-			suppliers = tempList;
-			for (SupplierModel i: suppliers)
-			{
-				System.out.println(i.toString());
-			}
 		}
 		catch(IOException readErr)
 		{
@@ -332,6 +329,10 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		}	
 		suppliers = tempList;
 		data.updateSupplierList(tempList);
+		for (SupplierModel s: suppliers)
+		{
+			System.out.println(s.toString());
+		}
 	}
 	
 		
@@ -463,6 +464,10 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			ItemModel deleteItem = (ItemModel)inputReader.readObject();
 			inv.removeItem(deleteItem);
 			data.removeItem(deleteItem);
+			for (ItemModel i: inv.getItems())
+			{
+				System.out.println(i.toString());
+			}
 
 		}
 		catch(IOException readErr)
