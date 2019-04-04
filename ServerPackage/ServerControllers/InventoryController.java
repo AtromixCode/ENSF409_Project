@@ -1,7 +1,7 @@
 package ServerPackage.ServerControllers;
 
-import ServerPackage.ServerModels.ItemModel;
-import ServerPackage.ServerModels.OrderModel;
+import Models.ItemModel;
+import Models.OrderModel;
 
 import java.io.*;
 import java.util.ArrayList;

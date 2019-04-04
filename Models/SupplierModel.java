@@ -1,6 +1,4 @@
-package ServerPackage.ServerModels;
-
-import ServerPackage.ServerModels.ItemModel;
+package Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,7 +32,7 @@ public class SupplierModel implements Serializable, Cloneable
         }
     }
 
-    public String info()
+    protected String info()
     {
         return "SupplierModel:\t\t"+companyName;
     }

@@ -1,8 +1,8 @@
 //package ServerPackage.ServerControllers;
 //
-//import ServerPackage.ServerModels.OrderModel;
-//import ServerPackage.ServerModels.ShopController;
-//import ServerPackage.ServerModels.SupplierModel;
+//import Models.OrderModel;
+//import ServerPackage.ServerControllers.ShopController;
+//import Models.SupplierModel;
 //
 //import java.io.FileNotFoundException;
 //import java.io.IOException;

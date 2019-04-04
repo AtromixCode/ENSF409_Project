@@ -6,8 +6,6 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import ServerPackage.ServerModels.*;
-
 /**
  * This class makes the connection between the back end found on the server package and to the client front
  * end found on the client package.

@@ -1,4 +1,4 @@
-package ServerPackage.ServerModels;
+package Models;
 
 import java.io.Serializable;
 
@@ -30,7 +30,7 @@ public class ItemModel implements Serializable, Cloneable{
     @Override
     public String toString()
     {
-        return "ItemModel Name: " +desc+ ", Quantity: " +quantity+ ", Price " +price+ ", ItemModel ID: "+id+", SupplierModel ID: "+supplierID+ ".\n";
+        return "In shop. ItemModel Name: " +desc+ ", Quantity: " +quantity+ ", Price " +price+ ", ItemModel ID: "+id+", SupplierModel ID: "+supplierID+ ".\n";
     }
 
     public String orderInfoItem()

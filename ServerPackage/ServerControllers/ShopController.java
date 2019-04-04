@@ -1,14 +1,15 @@
-package ServerPackage.ServerModels;
+package ServerPackage.ServerControllers;
 
 //import ServerPackage.ServerControllers.DataBaseController;
+import Models.ItemModel;
+import Models.OrderModel;
+import Models.SupplierModel;
 import ServerPackage.ServerControllers.InventoryController;
 import ServerPackage.ServerControllers.SCCommunicationConstants;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
-
 
 
 public class ShopController implements Runnable, SCCommunicationConstants {
@@ -297,6 +298,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			{
 				System.out.println(i.toString());
 			}
+
 		}
 		catch(IOException readErr)
 		{
@@ -322,7 +324,11 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		ArrayList<SupplierModel> tempList;
 		try
 		{
-			tempList = (ArrayList<SupplierModel>)inputReader.readObject();		
+			tempList = (ArrayList<SupplierModel>)inputReader.readObject();
+			for (SupplierModel i: tempList)
+			{
+				System.out.println(i.toString());
+			}
 		}
 		catch(IOException readErr)
 		{
@@ -348,7 +354,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		ArrayList<OrderModel> tempList;
 		try
 		{
-			tempList = (ArrayList<OrderModel>)inputReader.readObject();		
+			tempList = (ArrayList<OrderModel>)inputReader.readObject();
 		}
 		catch(IOException readErr)
 		{
