@@ -5,14 +5,46 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * Order view displays the orders of the shop.
+ * 
+ * @author Jake Liu
+ * @author Shamez Meghji
+ * @author Victor Sanchez
+ * @version 1.0
+ * @since March 29, 2019
+ */
 class MainView {
 
+	/**
+	 * main frame for the view.
+	 */
 	private JFrame mainWindow;
+	
+	/**
+	 * List of the 8 buttons for the main functionality of the GUI.
+	 */
 	private JButton[] buttons = new JButton[8];
+	
+	/**
+	 * Descriptive names of the 8 main functional buttons of the GUI.
+	 */
 	private String[] buttonNames = {"Sell Item", "Order Item", "Remove Item", "Add Item", "View Orders", "View Suppliers", "Import Items", "Import Suppliers"};
+	
+	/**
+	 * The list of items' display information
+	 */
 	private JList<String> itemList;
+	
+	/**
+	 * The list of item's information.
+	 */
 	private DefaultListModel<String> itemListModel;
 
+	/**
+	 * Default constructor.
+	 * By default, frame is visible.
+	 */
 	protected MainView()
 	{
 		mainWindow = new JFrame("Logistics & Information General Management Application");
@@ -26,6 +58,11 @@ class MainView {
 
 	}
 
+	/**
+	 * Creates the panel for the program title.
+	 * 
+	 * @return The title panel.
+	 */
 	private JPanel createTitlePanel()
 	{
 		JPanel titlePanel = new JPanel();
@@ -35,6 +72,11 @@ class MainView {
 		return titlePanel;
 	}
 
+	/**
+	 * Creates the panel for displaying the item list information.
+	 * 
+	 * @return The item list display panel.
+	 */
 	private JPanel createListPanel()
 	{
 		JPanel listPanel = new JPanel(new BorderLayout());
@@ -57,6 +99,11 @@ class MainView {
 		return listPanel;
 	}
 
+	/**
+	 * Creates the panel for the sidebar of functional buttons.
+	 * 
+	 * @return The button panel.
+	 */
 	private JPanel createButtonPanel()
 	{
 
@@ -76,17 +123,31 @@ class MainView {
 		}
 		return buttonPanel;
 	}
+	
+	/**
+	 * Set the visibility of the main window.
+	 * 
+	 * @param visible True if the main window should be visible, false if not.
+	 */
 	protected void setMainWindowVisibility(boolean visible)
 	{
 		mainWindow.setVisible(visible);
 	}
 
+	/**
+	 * Clear the item text in the GUI.
+	 */
 	protected void clearText()
 	{
 		itemListModel.clear();
 	}
 
-
+	/**
+	 * Toggle whether or not the first 3 functional buttons are enabled.
+	 * These buttons require at least one item to be functional.
+	 * 
+	 * @param clickable True if the buttons are clickable, false if not.
+	 */
 	protected void setButtonsClickable(boolean clickable)
 	{
 		for (int i = 0; i<3; i++)
@@ -95,51 +156,105 @@ class MainView {
 		}
 	}
 
+	/**
+	 * Getter function to get the list of item information formatted for the GUI display.
+	 * 
+	 * @return The item information string list for displaying.
+	 */
 	protected JList<String> getItemList(){return itemList;}
 
+	/**
+	 * Getter function to get the list of item information.
+	 * 
+	 * @return The item information string list.
+	 */
 	protected DefaultListModel<String> getItemListModel() {return itemListModel;}
 
+	/**
+	 * Adds an ActionListener for the list of selectable items.
+	 * 
+	 * @param l The ActionListener for the list item selection.
+	 */
 	protected void addListSelectionListener(ListSelectionListener l)
 	{
 		itemList.addListSelectionListener(l);
 	}
 
+	/**
+	 * Adds an ActionListener for the "Sell Item" button
+	 * 
+	 * @param b The ActionListener for clicking the sell item button.
+	 */
 	protected void addButton1ActionListener(ActionListener b)
 	{
 		buttons[0].addActionListener(b);
 	}
-
-
+	
+	/**
+	 * Adds an ActionListener for the "Order Item" button
+	 * 
+	 * @param b The ActionListener for clicking the order item button.
+	 */
 	protected void addButton2ActionListener(ActionListener b)
 	{
 		buttons[1].addActionListener(b);
 	}
 
+	/**
+	 * Adds an ActionListener for the "Remove Item" button
+	 * 
+	 * @param b The ActionListener for clicking the remove item button.
+	 */
 	protected void addButton3ActionListener(ActionListener b)
 	{
 		buttons[2].addActionListener(b);
 	}
 
+	/**
+	 * Adds an ActionListener for the "Add Item" button
+	 * 
+	 * @param b The ActionListener for clicking the add item button.
+	 */
 	protected void addButton4ActionListener(ActionListener b)
 	{
 		buttons[3].addActionListener(b);
 	}
-
+	
+	/**
+	 * Adds an ActionListener for the "View Orders" button
+	 * 
+	 * @param b The ActionListener for clicking the button to view orders.
+	 */
 	protected void addButton5ActionListener(ActionListener b)
 	{
 		buttons[4].addActionListener(b);
 	}
 
+	/**
+	 * Adds an ActionListener for the "View Suppliers" button
+	 * 
+	 * @param b The ActionListener for clicking the button to view suppliers.
+	 */
 	protected void addButton6ActionListener(ActionListener b)
 	{
 		buttons[5].addActionListener(b);
 	}
 
+	/**
+	 * Adds an ActionListener for the "Import Items" button
+	 * 
+	 * @param b The ActionListener for clicking the button to import items from a file.
+	 */
 	protected void addButton7ActionListener(ActionListener b)
 	{
 		buttons[6].addActionListener(b);
 	}
 
+	/**
+	 * Adds an ActionListener for the "Import Suppliers" button
+	 * 
+	 * @param b The ActionListener for clicking the button to import suppliers from a file.
+	 */
 	protected void addButton8ActionListener(ActionListener b)
 	{
 		buttons[7].addActionListener(b);

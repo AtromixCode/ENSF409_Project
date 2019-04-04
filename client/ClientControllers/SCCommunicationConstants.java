@@ -5,6 +5,8 @@ package client.ClientControllers;
  * message communication.
  *
  * @author Jake Liu
+ * @author Shamez Meghji
+ * @author Victor Sanchez
  * @version 1.0
  * @since April 1, 2019
  */

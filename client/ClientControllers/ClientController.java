@@ -15,6 +15,8 @@ import Models.SupplierModel;
  * Sent lists can be created from text files.
  *
  * @author Jake Liu
+ * @author Shamez Meghji
+ * @author Victor Sanchez
  * @version 1.0
  * @since March 29, 2019
  */
@@ -55,92 +57,6 @@ public class ClientController implements SCCommunicationConstants {
 	private ArrayList<OrderLineModel> orderList;
 
 	/**
-	 * Verifies if the client-server connection can still run
-	 * close all streams and terminate.
-	 */
-	 /*
-	public void connection()
-	{
-		try
-		{
-			while(true)
-			{
-				//Get a message from the server
-				String serverMessage = (String)inputReader.readObject();
-
-				//Session is over, so stop communicating with the server
-				if(serverMessage.equals("Client Quit"))
-					break;
-
-				//Act on the server's message.
-				interpretServerMessage(serverMessage);
-			}
-		}
-		catch(IOException ioErr)
-		{
-			System.out.println(ioErr.getMessage());
-		}
-
-		//close client processes before terminating.
-		try
-		{
-			inputReader.close();
-			outputWriter.close();
-			cSocket.close();
-		}
-		catch(IOException shutDownErr)
-		{
-			System.out.println("Error when closing: " + shutDownErr.getMessage());
-		}
-	}
-*/
-	/**
-	 * Verifies if the client-server connection can still run.
-	 * If it cannot, then the client will close all streams and terminate.
-	 *
-	 * @return true if the connection is still valid. If false, then a new client
-	 * 				will need to be created.
-	 */
-	/*
-	public boolean checkConnection()
-	{
-		try
-		{
-			while(true)
-			{
-
-
-				//Get a message from the server
-				String serverMessage = (String)inputReader.readObject();
-
-				//Session is over, so stop communicating with the server
-				if(serverMessage.equals("Client Quit"))
-					break;
-
-				//Act on the server's message.
-				interpretServerMessage(serverMessage);
-			}
-		}
-		catch(IOException ioErr)
-		{
-			System.out.println(ioErr.getMessage());
-		}
-
-		try
-		{
-			inputReader.close();
-			outputWriter.close();
-			cSocket.close();
-		}
-		catch(IOException shutDownErr)
-		{
-			System.out.println("Error when closing: " + shutDownErr.getMessage());
-		}
-		return true;
-	}
-	*/
-
-	/**
 	 * Informs the server that the client is done communicating with the server.
 	 * closes all streams and sockets.
 	 */
@@ -154,45 +70,6 @@ public class ClientController implements SCCommunicationConstants {
 			System.out.println("Error when closing: " + shutDownErr.getMessage());
 		}
 	}
-
-	/**
-	 * Sends a message from the server and then reads and returns
-	 * the following reply from the server.
-	 *
-	 * @throws IOException
-	 */
-	 /*
-	public Object retrieveObjectFromServer(String messageToServer)
-	{
-		try
-		{
-			outputWriter.writeObject(scQuery + scItem);
-			outputWriter.flush();
-		}
-		catch(IOException writeErr)
-		{
-			throw new IOException("Error: could not send opening message to the server.");
-		}
-
-		try
-		{
-			String serverResponse = (String)inputReader.readObject();
-
-			if(serverResponse.contains(scError))
-				throw new IOException("Error: server could not send the item list.");
-
-			return inputReader.readObject();
-		}
-		catch(IOException readErr)
-		{
-			throw new IOException("Error: could not read the server's message.");
-		}
-		catch(ClassNotFoundException classErr)
-		{
-			throw new IOException("Error: could not properly read the object.");
-		}
-	}
-	*/
 
 	/**
 	 * Asks the server for the items held in the database.
@@ -225,7 +102,7 @@ public class ClientController implements SCCommunicationConstants {
 
 	/**
 	 * Asks the server for the suppliers held in the database.
-	 * throws null if there is an error in the server.
+	 * throws an error if there is an error in the server.
 	 *
 	 * @return An ArrayList of the suppliers.
 	 * @throws IOException
@@ -252,51 +129,9 @@ public class ClientController implements SCCommunicationConstants {
 		}
 	}
 
-
-	/**
-	 * Asks the server for the suppliers held in the database.
-	 * throws null if there is an error in the server.
-	 *
-	 * @return An ArrayList of the suppliers.
-	 * throws IOException
-	 */
-	 /*
-	public ArrayList<SupplierModel> retrieveSupplierListFromServer() throws IOException
-	{
-		try
-		{
-			outputWriter.writeObject(scQuery + scSupplier);
-			outputWriter.flush();
-		}
-		catch(IOException writeErr)
-		{
-			throw new IOException("Error: could not send opening message to the server.");
-		}
-
-		try
-		{
-			String serverResponse = (String)inputReader.readObject();
-
-			if(serverResponse.contains(scError))
-				return null;
-
-			return (ArrayList<SupplierModel>)inputReader.readObject();
-		}
-		catch(IOException readErr)
-		{
-			throw new IOException("Error: could not read the server's message.");
-		}
-		catch(ClassNotFoundException classErr)
-		{
-			throw new IOException("Error: could not properly read the object.");
-		}
-	}
-
-	*/
-
 	/**
 	 * Asks the server for the orders held in the database.
-	 * throws null if there is an error in the server.
+	 * throws an error if there is an error in the server.
 	 *
 	 * @return An ArrayList of the orders.
 	 * @throws IOException
@@ -413,7 +248,7 @@ public class ClientController implements SCCommunicationConstants {
 		try {
 			outputWriter.writeObject(scSearch + scItem + scInt);
 
-			outputWriter.writeObject(new Integer(itemId));
+			outputWriter.writeObject(itemId);
 
 			outputWriter.flush();
 		} catch (IOException writeErr) {
@@ -522,7 +357,16 @@ public class ClientController implements SCCommunicationConstants {
 
 		return cloneList;
 	}
-
+	
+	/**
+	 * Attempts to read a file with the given filename,converting it into
+	 * a list of items, before sending the list to the server.
+	 * If the file cannot be read, nothing else happens.
+	 * 
+	 * @param fileName The name of the file to be read.
+	 * @param display The list to have the supplies potentially read into.
+	 * @return A description of how the attempt went.
+	 */
 	public String readItems(String fileName, DefaultListModel<String> display)
 	{
 		if (fileInput.readItemFile(fileName, itemList))
@@ -541,7 +385,15 @@ public class ClientController implements SCCommunicationConstants {
 				"Reminder: Don't forget to include the .txt";
 	}
 
-
+	/**
+	 * Attempts to read a file with the given filename,converting it into
+	 * a list of items, before sending the list to the server.
+	 * If the file cannot be read, nothing else happens.
+	 * 
+	 * @param fileName The name of the file to be read.
+	 * @param display The list to have the items potentially read into.
+	 * @return A description of how the attempt went.
+	 */
 	public String readSuppliers(String fileName, DefaultListModel<String> display)
 	{
 		if (fileInput.readSupplierFile(fileName, supplierList))
@@ -560,6 +412,12 @@ public class ClientController implements SCCommunicationConstants {
 				"Reminder: Don't forget to include the .txt";
 	}
 
+	/**
+	 * Fills/overwrites a given list model with the strings of 
+	 * the supplier list.
+	 * 
+	 * @param display The list model to fill with item Strings.
+	 */
 	protected void displaySuppliers(DefaultListModel<String> display)
 	{
 		display.clear();
@@ -569,6 +427,12 @@ public class ClientController implements SCCommunicationConstants {
 		}
 	}
 
+	/**
+	 * Fills/overwrites a given list model with the strings of 
+	 * the item list.
+	 * 
+	 * @param display The list model to fill with item Strings
+	 */
 	protected void displayItems(DefaultListModel<String> display)
 	{
 		display.clear();
@@ -578,7 +442,7 @@ public class ClientController implements SCCommunicationConstants {
 		}
 	}
 
-	public void orderItem(){}
+	//public void orderItem(){}
 
 	/**
 	 * Constructor.
@@ -596,15 +460,15 @@ public class ClientController implements SCCommunicationConstants {
 		try {
 			clientSocket = new Socket(serverName, portNum);
 			outputWriter = new ObjectOutputStream(clientSocket.getOutputStream());
+			outputWriter.flush();		
 			inputReader = new ObjectInputStream(clientSocket.getInputStream());
-			outputWriter.flush();
 		} catch (IOException ioErr) {
 			System.out.println(ioErr.getMessage());
 		}
 	}
 
 	/**
-	 * Main method for the client.
+	 * Main method for the client, used for testing.
 	 * Creates and runs a client, which tries to connect to a game server
 	 * on port 8428.
 	 *
@@ -613,6 +477,6 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public static void main(String[] args) throws IOException {
 		ClientController client = new ClientController("localhost", 8428);
-		System.out.println("lmao");
+		System.out.println("Testing ClienController concluded.");
 	}
 }
