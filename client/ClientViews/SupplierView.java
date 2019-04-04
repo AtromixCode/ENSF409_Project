@@ -16,7 +16,7 @@ class SupplierView {
 	protected SupplierView()
 	{
 		supplierWindow = new JFrame("Logistics & Information General Management Application");
-		supplierWindow.setSize(600,500);
+		supplierWindow.setSize(800,500);
 		supplierWindow.setResizable(false);
 		supplierWindow.add(createButtonPanel(), "South");
 		supplierWindow.add(createListPanel(),"Center");
@@ -42,14 +42,11 @@ class SupplierView {
 		suppliersLabel.setFont(new Font("Arial", Font.PLAIN,16));
 		labelPanel.add(suppliersLabel, "North");
 		labelPanel.add(Box.createRigidArea(new Dimension(10,10)));
-		labelPanel.add(new JLabel("Supplier ID:              Supplier Name:                          " +
-				"Supplier Address:                                      Contact:"),"South");
+		labelPanel.add(new JLabel("Supplier ID:              Supplier Name:                                       " +
+				"    Supplier Address:                                                        Contact:"), "South");
 		listPanel.add(labelPanel, "North");
 		supplierListModel = new DefaultListModel<String>();
 		supplierList = new JList<String>(supplierListModel);
-//		for (int i=0; i<100; i++) {
-//			supplierListModel.addElement("<html><pre> "+(8000+i)+"\t\tGrommet Builders\t788 30th St., SE, Calgary\tFred </pre></html>");
-//		}
 		supplierList.setVisibleRowCount(20);
 		JScrollPane listPane = new JScrollPane(supplierList);
 		listPanel.add(listPane, "Center");
@@ -61,6 +58,11 @@ class SupplierView {
 	protected void setSupplierWindowVisibility(boolean visible)
 	{
 		supplierWindow.setVisible(visible);
+	}
+
+	public void addSupplierActionListener(ActionListener b)
+	{
+		addSupplier.addActionListener(b);
 	}
 
 	protected void addCloseButtonListener(){

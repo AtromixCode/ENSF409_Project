@@ -48,9 +48,6 @@ class MainView {
 		listPanel.add(labelPanel, "North");
 		itemListModel = new DefaultListModel<String>();
 		itemList = new JList<String>(itemListModel);
-//		for (int i=0; i<100; i++) {
-//			itemListModel.addElement("<html><pre> "+(1000+i)+"\t\tKnock Bits\t88\t\t$12.67\t\t8015 </pre></html>");
-//		}
 		itemList.setVisibleRowCount(20);
 		JScrollPane listPane = new JScrollPane(itemList);
 		listPanel.add(listPane, "Center");

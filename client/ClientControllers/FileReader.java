@@ -21,6 +21,7 @@ public class FileReader {
 		try {
 			fileIn = new FileInputStream(fileName);
 			read = new BufferedReader(new InputStreamReader(fileIn));
+			items.clear();
 			String line = read.readLine();
 			while (line != null){
 				ItemModel a = readItemValues(line);
@@ -41,6 +42,7 @@ public class FileReader {
 	public boolean readSupplierFile(String fileName, ArrayList<SupplierModel> suppliers)
 	{
 		try {
+			suppliers.clear();
 			fileIn = new FileInputStream(fileName);
 			read = new BufferedReader(new InputStreamReader(fileIn));
 			String line = read.readLine();

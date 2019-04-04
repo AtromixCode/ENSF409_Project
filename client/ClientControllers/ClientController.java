@@ -5,18 +5,18 @@ import java.net.Socket;
 import java.util.*;
 import javax.swing.DefaultListModel;
 
-import Models.ItemModel;
-import Models.OrderLineModel;
-import Models.SupplierModel;
+import Models.*;
+import server.Supplier;
 
 /**
  * When run, connects the client to the server, and allows the client
- * to send and recieve lists of items, suppliers, and orders.
+ * to send and receive lists of items, suppliers, and orders.
  * Sent lists can be created from text files.
  *
  * @author Jake Liu
+ * @author Shamez Meghji
  * @version 1.0
- * @since March 29, 2019
+ * @since April 4, 2019
  */
 public class ClientController implements SCCommunicationConstants {
 	/**
@@ -53,6 +53,10 @@ public class ClientController implements SCCommunicationConstants {
 	 * List of orders held by the store.
 	 */
 	private ArrayList<OrderLineModel> orderList;
+
+	private DefaultListModel<String> supplierDisplay;
+
+	private DefaultListModel<String> itemDisplay;
 
 	/**
 	 * Verifies if the client-server connection can still run
@@ -523,15 +527,28 @@ public class ClientController implements SCCommunicationConstants {
 		return cloneList;
 	}
 
-	public String readItems(String fileName, DefaultListModel<String> display)
+	public void setSupplierDisplay(DefaultListModel<String> s){supplierDisplay = s;}
+	public void setItemDisplay(DefaultListModel<String> s){itemDisplay = s;}
+
+	public String[] supplierIdsandNames()
+	{
+		ArrayList<String> list = new ArrayList<String>();
+		for (SupplierModel s: supplierList)
+		{
+			list.add(s.idAndName());
+		}
+		return list.toArray(new String [0]);
+	}
+
+	public String readItems(String fileName)
 	{
 		if (fileInput.readItemFile(fileName, itemList))
 		{
-			displayItems(display);
+			displayItems();
 			try {
 				sendItemListToServer(itemList);
 			}
-			catch (IOException ex)
+			catch (Exception ex)
 			{
 				return "Error sending data to server.";
 			}
@@ -542,15 +559,15 @@ public class ClientController implements SCCommunicationConstants {
 	}
 
 
-	public String readSuppliers(String fileName, DefaultListModel<String> display)
+	public String readSuppliers(String fileName)
 	{
 		if (fileInput.readSupplierFile(fileName, supplierList))
 		{
-			displaySuppliers(display);
+			displaySuppliers();
 			try {
 				sendSupplierListToServer(supplierList);
 			}
-			catch (IOException ex)
+			catch (Exception ex)
 			{
 				return "Error sending data to server.";
 			}
@@ -560,22 +577,72 @@ public class ClientController implements SCCommunicationConstants {
 				"Reminder: Don't forget to include the .txt";
 	}
 
-	protected void displaySuppliers(DefaultListModel<String> display)
+	protected void displaySuppliers()
 	{
-		display.clear();
+		supplierDisplay.clear();
 		for(SupplierModel s: supplierList)
 		{
-			display.addElement(s.displayString());
+			supplierDisplay.addElement(s.displayString());
 		}
 	}
 
-	protected void displayItems(DefaultListModel<String> display)
+	protected void displayItems()
 	{
-		display.clear();
+		itemDisplay.clear();
 		for(ItemModel i: itemList)
 		{
-			display.addElement(i.displayString());
+			itemDisplay.addElement(i.displayString());
 		}
+	}
+
+	public String addSupplier(int id, String name, String address, String contact)
+	{
+		for(SupplierModel s: supplierList)
+		{
+			if (s.getId()==id)
+			{
+				return "Supplier already exists!";
+			}
+		}
+		SupplierModel s = new SupplierModel(id, name, address, contact);
+		supplierList.add(s);
+		displaySuppliers();
+		try
+		{
+			sendSupplierListToServer(supplierList);
+		}
+		catch(Exception ex)
+		{
+			return "Error sending data to server";
+		}
+
+		return "Successfully added supplier.";
+	}
+
+	public String addItem(int id, String name, int quantity, float price, String supplierInfo)
+	{
+		ItemModel i;
+		Scanner scan = new Scanner(supplierInfo);
+		int supId = scan.nextInt();
+		for(SupplierModel s: supplierList)
+		{
+			if (s.getId()==supId)
+			{
+				i = new ItemModel(id, name, quantity, price,s);
+				itemList.add(i);
+			}
+		}
+		displayItems();
+		try
+		{
+			sendItemListToServer(itemList);
+		}
+		catch(Exception ex)
+		{
+			return "Error sending data to server";
+		}
+
+		return "Successfully added item.";
 	}
 
 	public void orderItem(){}

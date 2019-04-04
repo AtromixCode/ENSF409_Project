@@ -33,13 +33,29 @@ public class SupplierModel implements Serializable, Cloneable
 		this.salesContact = sContact;
 	}
 
+	public int getId(){return id;}
+
+
 	@Override
 	public String toString()
 	{
 		return "SupplierModel ID: "+ id + ", Company Name: "+ companyName +", address: "+ address +", Sales Contact: " + salesContact;
 	}
 
+	public String idAndName()
+	{
+		return id + " " + companyName;
+	}
+
 	public String displayString(){
-		return "<html><pre> "+id+"\t\t"+companyName+"\t\t"+address+"\t\t"+salesContact+"</pre></html>";
+		if(companyName.length()>23)
+		{
+			return "<html><pre> "+id+"\t\t"+companyName+"\t"+address+"\t\t"+salesContact+"</pre></html>";
+		}
+		else if (companyName.length()>15)
+		{
+			return "<html><pre> "+id+"\t\t"+companyName+"\t\t"+address+"\t\t"+salesContact+"</pre></html>";
+		}
+		return "<html><pre> "+id+"\t\t"+companyName+"\t\t\t"+address+"\t\t"+salesContact+"</pre></html>";
 	}
 }
