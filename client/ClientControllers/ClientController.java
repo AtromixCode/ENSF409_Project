@@ -461,18 +461,15 @@ public class ClientController implements SCCommunicationConstants {
 		return list.toArray(new String [0]);
 	}
 
-	public String readItems(String fileName)
-
 	/**
 	 * Attempts to read a file with the given filename,converting it into
 	 * a list of items, before sending the list to the server.
 	 * If the file cannot be read, nothing else happens.
 	 *
 	 * @param fileName The name of the file to be read.
-	 * @param display The list to have the supplies potentially read into.
 	 * @return A description of how the attempt went.
 	 */
-	public String readItems(String fileName, DefaultListModel<String> display)
+	public String readItems(String fileName)
 	{
 		if (fileInput.readItemFile(fileName, itemList))
 		{
@@ -496,11 +493,8 @@ public class ClientController implements SCCommunicationConstants {
 	 * If the file cannot be read, nothing else happens.
 	 *
 	 * @param fileName The name of the file to be read.
-	 * @param display The list to have the items potentially read into.
 	 * @return A description of how the attempt went.
 	 */
-	public String readSuppliers(String fileName, DefaultListModel<String> display)
-
 	public String readSuppliers(String fileName)
 	{
 		if (fileInput.readSupplierFile(fileName, supplierList))
@@ -523,9 +517,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * Fills/overwrites a given list model with the strings of
 	 * the supplier list.
 	 *
-	 * @param display The list model to fill with item Strings.
 	 */
-	protected void displaySuppliers(DefaultListModel<String> display)
 	protected void displaySuppliers()
 	{
 		supplierDisplay.clear();
@@ -535,14 +527,12 @@ public class ClientController implements SCCommunicationConstants {
 		}
 	}
 
-	protected void displayItems()
 	/**
 	 * Fills/overwrites a given list model with the strings of
 	 * the item list.
 	 *
-	 * @param display The list model to fill with item Strings
 	 */
-	protected void displayItems(DefaultListModel<String> display)
+	protected void displayItems()
 	{
 		itemDisplay.clear();
 		for(ItemModel i: itemList)

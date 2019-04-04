@@ -49,16 +49,6 @@ public class ItemModel implements Serializable, Cloneable {
 	 */
 	private int supplierID;
 
-	/**
-	 * Item constructor, using the given attribute parameters.
-	 *
-	 * @param id The id of the item.
-	 * @param name The name of the item.
-	 * @param quantity The amount of the item in a stock.
-	 * @param price The price of the item.
-	 * @param supplierID The supplier ID of the item.
-	 */
-	public ItemModel(int id, String name, int quantity, float price, int supplierID)
 	public ItemModel(int id, String name, int quantity, float price, SupplierModel supplier)
 	{
 		this.id = id;
@@ -69,6 +59,15 @@ public class ItemModel implements Serializable, Cloneable {
 		this.supplierID = supplier.getId();
 	}
 
+	/**
+	 * Item constructor, using the given attribute parameters.
+	 *
+	 * @param id The id of the item.
+	 * @param name The name of the item.
+	 * @param quantity The amount of the item in a stock.
+	 * @param price The price of the item.
+	 * @param supplierId The supplier ID of the item.
+	 */
 	public ItemModel(int id, String name, int quantity, float price, int supplierId)
 	{
 		this.id = id;
