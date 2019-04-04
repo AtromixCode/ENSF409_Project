@@ -5,11 +5,35 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Order view displays the orders of the shop.
+ * 
+ * @author Jake Liu
+ * @author Shamez Meghji
+ * @author Victor Sanchez
+ * @version 1.0
+ * @since March 29, 2019
+ */
 class OrderView {
+	/**
+	 * Main JFrame of the window.
+	 */
 	private JFrame orderWindow;
+	
+	/**
+	 * Button to "turn off" (visibility of) the window.
+	 */
 	private JButton closeWindow;
+	
+	/**
+	 * The display area of the orders.
+	 */
 	private JTextArea orderDisplay;
 
+	/**
+	 * Default order constructor constructs the frame.
+	 * By default, is not visible.
+	 */
 	protected OrderView()
 	{
 		orderWindow = new JFrame();
@@ -22,6 +46,11 @@ class OrderView {
 		addCloseButtonListener();
 	}
 
+	/**
+	 * Create the panel of labels for the list of orders.
+	 * 
+	 * @return The label panel.
+	 */
 	private JPanel createLabelPanel()
 	{
 		JPanel labelPanel = new JPanel();
@@ -31,6 +60,11 @@ class OrderView {
 		return labelPanel;
 	}
 
+	/**
+	 * Create the panel to display the order information.
+	 * 
+	 * @return The order information panel.
+	 */
 	private JPanel createDisplayPanel()
 	{
 		JPanel displayPanel = new JPanel();
@@ -45,6 +79,11 @@ class OrderView {
 		return displayPanel;
 	}
 
+	/**
+	 * Create the panel for the buttons to close the window.
+	 * 
+	 * @return The button panel.
+	 */
 	private JPanel createButtonPanel()
 	{
 		JPanel buttonPanel = new JPanel();
@@ -53,11 +92,20 @@ class OrderView {
 		return buttonPanel;
 	}
 
+	/**
+	 * Set the visibility of the Order window.
+	 * 
+	 * @param visible True if the order window should be visible, false if not.
+	 */
 	protected void setWindowVisibility(boolean visibility)
 	{
 		orderWindow.setVisible(visibility);
 	}
 
+	/**
+	 * Adds an anonymous inner class ActionListener to the close buttons
+	 * of the order window, in order to set off visibility.
+	 */
 	protected void addCloseButtonListener(){
 		closeWindow.addActionListener(new ActionListener() {
 			@Override

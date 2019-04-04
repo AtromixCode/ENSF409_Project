@@ -15,6 +15,8 @@ import server.Supplier;
  *
  * @author Jake Liu
  * @author Shamez Meghji
+ * @author Shamez Meghji
+ * @author Victor Sanchez
  * @version 1.0
  * @since April 4, 2019
  */
@@ -160,45 +162,6 @@ public class ClientController implements SCCommunicationConstants {
 	}
 
 	/**
-	 * Sends a message from the server and then reads and returns
-	 * the following reply from the server.
-	 *
-	 * @throws IOException
-	 */
-	 /*
-	public Object retrieveObjectFromServer(String messageToServer)
-	{
-		try
-		{
-			outputWriter.writeObject(scQuery + scItem);
-			outputWriter.flush();
-		}
-		catch(IOException writeErr)
-		{
-			throw new IOException("Error: could not send opening message to the server.");
-		}
-
-		try
-		{
-			String serverResponse = (String)inputReader.readObject();
-
-			if(serverResponse.contains(scError))
-				throw new IOException("Error: server could not send the item list.");
-
-			return inputReader.readObject();
-		}
-		catch(IOException readErr)
-		{
-			throw new IOException("Error: could not read the server's message.");
-		}
-		catch(ClassNotFoundException classErr)
-		{
-			throw new IOException("Error: could not properly read the object.");
-		}
-	}
-	*/
-
-	/**
 	 * Asks the server for the items held in the database.
 	 * throws an error if there is an error in the server interaction.
 	 *
@@ -229,7 +192,7 @@ public class ClientController implements SCCommunicationConstants {
 
 	/**
 	 * Asks the server for the suppliers held in the database.
-	 * throws null if there is an error in the server.
+	 * throws an error if there is an error in the server.
 	 *
 	 * @return An ArrayList of the suppliers.
 	 * @throws IOException
@@ -256,51 +219,9 @@ public class ClientController implements SCCommunicationConstants {
 		}
 	}
 
-
-	/**
-	 * Asks the server for the suppliers held in the database.
-	 * throws null if there is an error in the server.
-	 *
-	 * @return An ArrayList of the suppliers.
-	 * throws IOException
-	 */
-	 /*
-	public ArrayList<SupplierModel> retrieveSupplierListFromServer() throws IOException
-	{
-		try
-		{
-			outputWriter.writeObject(scQuery + scSupplier);
-			outputWriter.flush();
-		}
-		catch(IOException writeErr)
-		{
-			throw new IOException("Error: could not send opening message to the server.");
-		}
-
-		try
-		{
-			String serverResponse = (String)inputReader.readObject();
-
-			if(serverResponse.contains(scError))
-				return null;
-
-			return (ArrayList<SupplierModel>)inputReader.readObject();
-		}
-		catch(IOException readErr)
-		{
-			throw new IOException("Error: could not read the server's message.");
-		}
-		catch(ClassNotFoundException classErr)
-		{
-			throw new IOException("Error: could not properly read the object.");
-		}
-	}
-
-	*/
-
 	/**
 	 * Asks the server for the orders held in the database.
-	 * throws null if there is an error in the server.
+	 * throws an error if there is an error in the server.
 	 *
 	 * @return An ArrayList of the orders.
 	 * @throws IOException
@@ -417,7 +338,7 @@ public class ClientController implements SCCommunicationConstants {
 		try {
 			outputWriter.writeObject(scSearch + scItem + scInt);
 
-			outputWriter.writeObject(new Integer(itemId));
+			outputWriter.writeObject(itemId);
 
 			outputWriter.flush();
 		} catch (IOException writeErr) {
@@ -541,6 +462,17 @@ public class ClientController implements SCCommunicationConstants {
 	}
 
 	public String readItems(String fileName)
+
+	/**
+	 * Attempts to read a file with the given filename,converting it into
+	 * a list of items, before sending the list to the server.
+	 * If the file cannot be read, nothing else happens.
+	 *
+	 * @param fileName The name of the file to be read.
+	 * @param display The list to have the supplies potentially read into.
+	 * @return A description of how the attempt went.
+	 */
+	public String readItems(String fileName, DefaultListModel<String> display)
 	{
 		if (fileInput.readItemFile(fileName, itemList))
 		{
@@ -558,6 +490,16 @@ public class ClientController implements SCCommunicationConstants {
 				"Reminder: Don't forget to include the .txt";
 	}
 
+	/**
+	 * Attempts to read a file with the given filename,converting it into
+	 * a list of items, before sending the list to the server.
+	 * If the file cannot be read, nothing else happens.
+	 *
+	 * @param fileName The name of the file to be read.
+	 * @param display The list to have the items potentially read into.
+	 * @return A description of how the attempt went.
+	 */
+	public String readSuppliers(String fileName, DefaultListModel<String> display)
 
 	public String readSuppliers(String fileName)
 	{
@@ -577,6 +519,13 @@ public class ClientController implements SCCommunicationConstants {
 				"Reminder: Don't forget to include the .txt";
 	}
 
+	/**
+	 * Fills/overwrites a given list model with the strings of
+	 * the supplier list.
+	 *
+	 * @param display The list model to fill with item Strings.
+	 */
+	protected void displaySuppliers(DefaultListModel<String> display)
 	protected void displaySuppliers()
 	{
 		supplierDisplay.clear();
@@ -587,6 +536,13 @@ public class ClientController implements SCCommunicationConstants {
 	}
 
 	protected void displayItems()
+	/**
+	 * Fills/overwrites a given list model with the strings of
+	 * the item list.
+	 *
+	 * @param display The list model to fill with item Strings
+	 */
+	protected void displayItems(DefaultListModel<String> display)
 	{
 		itemDisplay.clear();
 		for(ItemModel i: itemList)
@@ -645,7 +601,7 @@ public class ClientController implements SCCommunicationConstants {
 		return "Successfully added item.";
 	}
 
-	public void orderItem(){}
+	//public void orderItem(){}
 
 	/**
 	 * Constructor.
@@ -663,6 +619,7 @@ public class ClientController implements SCCommunicationConstants {
 		try {
 			clientSocket = new Socket(serverName, portNum);
 			outputWriter = new ObjectOutputStream(clientSocket.getOutputStream());
+			outputWriter.flush();
 			inputReader = new ObjectInputStream(clientSocket.getInputStream());
 			outputWriter.flush();
 		} catch (IOException ioErr) {
@@ -671,7 +628,7 @@ public class ClientController implements SCCommunicationConstants {
 	}
 
 	/**
-	 * Main method for the client.
+	 * Main method for the client, used for testing.
 	 * Creates and runs a client, which tries to connect to a game server
 	 * on port 8428.
 	 *
@@ -680,6 +637,6 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public static void main(String[] args) throws IOException {
 		ClientController client = new ClientController("localhost", 8428);
-		System.out.println("lmao");
+		System.out.println("Testing ClienController concluded.");
 	}
 }

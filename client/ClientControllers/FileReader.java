@@ -10,12 +10,36 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
+/**
+ * Reads files using given filenames, reading their text contents into
+ * Items and Suppliers and into given lists.
+ * 
+ * @author Jake Liu
+ * @author Shamez Meghji
+ * @author Victor Sanchez
+ * @version 1.0
+ * @since March 29, 2019
+ */
 public class FileReader {
 
+	/**
+	 * File input stream to read files.
+	 */
 	FileInputStream fileIn;
+	
+	/**
+	 * BufferReader input stream to read from the FileInputStream
+	 */
 	BufferedReader read;
 
+	/**
+	 * Using a given file name, reads a file and converts its contents into items,
+	 * adding them to the given list of items. (Note: no clearing or overwriting)
+	 * 
+	 * @param fileName The filename of the file to be read.
+	 * @param items The list of ItemModel to add the file items to.
+	 * @return true if the operation was successful, false if not.
+	 */
 	public boolean readItemFile(String fileName, ArrayList<ItemModel> items)
 	{
 		try {
@@ -39,6 +63,14 @@ public class FileReader {
 		}
 	}
 
+	/**
+	 * Using a given file name, reads a file and converts its contents into suppliers,
+	 * adding them to the given list of suppliers. (Note: no clearing or overwriting)
+	 * 
+	 * @param fileName The filename of the file to be read.
+	 * @param items The list of SupplierModel to add the file items to.
+	 * @return true if the operation was successful, false if not.
+	 */
 	public boolean readSupplierFile(String fileName, ArrayList<SupplierModel> suppliers)
 	{
 		try {
@@ -52,7 +84,6 @@ public class FileReader {
 				line = read.readLine();
 			}
 			return true;
-
 		}
 		catch (IOException e)
 		{
@@ -64,6 +95,13 @@ public class FileReader {
 		}
 	}
 
+	/**
+	 * Converts a string into a SupplierModel.
+	 * SupplierModel attributes are separated by ';'
+	 * 
+	 * @param r The String to convert into a supplier. 
+	 * @return The supplier version of the string.
+	 */
 	public SupplierModel readSupplierValues(String r)
 	{
 		Scanner s = new Scanner(r).useDelimiter(";");
@@ -74,8 +112,13 @@ public class FileReader {
 		return new SupplierModel(id, companyName, address, salesContact);
 	}
 
-
-
+	/**
+	 * Converts a string into a ItemModel.
+	 * ItemModel attributes are separated by ';'
+	 * 
+	 * @param r The String to convert into an item. 
+	 * @return The item version of the string.
+	 */
 	public ItemModel readItemValues(String r)
 	{
 		Scanner s = new Scanner(r).useDelimiter(";");
@@ -86,5 +129,4 @@ public class FileReader {
 		int supID = s.nextInt();
 		return new ItemModel (id, desc, quantity, price, supID);
 	}
-
 }
