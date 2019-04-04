@@ -13,19 +13,17 @@ import java.util.Date;
 public class OrderModel implements Serializable, Cloneable
 {
 	static final long serialVersionUID = 62L;
-	
-	
+
+
     private PrintWriter fileWrite;
-    private File orderFile;
     private ArrayList<OrderLineModel> orderLines;
     private Date date;
     private SimpleDateFormat format;
-    String dateString;
+    private String dateString;
     private int orderID;
 
-    public OrderModel(File file)
+    public OrderModel()
     {
-        orderFile = file;
         orderLines = new ArrayList<OrderLineModel>();
         date = new Date ();
         format = new SimpleDateFormat("MMMM dd, yyyy");
@@ -33,45 +31,49 @@ public class OrderModel implements Serializable, Cloneable
         orderID = (int)(Math.random() * 90000) + 10000;
     }
 
-
-    public void addLine(ItemModel item)
-    {
-        OrderLineModel ol = new OrderLineModel(item);
-        orderLines.add(ol);
+    public OrderModel (int id, String date, ArrayList<OrderLineModel> lines){
+        orderID = id;
+        dateString = date;
+        orderLines = lines;
     }
 
-    public void createOrder(boolean newLine) throws FileNotFoundException
+
+    public OrderLineModel addLine(ItemModel item)
     {
-        fileWrite = new PrintWriter(new FileOutputStream(orderFile, true));
-        if (newLine) {
-            fileWrite.println("**********************************************************************");
-            fileWrite.println("ORDER ID:\t\t" + orderID + "\r\n" +
-                              "Date Ordered:\t\t" + dateString);
+        OrderLineModel ol = new OrderLineModel(item);
+        for (OrderLineModel temp: orderLines) {
+            if (temp.getDateString().equals(dateString)){
+                ol.copyAttributes(temp);
+                break;
+            }
         }
-        for (OrderLineModel o: orderLines)
-            fileWrite.println(o);
-        fileWrite.close();
+        orderLines.add(ol);
+        return ol;
     }
 
     public String getDateString(){return dateString;}
-	
+
 	public Object clone() throws CloneNotSupportedException
 	{
 		OrderModel temp = (OrderModel)super.clone();
-		if(temp.orderLines != null) 
+		if(temp.orderLines != null)
 		{
 			temp.orderLines = new ArrayList<OrderLineModel>();
 			for(OrderLineModel orderLineInList : orderLines)
 				temp.orderLines.add((OrderLineModel)orderLineInList.clone());
 		}
-		
+
 		if(temp.date != null)
 			temp.date = (Date)date.clone();
-		
+
 		if(temp.format != null)
 			temp.format = (SimpleDateFormat)format.clone();
-		
+
 		return temp;
 	}
+
+	public int getOrderID (){
+        return orderID;
+    }
 
 }

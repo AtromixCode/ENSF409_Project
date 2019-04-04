@@ -7,13 +7,16 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class InventoryController{
+public class InventoryController
+{
 
     private ArrayList<ItemModel> items;
+    private DataBaseController data;
 
-    public InventoryController()
+    public InventoryController(DataBaseController dc)
     {
         items = new ArrayList<ItemModel>();
+        data = dc;
     }
 
     public void addItemsFromFile(String fileName) throws IOException
@@ -66,15 +69,15 @@ public class InventoryController{
         return false;
     }
 
-    public void generateOrder(OrderModel o, boolean stars)throws FileNotFoundException
+    public void generateOrder(OrderModel o)
     {
         for (ItemModel i: items){
             if (i.getQuantity()<40){
-                o.addLine(i);
+                data.addOrderLine(o.addLine(i));
                 i.setQuantity(50);
+                data.addItem(i);
             }
         }
-        o.createOrder(stars);
     }
 
 
@@ -109,15 +112,36 @@ public class InventoryController{
             return "ItemModel not found!";
     }
 
+    protected void updateItem (ItemModel item){
+        for (ItemModel temp : items) {
+            if(temp.getId() == item.getId()){
+                temp.copyAttributes(temp);
+            }
+        }
+    }
+
     public void printAllItems()
     {
         for (ItemModel i: items)
             System.out.println(i);
     }
-    public ArrayList<ItemModel> getItems()
+
+    protected void removeItem (ItemModel item){
+        for (ItemModel temp :items) {
+            if(temp.getId() == item.getId()){
+                items.remove(temp);
+                return;
+            }
+        }
+    }
+    protected ArrayList<ItemModel> getItems()
     {
         return items;
     }
 
     public void setItems(ArrayList<ItemModel> items){this.items = items;}
+
+    protected void updateItemList (ArrayList<ItemModel> listItem){
+        items = listItem;
+    }
 }

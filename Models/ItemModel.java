@@ -65,6 +65,14 @@ public class ItemModel implements Serializable, Cloneable{
         return supplierID;
     }
 
+    public void copyAttributes (ItemModel item){
+        supplier = item.supplier;
+        desc = item.desc;
+        quantity = item.quantity;
+        price = item.price;
+        supplierID = item.supplierID;
+    }
+
 	public Object clone() throws CloneNotSupportedException
 	{
 		ItemModel temp = (ItemModel)super.clone();
@@ -72,4 +80,8 @@ public class ItemModel implements Serializable, Cloneable{
 			temp.supplier = (SupplierModel)supplier.clone();
 		return temp;
 	}
+
+    public float getPrice(){
+        return price;
+    }
 }

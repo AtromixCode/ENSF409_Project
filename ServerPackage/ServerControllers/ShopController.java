@@ -2,6 +2,7 @@ package ServerPackage.ServerControllers;
 
 //import ServerPackage.ServerControllers.DataBaseController;
 import Models.ItemModel;
+import Models.OrderLineModel;
 import Models.OrderModel;
 import Models.SupplierModel;
 import ServerPackage.ServerControllers.InventoryController;
@@ -16,8 +17,13 @@ public class ShopController implements Runnable, SCCommunicationConstants {
     /**
      * The list of orders corresponding to the shop
      */
-    private ArrayList<OrderModel> orders;
+    private ArrayList<OrderLineModel> orders;
 
+
+    /**
+     * The order used to generate more orders
+     */
+    private OrderModel order;
     /**
      * the socket used for communications with the client
      */
@@ -44,24 +50,17 @@ public class ShopController implements Runnable, SCCommunicationConstants {
     private InventoryController inv;
 
     /**
+     * The data controller of the shop
+     */
+    private DataBaseController data;
+
+    /**
      *
      * TODO: ask Shamez wats dis boi do
      * The index of the order???
      */
     private int orderIndex;
 
-    /**
-     * The input from the socket
-     */
-	 /*
-    private BufferedReader socketIn;
-*/
-    /**
-     * The output to the socket
-     */
-	 /*
-    private PrintWriter socketOut;
-*/
 
     /**
      * Constructs a store and does the necessary callings to get up to date
@@ -71,10 +70,11 @@ public class ShopController implements Runnable, SCCommunicationConstants {
     public ShopController(Socket sc)
     {
         clientSocket = sc;
-        //DataBaseController data = new DataBaseController();
-		/**
-		 * TODO: RE-ADD this when it works.
-		 */
+        data = new DataBaseController();
+        inv = new InventoryController(data);
+        suppliers = data.supplierListFromDatabase();
+        orders = data.orderLineListFromDataBase();
+
         try
         {	
 			inputReader = new ObjectInputStream(clientSocket.getInputStream());
@@ -85,16 +85,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
             System.err.println(e.getMessage());
         }
     }
-
-    /**
-     * outputs to the client the given string
-     * @param s the string to output to the client
-     */
-	 /*
-    private void outputToClient (String s){
-        socketOut.println(s);
-    }
-	*/
 
 	/**
 	 * Read opening messages from the client and then respond appropriately.
@@ -190,7 +180,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		return true;
 	}
 
-	public void actOnOpCode(int opcode)
+	private void actOnOpCode(int opcode)
 	{
 		switch(opcode)
 		{
@@ -220,9 +210,8 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * If the list fails to write, instead sends an error message.
 	 * This should result in an error on the client side.
 	 */
-	public void sendItemListToClient()
-	{
-		System.out.println("Worked");
+	private void sendItemListToClient()
+    {
 		try
 		{	
 			outputWriter.writeObject(scOkay);
@@ -233,7 +222,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		}
 		catch(IOException writeErr)
 		{
-			System.err.println(writeErr);
+			System.err.println(writeErr.getMessage());
 			printErrorToClient();
 		}
 	}
@@ -243,9 +232,8 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * If the list fails to write, instead sends an error message.
 	 * This should result in an error on the client side.
 	 */
-	public void sendSupplierListToClient()
+	private void sendSupplierListToClient()
 	{
-		System.out.println("Worked");
 		try
 		{	
 			outputWriter.writeObject(scOkay);
@@ -256,7 +244,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		}
 		catch(IOException writeErr)
 		{
-			System.err.println(writeErr);
+			System.err.println(writeErr.getMessage());
 			printErrorToClient();
 		}
 	}
@@ -266,7 +254,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * If the list fails to write, instead sends an error message.
 	 * This should result in an error on the client side.
 	 */
-	public void sendOrderListToClient()
+	private void sendOrderListToClient()
 	{
 		try
 		{	
@@ -278,7 +266,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		}
 		catch(IOException writeErr)
 		{
-			System.err.println(writeErr);
+			System.err.println(writeErr.getMessage());
 			printErrorToClient();
 		}
 	}
@@ -288,39 +276,39 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * Recieve a list of ItemModel from the client.
 	 * updates the item list across the server and the database.
 	 */
-	public void updateItemListFromClient()
+	private void updateItemListFromClient()
 	{
 		ArrayList<ItemModel> tempList;
 		try
 		{
-			tempList = (ArrayList)inputReader.readObject();
-			inv.setItems(tempList);
-			for (ItemModel i: inv.getItems())
-			{
-				System.out.println(i.toString());
-			}
-
+			tempList = (ArrayList<ItemModel>)inputReader.readObject();
+            System.out.printf(tempList.toString());
 		}
 		catch(IOException readErr)
 		{
-			System.err.println(readErr);
+			System.err.println(readErr.getMessage());
 			return;
 		}
 		catch(ClassNotFoundException classErr)
 		{
-			System.err.println(classErr);
+			System.err.println(classErr.getMessage());
 			return;
 		}	
 		
-		//TODO
-		//update all the lists of items to now be tempList
+		inv.updateItemList(tempList);
+		if(!suppliers.isEmpty()){
+		    if(inv.checkIfOrder()){
+		        inv.generateOrder(order);
+            }
+        }
+
 	}
 	
 	/**
-	 * Recieve a list of SupplierModel from the client.
+	 * Receive a list of SupplierModel from the client.
 	 * updates the supplier list across the server and the database.
 	 */
-	public void updateSupplierListFromClient()
+	private void updateSupplierListFromClient()
 	{
 		ArrayList<SupplierModel> tempList;
 		try
@@ -334,40 +322,44 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		}
 		catch(IOException readErr)
 		{
-			System.err.println(readErr);
+			System.err.println(readErr.getMessage());
 			return;
 		}
 		catch(ClassNotFoundException classErr)
 		{
-			System.err.println(classErr);
+			System.err.println(classErr.getMessage());
 			return;
 		}	
-		//TODO
-		//update all the lists of servers to now be tempList
+		suppliers = tempList;
+		data.updateSupplierList(tempList);
 	}
 	
 		
 	/**
-	 * Recieve a list of OrderModel from the client.
+	 * Receive a list of OrderModel from the client.
 	 * updates the supplier list across the server and the database.
 	 */
-	public void updateOrderListFromClient()
+	private void updateOrderListFromClient()
 	{
-		ArrayList<OrderModel> tempList;
+		ArrayList<OrderLineModel> tempList;
 		try
 		{
-			tempList = (ArrayList<OrderModel>)inputReader.readObject();
+			tempList = (ArrayList<OrderLineModel>)inputReader.readObject();
 		}
 		catch(IOException readErr)
 		{
-			System.err.println(readErr);
+			System.err.println(readErr.getMessage());
 			return;
 		}
 		catch(ClassNotFoundException classErr)
 		{
-			System.err.println(classErr);
+			System.err.println(classErr.getMessage());
 			return;
-		}	
+		}
+
+		orders = tempList;
+		data.updateOrderList(tempList);
+
 		
 		//TODO
 		//update all the lists of orders to now be tempList
@@ -378,7 +370,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * Across the server and in the database, either updates the item in the
 	 * item lists if it already exists, or adds a new item to those lists.
 	 */
-	public void updateItemFromClient()
+	private void updateItemFromClient()
 	{
 		ItemModel changeItem;
 		
@@ -388,14 +380,16 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		}
 		catch(IOException readErr)
 		{
-			System.err.println(readErr);
+			System.err.println(readErr.getMessage());
 			return;
 		}
 		catch(ClassNotFoundException classErr)
 		{
-			System.err.println(classErr);
+			System.err.println(classErr.getMessage());
 			return;
-		}	
+		}
+		data.addItem(changeItem);
+		inv.updateItem(changeItem);
 		
 		//TODO
 		//For all item lists and the database, check if the list contains changeItem.
@@ -411,7 +405,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * @param searchChar What parameter to use when searching for an item.
 	 *					 'i' is for an int id, 's' is for an item name.
 	 */
-	public void searchItemFromClient(char searchChar)
+	private void searchItemFromClient(char searchChar)
 	{
 		
 		try
@@ -421,20 +415,12 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			if(searchChar == 'i')
 			{
 				int searchId = (Integer)inputReader.readObject();
-				
-				//TODO
-				//search for an item using an int id. 
-				//if the item cannot be found, then searchItem needs to be null.
-				//otherwise, searchItem points to the appropriate item.
+				searchItem = inv.findItem(searchId);
 			}
 			else if(searchChar == 'c')
 			{
 				String searchName = (String)inputReader.readObject();
-				
-				//TODO
-				//search for an item using an int id. 
-				//if the item cannot be found, then searchItem needs to be null.
-				//otherwise, searchItem points to the appropriate item.
+				searchItem = inv.findItem(searchName);
 			}
 			else
 				return;
@@ -450,17 +436,17 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		}
 		catch(IOException readErr)
 		{
-			System.err.println(readErr);
+			System.err.println(readErr.getMessage());
 			return;
 		}
 		catch(ClassNotFoundException classErr)
 		{
-			System.err.println(classErr);
+			System.err.println(classErr.getMessage());
 			return;
 		}	
 		catch(CloneNotSupportedException cnsErr)
 		{
-			System.err.println(cnsErr);
+			System.err.println(cnsErr.getMessage());
 			return;
 		}
 	}
@@ -470,24 +456,23 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * Then, attempts to delete the version of that item from the item lists
 	 * of the server and the database.
 	 */
-	public void deleteItemFromClient()
+	private void deleteItemFromClient()
 	{
 		try
 		{
 			ItemModel deleteItem = (ItemModel)inputReader.readObject();
-		
-			//TODO
-			//delete all instances of deleteItem from all lists and the database.
-			//(if they have the same id and/or item name then delete it)
+			inv.removeItem(deleteItem);
+			data.removeItem(deleteItem);
+
 		}
 		catch(IOException readErr)
 		{
-			System.err.println(readErr);
+			System.err.println(readErr.getMessage());
 			return;
 		}
 		catch(ClassNotFoundException classErr)
 		{
-			System.err.println(classErr);
+			System.err.println(classErr.getMessage());
 			return;
 		}	
 	}
@@ -497,19 +482,18 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * If necessary, create orders and update all server order lists
 	 * and the database.
 	 */
-	public void checkQuantities()
+	private void checkQuantities()
 	{
-		//TODO
-		//check item quantities and update orders as needed.
-		//don't worry about the client copies of orders.
-		//this is basically a one-way message
+	    if(inv.checkIfOrder()){
+	        inv.generateOrder(order);
+        }
 	}
 
 	/**
 	 * Indicate to the client that an error occurred when handling
 	 * a client request.
 	 */
-	public void printErrorToClient()
+	private void printErrorToClient()
 	{
 		try
 		{
@@ -528,7 +512,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * @param ogList The original list to clone.
 	 * @return a cloned list.
 	 */
-	public <T> ArrayList<T> cloneArrayList(ArrayList<T> ogList)
+	private <T> ArrayList<T> cloneArrayList(ArrayList<T> ogList)
 	{
 		ArrayList<T> cloneList = new ArrayList<T>();
 		for(T objInList : ogList)

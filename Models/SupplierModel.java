@@ -54,4 +54,20 @@ public class SupplierModel implements Serializable, Cloneable
 		return temp;
 	}
 
+	public int getId (){
+        return id;
+    }
+
+    public String getCompanyName (){
+        return companyName;
+    }
+
+    public String getAddress (){
+        return address;
+    }
+
+    public String getSalesContact (){
+        return salesContact;
+    }
+
 }
