@@ -1,6 +1,6 @@
 package ServerPackage.ServerModels;
 
-import ServerPackage.ServerControllers.DataBaseController;
+//import ServerPackage.ServerControllers.DataBaseController;
 import ServerPackage.ServerControllers.InventoryController;
 import ServerPackage.ServerControllers.SCCommunicationConstants;
 
@@ -70,7 +70,10 @@ public class ShopController implements Runnable, SCCommunicationConstants {
     public ShopController(Socket sc)
     {
         clientSocket = sc;
-        DataBaseController data = new DataBaseController();
+        //DataBaseController data = new DataBaseController();
+		/**
+		 * TODO: RE-ADD this when it works.
+		 */
         try
         {	
 			inputReader = new ObjectInputStream(clientSocket.getInputStream());
@@ -176,6 +179,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		catch(IOException readErr)
 		{
 			System.err.println("Error: Could not read.");
+			return false;
 		}
 		catch(ClassNotFoundException classErr)
 		{
@@ -217,6 +221,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 */
 	public void sendItemListToClient()
 	{
+		System.out.println("Worked");
 		try
 		{	
 			outputWriter.writeObject(scOkay);
@@ -239,6 +244,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 */
 	public void sendSupplierListToClient()
 	{
+		System.out.println("Worked");
 		try
 		{	
 			outputWriter.writeObject(scOkay);
@@ -286,7 +292,11 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		ArrayList<ItemModel> tempList;
 		try
 		{
-			tempList = (ArrayList<ItemModel>)inputReader.readObject();		
+			tempList = (ArrayList)inputReader.readObject();
+			for (ItemModel i: tempList)
+			{
+				System.out.println(i.toString());
+			}
 		}
 		catch(IOException readErr)
 		{

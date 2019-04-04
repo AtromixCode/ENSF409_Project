@@ -3,17 +3,17 @@ package ServerPackage.ServerModels;
 import java.io.Serializable;
 
 public class ItemModel implements Serializable, Cloneable{
-    
-	static final long serialVersionUID = 60L;
-	
+
+	static final long serialVersionUID = 1L;
+
 	private SupplierModel supplier;
     private int id;
     private String desc;
     private int quantity;
-    private double price;
+    private float price;
     private int supplierID;
 
-    public ItemModel(int id, String desc, int quantity, double price, int supplierID)
+    public ItemModel(int id, String desc, int quantity, float price, int supplierID)
     {
         this.id = id;
         this.desc = desc;
@@ -27,6 +27,7 @@ public class ItemModel implements Serializable, Cloneable{
         supplier=s;
     }
 
+    @Override
     public String toString()
     {
         return "ItemModel Name: " +desc+ ", Quantity: " +quantity+ ", Price " +price+ ", ItemModel ID: "+id+", SupplierModel ID: "+supplierID+ ".\n";
@@ -63,11 +64,11 @@ public class ItemModel implements Serializable, Cloneable{
     public int getSupplierID() {
         return supplierID;
     }
-	
+
 	public Object clone() throws CloneNotSupportedException
 	{
 		ItemModel temp = (ItemModel)super.clone();
-		if(temp.supplier != null) 
+		if(temp.supplier != null)
 			temp.supplier = (SupplierModel)supplier.clone();
 		return temp;
 	}

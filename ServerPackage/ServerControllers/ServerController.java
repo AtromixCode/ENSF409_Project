@@ -78,8 +78,8 @@ public class ServerController
 			{
 				//Accept a connection to a client.
 				clientSocket = socket.accept();
-				
-				Runnable shop = new ShopController(clientSocket);
+				System.out.println("Connection occurred");
+				ShopController shop = new ShopController(clientSocket);
 				
 				pool.execute(shop);
 				/*
@@ -122,7 +122,7 @@ public class ServerController
     }
 
 
-    protected  static void main (String arg []){
+    public static void main (String arg []){
         ServerController myServer = new ServerController();
     }
 

@@ -34,7 +34,7 @@ public class InventoryController{
         int id = s.nextInt();
         String desc = s.next();
         int quantity = s.nextInt();
-        double price = s.nextDouble();
+        float price = s.nextFloat();
         int supID = s.nextInt();
         return new ItemModel(id, desc, quantity, price, supID);
     }
