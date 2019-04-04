@@ -1,4 +1,4 @@
-package client.ClientModels;
+package Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,6 +31,12 @@ public class SupplierModel implements Serializable, Cloneable
 		this.companyName = cName;
 		this.address = address;
 		this.salesContact = sContact;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "SupplierModel ID: "+ id + ", Company Name: "+ companyName +", address: "+ address +", Sales Contact: " + salesContact;
 	}
 
 	public String displayString(){

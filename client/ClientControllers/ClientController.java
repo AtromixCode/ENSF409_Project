@@ -4,7 +4,10 @@ import java.io.*;
 import java.net.Socket;
 import java.util.*;
 import javax.swing.DefaultListModel;
-import client.ClientModels.*;
+
+import Models.ItemModel;
+import Models.OrderLineModel;
+import Models.SupplierModel;
 
 /**
  * When run, connects the client to the server, and allows the client
@@ -592,13 +595,9 @@ public class ClientController implements SCCommunicationConstants {
 
 		try {
 			clientSocket = new Socket(serverName, portNum);
-			System.out.println("Here");
 			outputWriter = new ObjectOutputStream(clientSocket.getOutputStream());
-			System.out.println("Here2");
 			inputReader = new ObjectInputStream(clientSocket.getInputStream());
-			System.out.println("Here3");
 			outputWriter.flush();
-			System.out.println("Here4");
 		} catch (IOException ioErr) {
 			System.out.println(ioErr.getMessage());
 		}

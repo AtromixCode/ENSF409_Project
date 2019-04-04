@@ -1,6 +1,7 @@
 package client.ClientControllers;
 
-import client.ClientModels.*;
+import Models.ItemModel;
+import Models.SupplierModel;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
