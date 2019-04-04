@@ -490,7 +490,7 @@ public class ClientController implements SCCommunicationConstants {
 	}
 
 	/**
-	 * Tells the server to check its quanties, in order to produce
+	 * Tells the server to check its quantities, in order to produce
 	 * orders if necessary.
 	 * Automatically returns the possibly updated order list.
 	 *
