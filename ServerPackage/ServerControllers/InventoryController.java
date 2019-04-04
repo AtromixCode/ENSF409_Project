@@ -118,4 +118,6 @@ public class InventoryController{
     {
         return items;
     }
+
+    public void setItems(ArrayList<ItemModel> items){this.items = items;}
 }

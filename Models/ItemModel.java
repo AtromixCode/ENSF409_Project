@@ -30,7 +30,7 @@ public class ItemModel implements Serializable, Cloneable{
     @Override
     public String toString()
     {
-        return "In shop. ItemModel Name: " +desc+ ", Quantity: " +quantity+ ", Price " +price+ ", ItemModel ID: "+id+", SupplierModel ID: "+supplierID+ ".\n";
+        return "In shop. ItemModel Name: " +desc+ ", Quantity: " +quantity+ ", Price " +price+ ", ItemModel ID: "+id+", SupplierModel ID: "+supplierID+ ".";
     }
 
     public String orderInfoItem()
@@ -39,7 +39,7 @@ public class ItemModel implements Serializable, Cloneable{
                 "Amount ordered:\t\t"+(50-quantity);
     }
 
-    public String orderInfoSupplier()
+    protected String orderInfoSupplier()
     {
         return supplier.info();
     }

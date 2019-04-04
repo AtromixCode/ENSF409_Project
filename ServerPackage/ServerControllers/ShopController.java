@@ -294,7 +294,8 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		try
 		{
 			tempList = (ArrayList)inputReader.readObject();
-			for (ItemModel i: tempList)
+			inv.setItems(tempList);
+			for (ItemModel i: inv.getItems())
 			{
 				System.out.println(i.toString());
 			}
@@ -325,7 +326,8 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		try
 		{
 			tempList = (ArrayList<SupplierModel>)inputReader.readObject();
-			for (SupplierModel i: tempList)
+			suppliers = tempList;
+			for (SupplierModel i: suppliers)
 			{
 				System.out.println(i.toString());
 			}
