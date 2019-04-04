@@ -473,12 +473,13 @@ public class ClientController implements SCCommunicationConstants {
 	{
 		if (fileInput.readItemFile(fileName, itemList))
 		{
-			displayItems();
 			try {
 				sendItemListToServer(itemList);
+				displayItems();
 			}
 			catch (Exception ex)
 			{
+				itemList.clear();
 				return "Error sending data to server.";
 			}
 			return "Successfully loaded items from file";
@@ -499,12 +500,13 @@ public class ClientController implements SCCommunicationConstants {
 	{
 		if (fileInput.readSupplierFile(fileName, supplierList))
 		{
-			displaySuppliers();
 			try {
 				sendSupplierListToServer(supplierList);
+				displaySuppliers();
 			}
 			catch (Exception ex)
 			{
+				supplierList.clear();
 				return "Error sending data to server.";
 			}
 			return "Successfully loaded suppliers from file";
@@ -516,9 +518,8 @@ public class ClientController implements SCCommunicationConstants {
 	/**
 	 * Fills/overwrites a given list model with the strings of
 	 * the supplier list.
-	 *
 	 */
-	protected void displaySuppliers()
+	public void displaySuppliers()
 	{
 		supplierDisplay.clear();
 		for(SupplierModel s: supplierList)
@@ -530,15 +531,36 @@ public class ClientController implements SCCommunicationConstants {
 	/**
 	 * Fills/overwrites a given list model with the strings of
 	 * the item list.
-	 *
 	 */
-	protected void displayItems()
+	public void displayItems()
 	{
 		itemDisplay.clear();
 		for(ItemModel i: itemList)
 		{
 			itemDisplay.addElement(i.displayString());
 		}
+	}
+
+	public String removeItem(int id)
+	{
+		for (ItemModel i: itemList)
+		{
+			if (i.getId() == id)
+			{
+				try
+				{
+					sendDeletedItemUpdate(i);
+					itemList.remove(i);
+					displayItems();
+					return "Successfully removed item from shop.";
+				}
+				catch(Exception e)
+				{
+					return "Error removing item from shop.";
+				}
+			}
+		}
+		return "Item does not exist in shop for removal";
 	}
 
 	public String addSupplier(int id, String name, String address, String contact)
@@ -551,14 +573,15 @@ public class ClientController implements SCCommunicationConstants {
 			}
 		}
 		SupplierModel s = new SupplierModel(id, name, address, contact);
-		supplierList.add(s);
-		displaySuppliers();
 		try
 		{
+			supplierList.add(s);
 			sendSupplierListToServer(supplierList);
+			displaySuppliers();
 		}
 		catch(Exception ex)
 		{
+			supplierList.remove(s);
 			return "Error sending data to server";
 		}
 
@@ -567,7 +590,7 @@ public class ClientController implements SCCommunicationConstants {
 
 	public String addItem(int id, String name, int quantity, float price, String supplierInfo)
 	{
-		ItemModel i;
+		ItemModel i = null;
 		Scanner scan = new Scanner(supplierInfo);
 		int supId = scan.nextInt();
 		for(SupplierModel s: supplierList)
@@ -575,13 +598,17 @@ public class ClientController implements SCCommunicationConstants {
 			if (s.getId()==supId)
 			{
 				i = new ItemModel(id, name, quantity, price,s);
-				itemList.add(i);
 			}
 		}
-		displayItems();
+		if (i==null)
+		{
+			return "Item not found!";
+		}
 		try
 		{
-			sendItemListToServer(itemList);
+			sendItemUpdate(i);
+			itemList.add(i);
+			displayItems();
 		}
 		catch(Exception ex)
 		{
@@ -611,7 +638,8 @@ public class ClientController implements SCCommunicationConstants {
 			outputWriter = new ObjectOutputStream(clientSocket.getOutputStream());
 			outputWriter.flush();
 			inputReader = new ObjectInputStream(clientSocket.getInputStream());
-			outputWriter.flush();
+			itemList = retrieveItemListFromServer();
+			supplierList = retrieveSupplierListFromServer();
 		} catch (IOException ioErr) {
 			System.out.println(ioErr.getMessage());
 		}
@@ -627,6 +655,6 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public static void main(String[] args) throws IOException {
 		ClientController client = new ClientController("localhost", 8428);
-		System.out.println("Testing ClienController concluded.");
+		System.out.println("Testing ClientController concluded.");
 	}
 }

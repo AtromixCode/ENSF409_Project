@@ -55,6 +55,8 @@ class GUIController {
 		cc = controller;
 		cc.setItemDisplay(mv.getItemListModel());
 		cc.setSupplierDisplay(sv.getSupplierListModel());
+		cc.displayItems();
+		cc.displaySuppliers();
 		mv.addListSelectionListener(new SelectItem());
 		mv.addButton4ActionListener(new AddItem());
 		mv.addButton5ActionListener(new ViewOrders());
@@ -177,7 +179,8 @@ class GUIController {
 						"Please confirm you would like to remove Item #"+id+" from the store.");
 				if (a==0)
 				{
-					System.out.println("Removing item here!");
+					JOptionPane.showMessageDialog(null, cc.removeItem(id),
+							"Result", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		}
@@ -198,8 +201,19 @@ class GUIController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			panel = new UserPromptPanel();
-			int value = JOptionPane.showConfirmDialog(null, panel, "Add new supplier", JOptionPane.OK_CANCEL_OPTION);
+			int value = JOptionPane.showConfirmDialog(null, panel, "Add new item", JOptionPane.OK_CANCEL_OPTION);
 			if (value == JOptionPane.OK_OPTION) {
+				try
+				{
+					int id = Integer.parseInt(panel.id.getText());
+					int quantity = Integer.parseInt(panel.quantity.getText());
+					float price = Integer.parseInt(panel.price.getText());
+
+				}
+				catch(Exception ex)
+				{
+
+				}
 
 			}
 		}
@@ -333,9 +347,15 @@ class GUIController {
 		public void actionPerformed(ActionEvent e) {
 
 			filename = JOptionPane.showInputDialog("Please enter the file name:");
-			if(filename != null) {
-				JOptionPane.showMessageDialog(null, cc.readItems(filename),
-						"Result", JOptionPane.INFORMATION_MESSAGE);
+			if (filename != null) {
+				if (!filename.equals("")) {
+					JOptionPane.showMessageDialog(null, cc.readItems(filename),
+							"Result", JOptionPane.INFORMATION_MESSAGE);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Please enter a filename!",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
 	}
@@ -351,15 +371,15 @@ class GUIController {
 		public void actionPerformed(ActionEvent e) {
 
 			filename = JOptionPane.showInputDialog("Please enter the file name:");
-			if(!filename.equals("")) {
-				JOptionPane.showMessageDialog(null, cc.readSuppliers(filename),
-						"Result", JOptionPane.INFORMATION_MESSAGE);
-				sv.setSupplierWindowVisibility(true);
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(null, "Please enter an filename!",
-						"Error", JOptionPane.ERROR_MESSAGE);
+			if (filename != null) {
+				if (!filename.equals("")) {
+					JOptionPane.showMessageDialog(null, cc.readSuppliers(filename),
+							"Result", JOptionPane.INFORMATION_MESSAGE);
+					sv.setSupplierWindowVisibility(true);
+				} else {
+					JOptionPane.showMessageDialog(null, "Please enter a filename!",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
 	}
@@ -376,5 +396,6 @@ class GUIController {
 	{
 		ClientController client = new ClientController("localhost", 8428);
 		GUIController g = new GUIController(client);
+		client.terminate();
 	}
 }
