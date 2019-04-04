@@ -51,12 +51,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
      */
     private DataBaseController data;
 
-    /**
-     *
-     * TODO: ask Shamez wats dis boi do
-     * The index of the order???
-     */
-    private int orderIndex;
 
 
     /**
@@ -71,6 +65,8 @@ public class ShopController implements Runnable, SCCommunicationConstants {
         inv = new InventoryController(data);
         suppliers = data.supplierListFromDatabase();
         orders = data.orderLineListFromDataBase();
+        order = new OrderModel();
+        order.setOrderLines(data.orderLineListFromDataBase());
 
         try
         {	
@@ -97,7 +93,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 				System.out.println("Client Disconnected");
 				return false;
 			}
-			
+
 			int opcode = 0;
 			
 			//type of operation
@@ -333,6 +329,11 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		{
 			System.out.println(s.toString());
 		}
+		if(!inv.items.isEmpty()) {
+            if (inv.checkIfOrder()) {
+                inv.generateOrder(order);
+            }
+        }
 	}
 	
 		
@@ -371,32 +372,21 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * Across the server and in the database, either updates the item in the
 	 * item lists if it already exists, or adds a new item to those lists.
 	 */
-	private void updateItemFromClient()
-	{
-		ItemModel changeItem;
-		
-		try
-		{
-			changeItem = (ItemModel)inputReader.readObject();		
-		}
-		catch(IOException readErr)
-		{
-			System.err.println(readErr.getMessage());
-			return;
-		}
-		catch(ClassNotFoundException classErr)
-		{
-			System.err.println(classErr.getMessage());
-			return;
-		}
-		data.addItem(changeItem);
-		inv.updateItem(changeItem);
-		
-		//TODO
-		//For all item lists and the database, check if the list contains changeItem.
-		//If so, overwrite/replace this item.
-		//Otherwise, add changeItem to the lists and database. 
-	}
+	private void updateItemFromClient() {
+        ItemModel changeItem;
+
+        try {
+            changeItem = (ItemModel) inputReader.readObject();
+        } catch (IOException readErr) {
+            System.err.println(readErr.getMessage());
+            return;
+        } catch (ClassNotFoundException classErr) {
+            System.err.println(classErr.getMessage());
+            return;
+        }
+        data.addItem(changeItem);
+        inv.updateItem(changeItem);
+    }
 	
 	/**
 	 * Searches for an item, sending it to the client if it is found.

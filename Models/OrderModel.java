@@ -76,4 +76,8 @@ public class OrderModel implements Serializable, Cloneable
         return orderID;
     }
 
+    public void setOrderLines(ArrayList<OrderLineModel> orders){
+        orderLines = orders;
+    }
+
 }

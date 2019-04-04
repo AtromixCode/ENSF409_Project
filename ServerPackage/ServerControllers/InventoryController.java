@@ -10,37 +10,16 @@ import java.util.Scanner;
 public class InventoryController
 {
 
-    private ArrayList<ItemModel> items;
+    protected ArrayList<ItemModel> items;
     private DataBaseController data;
 
     public InventoryController(DataBaseController dc)
     {
-        items = new ArrayList<ItemModel>();
+
         data = dc;
+        items = dc.itemListFromDataBase();
     }
 
-    public void addItemsFromFile(String fileName) throws IOException
-    {
-        FileInputStream fileIn= new FileInputStream(fileName);
-        BufferedReader read = new BufferedReader(new InputStreamReader(fileIn));
-        String line = read.readLine();
-        while (line != null){
-            ItemModel a = readValues(line);
-            items.add(a);
-            line = read.readLine();
-        }
-    }
-
-    public ItemModel readValues(String r)
-    {
-        Scanner s = new Scanner(r).useDelimiter(";");
-        int id = s.nextInt();
-        String desc = s.next();
-        int quantity = s.nextInt();
-        float price = s.nextFloat();
-        int supID = s.nextInt();
-        return new ItemModel(id, desc, quantity, price, supID);
-    }
 
     public ItemModel findItem(int id)
     {
@@ -81,41 +60,12 @@ public class InventoryController
     }
 
 
-    public int decreaseItemQuan(int id, int quantity)
-    {
-        ItemModel i = findItem(id);
-        if (i!=null) {
-            if (i.getQuantity() >= quantity) {
-                i.setQuantity(i.getQuantity() - quantity);
-                return 1;
-            } else
-                return 3;
-        }
-        return 2;
-    }
-
-
-    public String getItemInfo(int id)
-    {
-        ItemModel i = findItem(id);
-        if (i!=null)
-            return i.toString();
-        else
-            return "ItemModel not found!";
-    }
-    public String getItemInfo(String desc)
-    {
-        ItemModel i = findItem(desc);
-        if (i!=null)
-            return i.toString();
-        else
-            return "ItemModel not found!";
-    }
 
     protected void updateItem (ItemModel item){
         for (ItemModel temp : items) {
             if(temp.getId() == item.getId()){
                 temp.copyAttributes(temp);
+                return;
             }
         }
     }

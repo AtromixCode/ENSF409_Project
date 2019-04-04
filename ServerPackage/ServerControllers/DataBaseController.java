@@ -2,7 +2,6 @@ package ServerPackage.ServerControllers;
 
 import Models.ItemModel;
 import Models.OrderLineModel;
-import Models.OrderModel;
 import Models.SupplierModel;
 
 import java.sql.*;
@@ -53,9 +52,6 @@ public class DataBaseController {
             System.err.println("Error trying to retrieve the orders from the data base");
             e.printStackTrace();
         }
-
-
-
 
         return orderLineList;
     }
@@ -224,7 +220,6 @@ public class DataBaseController {
             System.err.println("Error inserting supplier to the data base");
             e.printStackTrace();
         }
-
     }
 
 

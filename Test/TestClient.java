@@ -43,21 +43,14 @@ public class TestClient {
         boolean running = true;
         while (running) {
             try {
-                String Quit = "QUIT;";
-                socketOut.writeObject(Quit);
+                socketOut.writeObject("QUIT;");
                 System.out.println("Goodbye");
-                running = false;
+                socketOut.close();
+                socketIn.close();
+                return;
             }catch (IOException e){
                 System.err.println("Error Exiting");
             }
-        }
-
-        try {
-            socketOut.close();
-            socketIn.close();
-        } catch (IOException e) {
-            System.out.println("error trying to close");
-            e.printStackTrace();
         }
 
     }
