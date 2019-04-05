@@ -129,6 +129,7 @@ class GUIController {
 				scan.next();
 				id = scan.nextInt();
 			}
+			retrieveAndDisplay();
 		}
 
 		/**
@@ -160,6 +161,7 @@ class GUIController {
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 				mv.setButtonsClickable(false);
+				retrieveAndDisplay();
 			}
 		}
 
@@ -192,6 +194,7 @@ class GUIController {
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 				mv.setButtonsClickable(false);
+				retrieveAndDisplay();
 			}
 		}
 
@@ -213,6 +216,7 @@ class GUIController {
 					mv.setButtonsClickable(false);
 				}
 				mv.setButtonsClickable(false);
+				retrieveAndDisplay();
 			}
 		}
 	}
@@ -271,6 +275,7 @@ class GUIController {
 				}
 			}
 			mv.setButtonsClickable(false);
+			retrieveAndDisplay();
 		}
 
 		public class UserPromptPanel extends JPanel {
@@ -345,6 +350,7 @@ class GUIController {
 				}
 			}
 			mv.setButtonsClickable(false);
+			retrieveAndDisplay();
 		}
 
 		public class UserPromptPanel extends JPanel
@@ -379,6 +385,7 @@ class GUIController {
 			retrieveAndDisplay();
 			ov.setWindowVisibility(true);
 			mv.setButtonsClickable(false);
+			retrieveAndDisplay();
 		}
 	}
 
@@ -393,6 +400,7 @@ class GUIController {
 			retrieveAndDisplay();
 			sv.setSupplierWindowVisibility(true);
 			mv.setButtonsClickable(false);
+			retrieveAndDisplay();
 		}
 	}
 
@@ -418,6 +426,7 @@ class GUIController {
 				}
 			}
 			mv.setButtonsClickable(false);
+			retrieveAndDisplay();
 		}
 	}
 
@@ -443,6 +452,7 @@ class GUIController {
 				}
 			}
 			mv.setButtonsClickable(false);
+			retrieveAndDisplay();
 		}
 	}
 
