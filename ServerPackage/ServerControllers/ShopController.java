@@ -417,6 +417,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			return;
 		}
 		inv.updateItem(changeItem);
+		inv.updateItemsSuppliers(suppliers);
         checkQuantities();
 
 	}
