@@ -253,7 +253,7 @@ public class ClientController implements SCCommunicationConstants {
 			throw new IOException("Error: could not properly read the object.");
 		}
 	}
-
+	
 	/**
 	 * Sends an Array List of Items to the server to update the
 	 * server items in the database.
@@ -324,6 +324,36 @@ public class ClientController implements SCCommunicationConstants {
 			outputWriter.writeObject(scData + scItem + scObject);
 
 			outputWriter.writeObject((ItemModel) updateItem.clone());
+
+			outputWriter.flush();
+		} catch (IOException writeErr) {
+			throw new IOException("Error: could not communicate to the server.");
+		} catch (CloneNotSupportedException cnsErr) {
+			throw new IOException("Error: item could not be cloned.");
+		}
+	}
+	
+	/**
+	 * Sends an item and a quantity to order to the server.
+	 * The server will generate an order line to add to their order list.
+	 * The server will not automatically send the updated line.
+	 * If the item being ordered does not exist in the server's list, it will throw an error.
+	 * If less than 1 item is being ordered, it will throw an error.
+	 *
+	 * @param itemToOrder The item being ordered.
+	 * @param quantityToOrder The quantity of the item to be ordered.
+	 * @throws IOException 
+	 */	
+	public void sendItemOrderUpdate(ItemModel itemToOrder, int quantityToOrder) throws IOException {
+	
+		if(quantityToOrder < 1)
+			throw new IOException("Error: cannot order less than 1 item.");
+		
+		try {
+			outputWriter.writeObject(scData + scItem + scInt);
+
+			outputWriter.writeObject((ItemModel) itemToOrder.clone());
+			outputWriter.writeObject(quantityToOrder);
 
 			outputWriter.flush();
 		} catch (IOException writeErr) {
