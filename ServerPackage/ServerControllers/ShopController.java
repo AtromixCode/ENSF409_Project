@@ -193,6 +193,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			case(201):	updateItemListFromClient();		break;	//read an item list
 			case(202):	updateSupplierListFromClient();	break;	//read an supplier list
 			case(203):	updateOrderListFromClient();	break;	//read an order list
+			case(211):	updateOrderListFromClientOrder();	break;	// read an item and quantity to order and order it.
 			case(231):	updateItemFromClient();			break;	//read an item to add/replace
 
 			case(311):	searchItemFromClient('i');			break;	//search for an item using an id
@@ -366,6 +367,31 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		//update all the lists of orders to now be tempList
 	}
 
+	/**
+	 * Recieve an item from the client, and a quantity to order.
+	 * Checks if the item exists in the server, and it it does,
+	 * orders the item according to the desired amount.
+	 */
+	private void updateOrderListFromClientOrder()
+	{
+		ItemModel itemToOrder;
+		int quantityToOrder;
+		
+		try {
+			itemToOrder = (ItemModel) inputReader.readObject();
+			quantityToOrder = (Integer)inputReader.readObject();
+		} catch (IOException readErr) {
+			System.err.println(readErr.getMessage());
+			return;
+		} catch (ClassNotFoundException classErr) {
+			System.err.println(classErr.getMessage());
+			return;
+		}
+		
+		//TODO: order quantityToOrder of itemToOrder and update all order lists in the server and database
+	}
+	
+	
 	/**
 	 * Recieve an item from the client.
 	 * Across the server and in the database, either updates the item in the
