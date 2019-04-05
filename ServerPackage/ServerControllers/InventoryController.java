@@ -51,10 +51,12 @@ public class InventoryController
 
     public void generateOrder(OrderModel o)
     {
+
         for (ItemModel i: items){
-            if (i.getQuantity()<40 && i.getSupplier()!= null){
+            if (i.getQuantity()< 40 && i.getSupplier()!= null){
                 o.addLine(i);
                 i.setQuantity(50);
+                System.out.printf("item quntity = %d\n", i.getQuantity());
                 data.addItem(i);
             }
         }
@@ -66,7 +68,8 @@ public class InventoryController
     protected void updateItem (ItemModel item){
         for (ItemModel temp : items) {
             if(temp.getId() == item.getId()){
-                temp.copyAttributes(temp);
+                temp.copyAttributes(item);
+                data.addItem(item);
                 return;
             }
         }
