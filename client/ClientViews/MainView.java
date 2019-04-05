@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowListener;
 
 /**
  * Order view displays the orders of the shop.
@@ -54,7 +55,7 @@ class MainView {
 		mainWindow.add(createListPanel(), "Center");
 		mainWindow.setVisible(true);
 		mainWindow.setResizable(false);
-		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
 
@@ -255,6 +256,11 @@ class MainView {
 	protected void addButton8ActionListener(ActionListener b)
 	{
 		buttons[7].addActionListener(b);
+	}
+
+	protected void addWindowListener(WindowListener w)
+	{
+		mainWindow.addWindowListener(w);
 	}
 
 

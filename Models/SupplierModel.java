@@ -41,22 +41,11 @@ public class SupplierModel implements Serializable, Cloneable
 	private String salesContact;
 
 	/**
-	 * List of the items that the supplier supplies.
-	 */
-	private ArrayList<ItemModel> items;
-
-	/**
 	 * Cloneable SupplierModel clone() method.
 	 */
 	public Object clone() throws CloneNotSupportedException
 	{
 		SupplierModel temp = (SupplierModel)super.clone();
-		if(temp.items != null)
-		{
-			temp.items = new ArrayList<ItemModel>();
-			for(ItemModel itemInList : items)
-				temp.items.add((ItemModel)itemInList.clone());
-		}
 		return temp;
 	}
 
@@ -77,7 +66,6 @@ public class SupplierModel implements Serializable, Cloneable
 	}
 
 	public int getId(){return id;}
-
 
 	/**
 	 * Supplier toString() displays the information of the supplier.

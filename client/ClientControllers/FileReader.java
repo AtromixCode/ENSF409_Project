@@ -34,7 +34,8 @@ public class FileReader {
 
 	/**
 	 * Using a given file name, reads a file and converts its contents into items,
-	 * adding them to the given list of items. (Note: no clearing or overwriting)
+	 * adding them to the given list of items. Checks to see if item already exists.
+	 * (Note: no clearing or overwriting)
 	 * 
 	 * @param fileName The filename of the file to be read.
 	 * @param items The list of ItemModel to add the file items to.
@@ -45,11 +46,20 @@ public class FileReader {
 		try {
 			fileIn = new FileInputStream(fileName);
 			read = new BufferedReader(new InputStreamReader(fileIn));
-			items.clear();
 			String line = read.readLine();
 			while (line != null){
 				ItemModel a = readItemValues(line);
-				items.add(a);
+				boolean check = false;
+				for (ItemModel i:items)
+				{
+					if (i.getId()==a.getId())
+					{
+						check = true;
+					}
+				}
+				if (check == false) {
+					items.add(a);
+				}
 				line = read.readLine();
 			}
 			return true;
@@ -65,21 +75,32 @@ public class FileReader {
 
 	/**
 	 * Using a given file name, reads a file and converts its contents into suppliers,
-	 * adding them to the given list of suppliers. (Note: no clearing or overwriting)
+	 * adding them to the given list of suppliers. Checks to see if supplier already exists.
+	 * (Note: no clearing or overwriting)
 	 * 
 	 * @param fileName The filename of the file to be read.
-	 * @param items The list of SupplierModel to add the file items to.
+	 * @param suppliers list of SupplierModel to add the file items to.
 	 * @return true if the operation was successful, false if not.
 	 */
 	public boolean readSupplierFile(String fileName, ArrayList<SupplierModel> suppliers)
 	{
 		try {
-			suppliers.clear();
 			fileIn = new FileInputStream(fileName);
 			read = new BufferedReader(new InputStreamReader(fileIn));
 			String line = read.readLine();
 			while (line != null){
 				SupplierModel a = readSupplierValues(line);
+				boolean check = false;
+				for (SupplierModel s:suppliers)
+				{
+					if (s.getId()==a.getId())
+					{
+						check = true;
+					}
+				}
+				if (check == false) {
+					suppliers.add(a);
+				}
 				suppliers.add(a);
 				line = read.readLine();
 			}

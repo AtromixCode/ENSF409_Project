@@ -7,7 +7,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Scanner;
 
 /**
@@ -53,10 +54,22 @@ class GUIController {
 		sv = new SupplierView();
 		ov = new OrderView();
 		cc = controller;
+		setUpCC();
+		addActionListeners();
+		retrieveAndDisplay();
+	}
+
+	protected void setUpCC()
+	{
 		cc.setItemDisplay(mv.getItemListModel());
 		cc.setSupplierDisplay(sv.getSupplierListModel());
-		cc.displayItems();
-		cc.displaySuppliers();
+		cc.setOrderDisplay(ov.getOrderDisplay());
+	}
+
+
+	protected void addActionListeners()
+	{
+		mv.addWindowListener(new WindowClose());
 		mv.addListSelectionListener(new SelectItem());
 		mv.addButton4ActionListener(new AddItem());
 		mv.addButton5ActionListener(new ViewOrders());
@@ -64,6 +77,16 @@ class GUIController {
 		mv.addButton7ActionListener(new ImportItems());
 		mv.addButton8ActionListener(new ImportSuppliers());
 		sv.addSupplierActionListener(new AddSupplier());
+	}
+
+	protected void retrieveAndDisplay()
+	{
+		if(!cc.fetchAndDisplayFromServer())
+		{
+			JOptionPane.showMessageDialog(null, "Error communicating with server!",
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
+
 	}
 
 	/**
@@ -118,11 +141,13 @@ class GUIController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				retrieveAndDisplay();
 				try {
 					int quantity = Integer.parseInt(JOptionPane.showInputDialog("Please enter the quantity sold:"));
 					if (quantity>0)
 					{
-						System.out.println("Checking if "+ quantity + " is enough and removing it here!");
+						JOptionPane.showMessageDialog(null, cc.sellItem(id, quantity),
+								"Result", JOptionPane.INFORMATION_MESSAGE);
 					}
 					else
 					{
@@ -147,11 +172,13 @@ class GUIController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				retrieveAndDisplay();
 				try {
 					int quantity = Integer.parseInt(JOptionPane.showInputDialog("Please enter the quantity to order:"));
 					if (quantity>0)
 					{
-						System.out.println("Ordering "+ quantity +" here!");
+						JOptionPane.showMessageDialog(null, cc.orderItem(id, quantity),
+								"Result", JOptionPane.INFORMATION_MESSAGE);
 					}
 					else
 					{
@@ -175,24 +202,24 @@ class GUIController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				retrieveAndDisplay();
 				int a = JOptionPane.showConfirmDialog(null,
 						"Please confirm you would like to remove Item #"+id+" from the store.");
 				if (a==0)
 				{
 					JOptionPane.showMessageDialog(null, cc.removeItem(id),
 							"Result", JOptionPane.INFORMATION_MESSAGE);
+					mv.setButtonsClickable(false);
 				}
 			}
 		}
 	}
 
 	/**
-	 * inner ActionListener class listens for the "Add Item" button
-	 * to be pressed, whereupon
+	 * Inner ActionListener class listens for the "Add Item" button
+	 * to be pressed, whereupon error checking is done and an item
+	 * is added to the store.
 	 *
-	 * I DUNNO TODO
-	 * TODO
-	 * TODO
 	 */
 	public class AddItem implements ActionListener {
 
@@ -200,6 +227,7 @@ class GUIController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			retrieveAndDisplay();
 			panel = new UserPromptPanel();
 			int value = JOptionPane.showConfirmDialog(null, panel, "Add new item", JOptionPane.OK_CANCEL_OPTION);
 			if (value == JOptionPane.OK_OPTION) {
@@ -207,12 +235,37 @@ class GUIController {
 				{
 					int id = Integer.parseInt(panel.id.getText());
 					int quantity = Integer.parseInt(panel.quantity.getText());
-					float price = Integer.parseInt(panel.price.getText());
-
+					float price = Float.parseFloat(panel.price.getText());
+					int index = panel.suppliers.getSelectedIndex();
+					Scanner scan = new Scanner(panel.list[index]);
+					int supId = scan.nextInt();
+					String name = panel.name.getText();
+					if (name.equals(""))
+					{
+						JOptionPane.showMessageDialog(null, "Item name was left blank!",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
+					else if(quantity<0||price<0)
+					{
+						JOptionPane.showMessageDialog(null, "Please enter a number greater than 0!",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, cc.addItem(id, name, quantity, price, supId),
+								"Result", JOptionPane.INFORMATION_MESSAGE);
+					}
+				}
+				catch(NumberFormatException ex)
+				{
+					JOptionPane.showMessageDialog(null, "The id, quantity, price, or supplier was not entered correctly.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+					ex.printStackTrace();
 				}
 				catch(Exception ex)
 				{
-
+					JOptionPane.showMessageDialog(null, "There was an error adding the item.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 
 			}
@@ -223,7 +276,8 @@ class GUIController {
 			private JTextField name = new JTextField(10);
 			private JTextField quantity = new JTextField(5);
 			private JTextField price = new JTextField(8);
-			private JComboBox<String> suppliers = new JComboBox<String>(cc.supplierIdsandNames());
+			private String [] list = cc.supplierIdsandNames();
+			private JComboBox<String> suppliers = new JComboBox<String>(list);
 
 			public UserPromptPanel() {
 				this.add(new JLabel("ID:"));
@@ -240,18 +294,17 @@ class GUIController {
 		}
 	}
 	/**
-	 * inner ActionListener class listens for the "Add Item" button
-	 * to be pressed, whereupon
+	 * inner ActionListener class listens for the "Add Supplier" button
+	 * to be pressed, whereupon user input is taken to add a supplier,
+	 * and the supplier list is updated.
 	 *
-	 * I DUNNO TODO
-	 * TODO
-	 * TODO
 	 */
 	public class AddSupplier implements ActionListener
 	{
 		UserPromptPanel panel = new UserPromptPanel();
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			retrieveAndDisplay();
 			int value = JOptionPane.showConfirmDialog(null, panel, "Add new supplier", JOptionPane.OK_CANCEL_OPTION);
 			if (value == JOptionPane.OK_OPTION)
 			{
@@ -320,6 +373,7 @@ class GUIController {
 	{
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			retrieveAndDisplay();
 			ov.setWindowVisibility(true);
 		}
 	}
@@ -332,6 +386,7 @@ class GUIController {
 	{
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			retrieveAndDisplay();
 			sv.setSupplierWindowVisibility(true);
 		}
 	}
@@ -345,7 +400,7 @@ class GUIController {
 		String filename;
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
+			retrieveAndDisplay();
 			filename = JOptionPane.showInputDialog("Please enter the file name:");
 			if (filename != null) {
 				if (!filename.equals("")) {
@@ -369,7 +424,7 @@ class GUIController {
 		String filename;
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
+			retrieveAndDisplay();
 			filename = JOptionPane.showInputDialog("Please enter the file name:");
 			if (filename != null) {
 				if (!filename.equals("")) {
@@ -381,6 +436,45 @@ class GUIController {
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+		}
+	}
+
+	public class WindowClose implements WindowListener
+	{
+
+		@Override
+		public void windowOpened(WindowEvent e) {
+
+		}
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			cc.terminate();
+		}
+
+		@Override
+		public void windowClosed(WindowEvent e) {
+			//cc.terminate();
+		}
+
+		@Override
+		public void windowIconified(WindowEvent e) {
+
+		}
+
+		@Override
+		public void windowDeiconified(WindowEvent e) {
+
+		}
+
+		@Override
+		public void windowActivated(WindowEvent e) {
+
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+
 		}
 	}
 
@@ -396,6 +490,5 @@ class GUIController {
 	{
 		ClientController client = new ClientController("localhost", 8428);
 		GUIController g = new GUIController(client);
-		client.terminate();
 	}
 }

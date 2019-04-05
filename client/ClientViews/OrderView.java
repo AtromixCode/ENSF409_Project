@@ -37,7 +37,7 @@ class OrderView {
 	protected OrderView()
 	{
 		orderWindow = new JFrame();
-		orderWindow.setSize(500,500);
+		orderWindow.setSize(550,500);
 		orderWindow.add("North",createLabelPanel());
 		orderWindow.add(createDisplayPanel());
 		orderWindow.add("South", createButtonPanel());
@@ -95,7 +95,7 @@ class OrderView {
 	/**
 	 * Set the visibility of the Order window.
 	 * 
-	 * @param visible True if the order window should be visible, false if not.
+	 * @param visibility True if the order window should be visible, false if not.
 	 */
 	protected void setWindowVisibility(boolean visibility)
 	{
@@ -114,4 +114,6 @@ class OrderView {
 			}
 		});
 	}
+
+	public JTextArea getOrderDisplay(){return orderDisplay;}
 }

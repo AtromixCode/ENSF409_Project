@@ -94,6 +94,10 @@ public class ItemModel implements Serializable, Cloneable {
 
 	public int getId(){return id;}
 
+	public int getQuantity(){return quantity;}
+
+	public void setQuantity(int q){this.quantity = q;}
+
 	/**
 	 * Item toString() method displays the attributes of the item.
 	 */

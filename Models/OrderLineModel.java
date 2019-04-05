@@ -17,7 +17,7 @@ public class OrderLineModel implements Serializable, Cloneable
 	/**
 	 * serialVersionUID, for serializing and deserialization
 	 */
-	static final long serialVersionUID = 62L;
+	static final long serialVersionUID = 63L;
 
 	/**
 	 * The information of the order.
@@ -41,5 +41,17 @@ public class OrderLineModel implements Serializable, Cloneable
 	{
 		OrderLineModel temp = (OrderLineModel)super.clone();
 		return temp;
+	}
+
+	public String getDateString() {
+		return dateString;
+	}
+
+	public String getOrderLine() {
+		return orderLine;
+	}
+
+	public int getOrderID() {
+		return orderID;
 	}
 }
