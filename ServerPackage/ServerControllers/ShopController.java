@@ -177,6 +177,11 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		return true;
 	}
 
+	/**
+	 *
+	 * TODO: Add a make order function with a received item (and perhaps quantity).
+	 */
+
 	private void actOnOpCode(int opcode)
 	{
 		switch(opcode)

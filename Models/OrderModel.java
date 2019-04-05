@@ -38,6 +38,11 @@ public class OrderModel implements Serializable, Cloneable
     }
 
 
+    /**
+     *
+     * TODO: I think this is a problem because you end up replacing order lines with wrong info.
+     */
+
     public void addLine(ItemModel item)
     {
         OrderLineModel ol = new OrderLineModel(item, dateString, orderID);
