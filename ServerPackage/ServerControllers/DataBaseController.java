@@ -21,7 +21,7 @@ public class DataBaseController {
         }
     }
 
-    protected ArrayList<ItemModel> itemListFromDataBase (){
+    protected synchronized ArrayList<ItemModel> itemListFromDataBase (){
         ArrayList<ItemModel> temp = new ArrayList<ItemModel>();
         try {
             statement = dataCon.createStatement();
@@ -38,7 +38,7 @@ public class DataBaseController {
         return temp;
     }
 
-    protected ArrayList<OrderLineModel> orderLineListFromDataBase (){
+    protected synchronized  ArrayList<OrderLineModel> orderLineListFromDataBase (){
         ArrayList<OrderLineModel> orderLineList = new ArrayList<OrderLineModel>();
         try{
             statement = dataCon.createStatement();
@@ -56,7 +56,7 @@ public class DataBaseController {
         return orderLineList;
     }
 
-    protected ArrayList<SupplierModel> supplierListFromDatabase (){
+    protected synchronized  ArrayList<SupplierModel> supplierListFromDatabase (){
         ArrayList<SupplierModel> temp = new ArrayList<SupplierModel>();
         try {
             statement = dataCon.createStatement();
@@ -74,7 +74,7 @@ public class DataBaseController {
     }
 
 
-    protected void addItem (ItemModel temp){
+    protected synchronized  void addItem (ItemModel temp){
         try {
             String overrideQuerry = "SELECT * FROM items WHERE ItemID ='" + temp.getId() + "'";
             statement = dataCon.createStatement();
@@ -105,7 +105,7 @@ public class DataBaseController {
 
     }
 
-    private void addSupplier(SupplierModel temp){
+    private synchronized void addSupplier(SupplierModel temp){
         try {
             String overrideQuerry = "SELECT * FROM suppliers WHERE SupplierID ='" + temp.getId() + "'";
             statement = dataCon.createStatement();
@@ -127,7 +127,7 @@ public class DataBaseController {
         }
     }
 
-    protected void updateItemList (ArrayList<ItemModel> updateItemList){
+    protected synchronized void updateItemList (ArrayList<ItemModel> updateItemList){
         try {
             statement = dataCon.createStatement();
             statement.executeUpdate("TRUNCATE TABLE items");
@@ -143,13 +143,13 @@ public class DataBaseController {
     }
 
     //Done
-    protected void updateSupplierList (ArrayList<SupplierModel> updatedSupplierList){
+    protected synchronized void updateSupplierList (ArrayList<SupplierModel> updatedSupplierList){
         try {
             statement = dataCon.createStatement();
             statement.executeUpdate("TRUNCATE TABLE suppliers");
 
             for (SupplierModel temp: updatedSupplierList) {
-                insertSupplier(temp);
+                addSupplier(temp);
             }
 
         }catch (java.sql.SQLException e){
@@ -158,7 +158,7 @@ public class DataBaseController {
     }
 
     //Done
-    protected void updateOrderList (ArrayList<OrderLineModel> updatedOrderList){
+    protected synchronized void updateOrderList (ArrayList<OrderLineModel> updatedOrderList){
         try {
             statement = dataCon.createStatement();
             statement.executeUpdate("TRUNCATE TABLE orderlines");
@@ -173,7 +173,7 @@ public class DataBaseController {
         }
     }
 
-    protected void addOrderLine (OrderLineModel temp){
+    protected synchronized void addOrderLine (OrderLineModel temp){
         try {
             String insertQuery = "INSERT orderlines (OrderID, DateOrdered, OrderDescription) VALUES (?,?,?)";
             PreparedStatement pStat = dataCon.prepareStatement(insertQuery);
@@ -190,7 +190,7 @@ public class DataBaseController {
 
     }
 
-    private void insertItem (ItemModel temp ){
+    private synchronized void insertItem (ItemModel temp ){
         try {
             String insertQuery = "INSERT items (ItemID, Description, Quantity, Price, SupplierID) VALUES (?,?,?,?,?)";
             PreparedStatement pStat = dataCon.prepareStatement(insertQuery);
@@ -209,7 +209,7 @@ public class DataBaseController {
 
 
 
-    private void insertSupplier (SupplierModel temp){
+    private synchronized void insertSupplier (SupplierModel temp){
         try {
             String query = "INSERT suppliers (SupplierID, SupplierName, Address, Contact) VALUES (?,?,?,?)";
             PreparedStatement pStat = dataCon.prepareStatement(query);
@@ -225,7 +225,7 @@ public class DataBaseController {
     }
 
 
-    protected void removeItem (ItemModel item){
+    protected synchronized void removeItem (ItemModel item){
         try {
             String querry = "DELETE FROM items WHERE itemID = ?";
             PreparedStatement pStat = dataCon.prepareStatement(querry);

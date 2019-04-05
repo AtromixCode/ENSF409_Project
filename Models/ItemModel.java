@@ -39,6 +39,11 @@ public class ItemModel implements Serializable, Cloneable{
                 "Amount ordered:\t\t"+(50-quantity);
     }
 
+    public String custumOrderInfo(int Quantity){
+        return "ItemModel description:\t" + desc + "\r\n" +
+                "Amount ordered:\t\t" + Quantity;
+    }
+
     public String orderInfoSupplier()
     {
         return supplier.info();

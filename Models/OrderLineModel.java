@@ -58,4 +58,8 @@ public class OrderLineModel implements Serializable, Cloneable
     public String getDateString (){
         return dateString;
     }
+
+    public void setOrderLine (String line){
+        orderLine = line;
+    }
 }

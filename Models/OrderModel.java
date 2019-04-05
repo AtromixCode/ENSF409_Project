@@ -46,6 +46,17 @@ public class OrderModel implements Serializable, Cloneable
     public void addLine(ItemModel item)
     {
         OrderLineModel ol = new OrderLineModel(item, dateString, orderID);
+        checkOrders(ol);
+
+    }
+
+    public void createOrder (ItemModel i, int quantity){
+        OrderLineModel ol = new OrderLineModel(i, dateString, orderID);
+        ol.setOrderLine(i.custumOrderInfo(quantity));
+        checkOrders(ol);
+    }
+
+    private void checkOrders(OrderLineModel ol){
         if(!orderLines.isEmpty()) {
             for (OrderLineModel temp : orderLines) {
                 if (temp.getDateString().equals(dateString)) {

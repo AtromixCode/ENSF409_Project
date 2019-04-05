@@ -51,10 +51,8 @@ public class InventoryController
 
     public void generateOrder(OrderModel o)
     {
-        System.out.println("here3");
         for (ItemModel i: items){
             if (i.getQuantity()<40 && i.getSupplier()!= null){
-                System.out.println("here4");
                 o.addLine(i);
                 i.setQuantity(50);
                 data.addItem(i);
