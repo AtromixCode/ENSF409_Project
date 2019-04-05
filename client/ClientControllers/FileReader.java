@@ -101,7 +101,6 @@ public class FileReader {
 				if (check == false) {
 					suppliers.add(a);
 				}
-				suppliers.add(a);
 				line = read.readLine();
 			}
 			return true;

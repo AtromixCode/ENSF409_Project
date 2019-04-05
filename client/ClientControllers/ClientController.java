@@ -635,7 +635,6 @@ public class ClientController implements SCCommunicationConstants {
 	public void displayOrders()
 	{
 		orderDisplay.setText("***********************************************************************");
-		System.out.println(orderList.size());
 		if (!orderList.isEmpty()) {
 			String orderDate = orderList.get(0).getDateString();
 			int orderId = orderList.get(0).getOrderID();
