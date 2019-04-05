@@ -221,7 +221,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			inv.updateItemList(data.itemListFromDataBase());
 			inv.updateItemsSuppliers(suppliers);
 			outputWriter.writeObject(cloneArrayList(inv.getItems()));
-            System.out.println("sent");
+            System.out.println("Sent ItemList");
 
 			outputWriter.flush();
 		}
@@ -244,6 +244,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			outputWriter.writeObject(scOkay);
 			suppliers = data.supplierListFromDatabase();
 			outputWriter.writeObject(cloneArrayList(suppliers));
+			System.out.println("Sent SupplierList");
 
 			outputWriter.flush();
 		}
@@ -266,6 +267,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			outputWriter.writeObject(scOkay);
 			orders = data.orderLineListFromDataBase();
 			outputWriter.writeObject(cloneArrayList(orders));
+			System.out.println("Sent OrderList");
 
 			outputWriter.flush();
 		}
