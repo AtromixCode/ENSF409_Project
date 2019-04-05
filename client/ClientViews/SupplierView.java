@@ -111,6 +111,11 @@ class SupplierView {
 		supplierWindow.setVisible(visible);
 	}
 
+	/**
+	 * Sets the action listener for the add supplier button.
+	 *
+	 * @param b an action listener containing logic for the add supplier button.
+	 */
 	public void addSupplierActionListener(ActionListener b)
 	{
 		addSupplier.addActionListener(b);
@@ -128,7 +133,4 @@ class SupplierView {
 			}
 		});
 	}
-
-
-
 }

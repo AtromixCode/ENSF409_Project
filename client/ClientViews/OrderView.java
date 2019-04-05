@@ -115,5 +115,9 @@ class OrderView {
 		});
 	}
 
+	/**
+	 * Gets the order display text area.
+	 * @return a text area that contains the order display.
+	 */
 	public JTextArea getOrderDisplay(){return orderDisplay;}
 }

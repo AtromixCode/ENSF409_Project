@@ -43,14 +43,26 @@ public class OrderLineModel implements Serializable, Cloneable
 		return temp;
 	}
 
+	/**
+	 * Gets the date string of the order line.
+	 * @return a string containing the order date.
+	 */
 	public String getDateString() {
 		return dateString;
 	}
 
+	/**
+	 * Gets the order information of the order line.
+	 * @return a string containing the order line.
+	 */
 	public String getOrderLine() {
 		return orderLine;
 	}
 
+	/**
+	 * Gets the id of the order line.
+	 * @return the id of the order line.
+	 */
 	public int getOrderID() {
 		return orderID;
 	}

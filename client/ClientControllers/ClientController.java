@@ -55,10 +55,19 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	private ArrayList<OrderLineModel> orderList;
 
+	/**
+	 * The display model that is used to display the list of suppliers.
+	 */
 	private DefaultListModel<String> supplierDisplay;
 
+	/**
+	 * The display model that is used to display the list of items.
+	 */
 	private DefaultListModel<String> itemDisplay;
 
+	/**
+	 * The text area that is used to display orders.
+	 */
 	private JTextArea orderDisplay;
 
 	/**
@@ -483,10 +492,28 @@ public class ClientController implements SCCommunicationConstants {
 		return cloneList;
 	}
 
+	/**
+	 * Sets the display model for suppliers.
+	 * @param s the display model used in the GUI.
+	 */
 	public void setSupplierDisplay(DefaultListModel<String> s){supplierDisplay = s;}
+
+	/**
+	 * Sets the display model for items.
+	 * @param s the display model used in the GUI.
+	 */
 	public void setItemDisplay(DefaultListModel<String> s){itemDisplay = s;}
+
+	/**
+	 * Sets the text area used for orders.
+	 * @param o the text area used in the GUI.
+	 */
 	public void setOrderDisplay(JTextArea o){orderDisplay = o;}
 
+	/**
+	 * Makes a string array containing the ids and names of the suppliers.
+	 * @return a string array containing a string of ids and names.
+	 */
 	public String[] supplierIdsandNames()
 	{
 		ArrayList<String> list = new ArrayList<String>();
@@ -497,6 +524,10 @@ public class ClientController implements SCCommunicationConstants {
 		return list.toArray(new String [0]);
 	}
 
+	/**
+	 * Gets all data from server and inputs into display models.
+	 * @return true if communication with server was successful, false if otherwise.
+	 */
 	public boolean fetchAndDisplayFromServer()
 	{
 		try {
@@ -597,6 +628,10 @@ public class ClientController implements SCCommunicationConstants {
 		}
 	}
 
+	/**
+	 * Fills/overwrites a given list model with the strings of
+	 * the order list.
+	 */
 	public void displayOrders()
 	{
 		orderDisplay.setText("***********************************************************************");
@@ -625,6 +660,11 @@ public class ClientController implements SCCommunicationConstants {
 		}
 	}
 
+	/**
+	 * Removes an item from the item list on the server and client.
+	 * @param id the id of the item to be removed.
+	 * @return a string giving the result of the removal.
+	 */
 	public String removeItem(int id)
 	{
 		for (ItemModel i: itemList)
@@ -646,6 +686,14 @@ public class ClientController implements SCCommunicationConstants {
 		return "Item does not exist in shop for removal";
 	}
 
+	/**
+	 * Adds a supplier to the supplier list on the server and the client.
+	 * @param id the id of the supplier to be added.
+	 * @param name the name of the supplier to be added.
+	 * @param address the address of the supplier to be added.
+	 * @param contact the contact name of the supplier to be added.
+	 * @return the result of the supplier addition.
+	 */
 	public String addSupplier(int id, String name, String address, String contact)
 	{
 		for(SupplierModel s: supplierList)
@@ -671,6 +719,15 @@ public class ClientController implements SCCommunicationConstants {
 		return "Successfully added supplier.";
 	}
 
+	/**
+	 * Adds an item to the item list on the server and the client.
+	 * @param id the id of the item to be added.
+	 * @param name the name of the item to be added.
+	 * @param quantity the quantity of the item to be added.
+	 * @param price the price of the item to be added.
+	 * @param supId the supplier id of the item to be added.
+	 * @return the result of the item addition.
+	 */
 	public String addItem(int id, String name, int quantity, float price, int supId)
 	{
 		ItemModel i = null;
@@ -706,6 +763,12 @@ public class ClientController implements SCCommunicationConstants {
 		return "Successfully added item.";
 	}
 
+	/**
+	 * Removes a certain quantity of the item, updating this on the server and client.
+	 * @param id the id of the item to be sold.
+	 * @param quantity the quantity to be sold of the item.
+	 * @return the result of the item sale.
+	 */
 	public String sellItem(int id, int quantity)
 	{
 		for (ItemModel i: itemList)
@@ -734,6 +797,12 @@ public class ClientController implements SCCommunicationConstants {
 		return "Item does not exist";
 	}
 
+	/**
+	 * Orders a certain amount of a particular item, updating this on the server and client.
+	 * @param id the id of the item to be ordered.
+	 * @param quantity the amount of the item that will be ordered.
+	 * @return The result of the item order.
+	 */
 	public String orderItem(int id, int quantity)
 	{
 		ItemModel a=null;
@@ -758,7 +827,6 @@ public class ClientController implements SCCommunicationConstants {
 		{
 			return "Error communicating with server.";
 		}
-		//return "Successfully ordered item.";
 	}
 
 	/**
