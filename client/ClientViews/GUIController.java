@@ -1,7 +1,6 @@
 package client.ClientViews;
 
 import client.ClientControllers.ClientController;
-import Models.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -444,7 +443,6 @@ class GUIController {
 
 		@Override
 		public void windowOpened(WindowEvent e) {
-
 		}
 
 		@Override

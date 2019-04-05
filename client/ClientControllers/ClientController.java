@@ -750,11 +750,9 @@ public class ClientController implements SCCommunicationConstants {
 		}
 		try
 		{
-			/**
-			 * TODO: Add Order Item on Client and Server.
-			 */
+			sendItemOrderUpdate(a, quantity);
 			fetchAndDisplayFromServer();
-			return "Doesn't work yet.";
+			return "Successfully Ordered Item!";
 		}
 		catch (Exception ex)
 		{
