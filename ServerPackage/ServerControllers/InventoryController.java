@@ -2,6 +2,7 @@ package ServerPackage.ServerControllers;
 
 import Models.ItemModel;
 import Models.OrderModel;
+import Models.SupplierModel;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -50,13 +51,16 @@ public class InventoryController
 
     public void generateOrder(OrderModel o)
     {
+        System.out.println("here3");
         for (ItemModel i: items){
-            if (i.getQuantity()<40){
-                data.addOrderLine(o.addLine(i));
+            if (i.getQuantity()<40 && i.getSupplier()!= null){
+                System.out.println("here4");
+                o.addLine(i);
                 i.setQuantity(50);
                 data.addItem(i);
             }
         }
+        data.updateOrderList(o.getOrderLines());
     }
 
 
@@ -67,6 +71,12 @@ public class InventoryController
                 temp.copyAttributes(temp);
                 return;
             }
+        }
+    }
+
+    public void updateItemsSuppliers (ArrayList<SupplierModel> supp){
+        for (SupplierModel tempSupp: supp) {
+            tempSupp.addItem(items);
         }
     }
 
@@ -84,12 +94,14 @@ public class InventoryController
             }
         }
     }
+
     protected ArrayList<ItemModel> getItems()
     {
         return items;
     }
 
     protected void updateItemList (ArrayList<ItemModel> listItem){
+
         items = listItem;
     }
 }

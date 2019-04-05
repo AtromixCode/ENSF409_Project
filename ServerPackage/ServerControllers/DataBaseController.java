@@ -32,7 +32,7 @@ public class DataBaseController {
                 temp.add(tempItem);
             }
         }catch (java.sql.SQLException e){
-            System.err.println("Error qhile trying to get the list of items from the server");
+            System.err.println("Error while trying to get the list of items from the server");
             e.printStackTrace();
         }
         return temp;
@@ -44,7 +44,7 @@ public class DataBaseController {
             statement = dataCon.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM shop.orderlines");
             while(rs.next()){
-                OrderLineModel tempLine = new OrderLineModel(rs.getInt("OrderID"),rs.getString("Date Ordered"),
+                OrderLineModel tempLine = new OrderLineModel(rs.getInt("OrderID"),rs.getString("DateOrdered"),
                         rs.getString("OrderDescription"));
             }
 
@@ -67,7 +67,7 @@ public class DataBaseController {
                 temp.add(tempSupplier);
             }
         }catch (java.sql.SQLException e){
-            System.err.println("Error qhile trying to get the list of items from the server");
+            System.err.println("Error while trying to get the list of suppliers from the server");
             e.printStackTrace();
         }
         return temp;
@@ -76,29 +76,30 @@ public class DataBaseController {
 
     protected void addItem (ItemModel temp){
         try {
-                String overrideQuerry = "SELECT * FROM orders WHERE date ='" + temp.getId() + "'";
-                statement = dataCon.createStatement();
-                resultSet = statement.executeQuery(overrideQuerry);
-                if (resultSet.next()) {
-                    String updateQuerry = "UPDATE items SET Description = ?, Quantity = ?, Price = ?, SupplierID = ? WHERE ItemID = ? ";
-                    PreparedStatement pStat = dataCon.prepareStatement(updateQuerry);
+            String overrideQuerry = "SELECT * FROM items WHERE ItemID ='" + temp.getId() + "'";
+            statement = dataCon.createStatement();
+            resultSet = statement.executeQuery(overrideQuerry);
+            if (resultSet.next()) {
+                String updateQuerry = "UPDATE items SET Description = ?, Quantity = ?, Price = ?, SupplierID = ? WHERE ItemID = ? ";
+                PreparedStatement pStat = dataCon.prepareStatement(updateQuerry);
 
 
-                    pStat.setString(1, temp.getDesc());     //The description of the GIVEN item
-                    pStat.setInt(2, temp.getQuantity());    //The quantity of the GIVEN item
-                    pStat.setFloat(3, temp.getPrice());     //The price of the GIVEN item
-                    pStat.setInt(4, temp.getSupplierID());  //The suppliers of the GIVEN item
-                    pStat.setInt(5, temp.getId());          //The id of the GIVEN item
+                pStat.setString(1, temp.getDesc());     //The description of the GIVEN item
+                pStat.setInt(2, temp.getQuantity());    //The quantity of the GIVEN item
+                pStat.setFloat(3, temp.getPrice());     //The price of the GIVEN item
+                pStat.setInt(4, temp.getSupplierID());  //The suppliers of the GIVEN item
+                pStat.setInt(5, temp.getId());          //The id of the GIVEN item
+                pStat.executeUpdate();
 
 
-                } else {
-                    insertItem(temp);
-                }
+            } else {
+                insertItem(temp);
+            }
 
 
         }catch (java.sql.SQLException e){
-            System.err.println("Error writing into the data base form the file" +
-                    "\ncheck for empty fields of the given items of the file");
+            System.err.println("Error adding items into the data base");
+            e.printStackTrace();
         }
 
 
@@ -106,38 +107,38 @@ public class DataBaseController {
 
     private void addSupplier(SupplierModel temp){
         try {
-                String overrideQuerry = "SELECT * FROM suppliers WHERE date ='" + temp.getId() + "'";
-                statement = dataCon.createStatement();
-                resultSet = statement.executeQuery(overrideQuerry);
-                if (resultSet.next()) {
-                    String updateQuerry = "UPDATE suppliers SET SupplierName = ?, Address = ?, Contact = ? WHERE SupplierID = ? ";
-                    PreparedStatement pStat = dataCon.prepareStatement(updateQuerry);
+            String overrideQuerry = "SELECT * FROM suppliers WHERE SupplierID ='" + temp.getId() + "'";
+            statement = dataCon.createStatement();
+            resultSet = statement.executeQuery(overrideQuerry);
+            if (resultSet.next()) {
+                String updateQuerry = "UPDATE suppliers SET SupplierName = ?, Address = ?, Contact = ? WHERE SupplierID = ? ";
+                PreparedStatement pStat = dataCon.prepareStatement(updateQuerry);
 
-                    pStat.setString(1, temp.getCompanyName());
-                    pStat.setString(2, temp.getAddress());
-                    pStat.setString(3, temp.getSalesContact());
-                    pStat.setInt(4, temp.getId());
+                pStat.setString(1, temp.getCompanyName());
+                pStat.setString(2, temp.getAddress());
+                pStat.setString(3, temp.getSalesContact());
+                pStat.setInt(4, temp.getId());
 
-                } else {
-                    insertSupplier(temp);
-                }
+            } else {
+                insertSupplier(temp);
+            }
         }catch (java.sql.SQLException e){
-            System.err.println("Error writing into the data base form the file" +
-                    "\ncheck for empty fields of the given items of the file");
+            System.err.println("Error inserting a supplier into the database table");
         }
     }
 
     protected void updateItemList (ArrayList<ItemModel> updateItemList){
         try {
             statement = dataCon.createStatement();
-            statement.executeQuery("TRUNCATE TABLE items");
+            statement.executeUpdate("TRUNCATE TABLE items");
 
             for (ItemModel temp: updateItemList ) {
-              insertItem(temp);
+                insertItem(temp);
             }
 
         }catch (java.sql.SQLException e){
             System.err.println("Error updating the item table in the data base");
+            e.printStackTrace();
         }
     }
 
@@ -145,14 +146,14 @@ public class DataBaseController {
     protected void updateSupplierList (ArrayList<SupplierModel> updatedSupplierList){
         try {
             statement = dataCon.createStatement();
-            statement.executeQuery("TRUNCATE TABLE suppliers");
+            statement.executeUpdate("TRUNCATE TABLE suppliers");
 
             for (SupplierModel temp: updatedSupplierList) {
                 insertSupplier(temp);
             }
 
         }catch (java.sql.SQLException e){
-            System.err.println("Error updating the item table in the data base");
+            System.err.println("Error updating the supplier table in the data base");
         }
     }
 
@@ -160,14 +161,15 @@ public class DataBaseController {
     protected void updateOrderList (ArrayList<OrderLineModel> updatedOrderList){
         try {
             statement = dataCon.createStatement();
-            statement.executeQuery("TRUNCATE TABLE suppliers");
+            statement.executeUpdate("TRUNCATE TABLE orderlines");
+            System.out.println("here");
 
             for (OrderLineModel temp: updatedOrderList) {
                 addOrderLine(temp);
             }
 
         }catch (java.sql.SQLException e){
-            System.err.println("Error updating the item table in the data base");
+            System.err.println("Error updating the Order  table in the data base");
         }
     }
 
@@ -179,10 +181,10 @@ public class DataBaseController {
             pStat.setInt(1, temp.getOrderID());
             pStat.setString(2, temp.getDateString());
             pStat.setString(3, temp.getOrderLine());
-            pStat.execute();
+            pStat.executeUpdate();
 
         }catch (java.sql.SQLException e){
-            System.err.println("Error trying to insert an order line into the data basse");
+            System.err.println("Error trying to insert an order line into the data base");
             e.printStackTrace();
         }
 
@@ -196,9 +198,9 @@ public class DataBaseController {
             pStat.setString(2, temp.getDesc());
             pStat.setInt(3, temp.getQuantity());
             pStat.setFloat(4,temp.getPrice());
-            pStat.setInt(5, temp.getId());
+            pStat.setInt(5, temp.getSupplierID());
 
-            pStat.execute();
+            pStat.executeUpdate();
         }catch (java.sql.SQLException e){
             System.err.println("Error inserting an item to the table");
             e.printStackTrace();
@@ -215,7 +217,7 @@ public class DataBaseController {
             pStat.setString(2, temp.getCompanyName());
             pStat.setString(3, temp.getAddress());
             pStat.setString(4, temp.getSalesContact());
-            pStat.execute();
+            pStat.executeUpdate();
         }catch (java.sql.SQLException e){
             System.err.println("Error inserting supplier to the data base");
             e.printStackTrace();

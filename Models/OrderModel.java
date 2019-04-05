@@ -12,7 +12,7 @@ import java.util.Date;
 
 public class OrderModel implements Serializable, Cloneable
 {
-	static final long serialVersionUID = 62L;
+    static final long serialVersionUID = 62L;
 
 
     private PrintWriter fileWrite;
@@ -38,46 +38,51 @@ public class OrderModel implements Serializable, Cloneable
     }
 
 
-    public OrderLineModel addLine(ItemModel item)
+    public void addLine(ItemModel item)
     {
-        OrderLineModel ol = new OrderLineModel(item);
-        for (OrderLineModel temp: orderLines) {
-            if (temp.getDateString().equals(dateString)){
-                ol.copyAttributes(temp);
-                break;
+        OrderLineModel ol = new OrderLineModel(item, dateString, orderID);
+        if(!orderLines.isEmpty()) {
+            for (OrderLineModel temp : orderLines) {
+                if (temp.getDateString().equals(dateString)) {
+                    ol.copyAttributes(temp);
+                    break;
+                }
             }
         }
         orderLines.add(ol);
-        return ol;
     }
 
     public String getDateString(){return dateString;}
 
-	public Object clone() throws CloneNotSupportedException
-	{
-		OrderModel temp = (OrderModel)super.clone();
-		if(temp.orderLines != null)
-		{
-			temp.orderLines = new ArrayList<OrderLineModel>();
-			for(OrderLineModel orderLineInList : orderLines)
-				temp.orderLines.add((OrderLineModel)orderLineInList.clone());
-		}
+    public Object clone() throws CloneNotSupportedException
+    {
+        OrderModel temp = (OrderModel)super.clone();
+        if(temp.orderLines != null)
+        {
+            temp.orderLines = new ArrayList<OrderLineModel>();
+            for(OrderLineModel orderLineInList : orderLines)
+                temp.orderLines.add((OrderLineModel)orderLineInList.clone());
+        }
 
-		if(temp.date != null)
-			temp.date = (Date)date.clone();
+        if(temp.date != null)
+            temp.date = (Date)date.clone();
 
-		if(temp.format != null)
-			temp.format = (SimpleDateFormat)format.clone();
+        if(temp.format != null)
+            temp.format = (SimpleDateFormat)format.clone();
 
-		return temp;
-	}
+        return temp;
+    }
 
-	public int getOrderID (){
+    public int getOrderID (){
         return orderID;
     }
 
     public void setOrderLines(ArrayList<OrderLineModel> orders){
         orderLines = orders;
+    }
+
+    public ArrayList <OrderLineModel> getOrderLines(){
+        return orderLines;
     }
 
 }

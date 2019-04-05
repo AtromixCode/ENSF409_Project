@@ -6,8 +6,8 @@ import java.util.Date;
 
 public class OrderLineModel implements Serializable, Cloneable
 {
-	static final long serialVersionUID = 63L;	
-	
+    static final long serialVersionUID = 63L;
+
     private transient ItemModel item;
     private String orderLine;
     private transient Date date;
@@ -15,9 +15,11 @@ public class OrderLineModel implements Serializable, Cloneable
     private String dateString;
     private int orderID;
 
-    public OrderLineModel(ItemModel i)
+    public OrderLineModel(ItemModel i, String dateS, int id)
     {
         item = i;
+        dateString = dateS;
+        orderID = id;
         orderLine = "\r\n"+i.orderInfoItem()+ "\r\n" + i.orderInfoSupplier();
     }
 
@@ -35,17 +37,17 @@ public class OrderLineModel implements Serializable, Cloneable
     {
         return orderLine;
     }
-	
-	public Object clone() throws CloneNotSupportedException
-	{
-		OrderLineModel temp = (OrderLineModel)super.clone();
-		if(temp.item != null) 
-			temp.item = (ItemModel)temp.item; 
-		
-		return temp;
-	}
 
-	public String getOrderLine (){
+    public Object clone() throws CloneNotSupportedException
+    {
+        OrderLineModel temp = (OrderLineModel)super.clone();
+        if(temp.item != null)
+            temp.item = (ItemModel)temp.item;
+
+        return temp;
+    }
+
+    public String getOrderLine (){
         return orderLine;
     }
 

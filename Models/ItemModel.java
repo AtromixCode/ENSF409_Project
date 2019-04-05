@@ -6,7 +6,7 @@ public class ItemModel implements Serializable, Cloneable{
 
 	static final long serialVersionUID = 1L;
 
-	private SupplierModel supplier;
+	private transient SupplierModel supplier;
     private int id;
     private String desc;
     private int quantity;
@@ -24,7 +24,7 @@ public class ItemModel implements Serializable, Cloneable{
 
     public void setSupplier(SupplierModel s)
     {
-        supplier=s;
+        supplier = s;
     }
 
     @Override
@@ -83,5 +83,9 @@ public class ItemModel implements Serializable, Cloneable{
 
     public float getPrice(){
         return price;
+    }
+
+    public SupplierModel getSupplier (){
+        return supplier;
     }
 }

@@ -5,13 +5,13 @@ import java.util.ArrayList;
 
 public class SupplierModel implements Serializable, Cloneable
 {
-	static final long serialVersionUID = 61L;
-	
+    static final long serialVersionUID = 61L;
+
     private int id;
     private String companyName;
     private String address;
     private String salesContact;
-    private ArrayList<ItemModel> items;
+    private transient ArrayList<ItemModel> items;
 
     public SupplierModel(int id, String cn, String address, String sc)
     {
@@ -41,20 +41,20 @@ public class SupplierModel implements Serializable, Cloneable
     {
         return "SupplierModel ID: "+ id + ", Company Name: "+ companyName +", address: "+ address +", Sales Contact: " + salesContact;
     }
-	
-	public Object clone() throws CloneNotSupportedException
-	{
-		SupplierModel temp = (SupplierModel)super.clone();
-		if(temp.items != null) 
-		{
-			temp.items = new ArrayList<ItemModel>();
-			for(ItemModel itemInList : items)
-				temp.items.add((ItemModel)itemInList.clone());
-		}
-		return temp;
-	}
 
-	public int getId (){
+    public Object clone() throws CloneNotSupportedException
+    {
+        SupplierModel temp = (SupplierModel)super.clone();
+        if(temp.items != null)
+        {
+            temp.items = new ArrayList<ItemModel>();
+            for(ItemModel itemInList : items)
+                temp.items.add((ItemModel)itemInList.clone());
+        }
+        return temp;
+    }
+
+    public int getId (){
         return id;
     }
 
