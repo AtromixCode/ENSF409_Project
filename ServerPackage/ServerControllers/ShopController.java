@@ -413,9 +413,13 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			System.err.println(classErr.getMessage());
 			return;
 		}
-		data.addItem(changeItem);
-		inv.updateItem(changeItem);
-		checkQuantities();
+        inv.updateItem(changeItem);
+        checkQuantities();
+        if(changeItem.getQuantity() < 40) {
+            changeItem.setQuantity(50);
+        }
+        data.addItem(changeItem);
+
 	}
 
 	/**
@@ -505,9 +509,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 */
 	private void checkQuantities()
 	{
-        System.out.println("here1");
 		if(inv.checkIfOrder()){
-            System.out.println("here2");
 			inv.generateOrder(order);
 		}
 	}
