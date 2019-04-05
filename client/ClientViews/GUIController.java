@@ -159,6 +159,7 @@ class GUIController {
 					JOptionPane.showMessageDialog(null, "Please enter an integer!",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
+				mv.setButtonsClickable(false);
 			}
 		}
 
@@ -190,6 +191,7 @@ class GUIController {
 					JOptionPane.showMessageDialog(null, "Please enter an integer!",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
+				mv.setButtonsClickable(false);
 			}
 		}
 
@@ -210,6 +212,7 @@ class GUIController {
 							"Result", JOptionPane.INFORMATION_MESSAGE);
 					mv.setButtonsClickable(false);
 				}
+				mv.setButtonsClickable(false);
 			}
 		}
 	}
@@ -266,8 +269,8 @@ class GUIController {
 					JOptionPane.showMessageDialog(null, "There was an error adding the item.",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
-
 			}
+			mv.setButtonsClickable(false);
 		}
 
 		public class UserPromptPanel extends JPanel {
@@ -341,6 +344,7 @@ class GUIController {
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+			mv.setButtonsClickable(false);
 		}
 
 		public class UserPromptPanel extends JPanel
@@ -374,6 +378,7 @@ class GUIController {
 		public void actionPerformed(ActionEvent e) {
 			retrieveAndDisplay();
 			ov.setWindowVisibility(true);
+			mv.setButtonsClickable(false);
 		}
 	}
 
@@ -387,6 +392,7 @@ class GUIController {
 		public void actionPerformed(ActionEvent e) {
 			retrieveAndDisplay();
 			sv.setSupplierWindowVisibility(true);
+			mv.setButtonsClickable(false);
 		}
 	}
 
@@ -411,6 +417,7 @@ class GUIController {
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+			mv.setButtonsClickable(false);
 		}
 	}
 
@@ -435,15 +442,14 @@ class GUIController {
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+			mv.setButtonsClickable(false);
 		}
 	}
 
 	public class WindowClose implements WindowListener
 	{
-
 		@Override
-		public void windowOpened(WindowEvent e) {
-		}
+		public void windowOpened(WindowEvent e) { }
 
 		@Override
 		public void windowClosing(WindowEvent e) {
@@ -451,29 +457,19 @@ class GUIController {
 		}
 
 		@Override
-		public void windowClosed(WindowEvent e) {
-			//cc.terminate();
-		}
+		public void windowClosed(WindowEvent e) { }
 
 		@Override
-		public void windowIconified(WindowEvent e) {
-
-		}
+		public void windowIconified(WindowEvent e) { }
 
 		@Override
-		public void windowDeiconified(WindowEvent e) {
-
-		}
+		public void windowDeiconified(WindowEvent e) { }
 
 		@Override
-		public void windowActivated(WindowEvent e) {
-
-		}
+		public void windowActivated(WindowEvent e) { }
 
 		@Override
-		public void windowDeactivated(WindowEvent e) {
-
-		}
+		public void windowDeactivated(WindowEvent e) { }
 	}
 
 	/**
