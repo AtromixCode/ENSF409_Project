@@ -531,8 +531,8 @@ public class ClientController implements SCCommunicationConstants {
 	public boolean fetchAndDisplayFromServer()
 	{
 		try {
-			supplierList = retrieveSupplierListFromServer();
 			itemList = retrieveItemListFromServer();
+			supplierList = retrieveSupplierListFromServer();
 			orderList = retrieveOrderListFromServer();
 			displayItems();
 			displaySuppliers();
@@ -778,7 +778,15 @@ public class ClientController implements SCCommunicationConstants {
 				{
 					return "Not enough quantity to sell that much.";
 				}
-				else if (i.getSupplier()==null)
+				boolean check = false;
+				for (SupplierModel s: supplierList)
+				{
+					if (s.getId()==i.getSupplierID())
+					{
+						check = true;
+					}
+				}
+				if (!check)
 				{
 					return "No supplier found for that item!";
 				}
@@ -820,7 +828,15 @@ public class ClientController implements SCCommunicationConstants {
 		{
 			return "Could not find item.";
 		}
-		if (a.getSupplier()==null)
+		boolean check = false;
+		for (SupplierModel s: supplierList)
+		{
+			if (s.getId()==a.getSupplierID())
+			{
+				check = true;
+			}
+		}
+		if (!check)
 		{
 			return "No supplier found for that item!";
 		}

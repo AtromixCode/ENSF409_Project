@@ -121,10 +121,10 @@ public class ItemModel implements Serializable, Cloneable {
 	public void setQuantity(int q){this.quantity = q;}
 
 	/**
-	 * Gets the item's supplier.
-	 * @return the supplier object that is the supplier for the item.
+	 * Gets the item's supplier id .
+	 * @return an integer that is the supplier id for the item.
 	 */
-	public SupplierModel getSupplier(){return supplier;}
+	public int getSupplierID(){return supplierID;}
 
 	/**
 	 * Item toString() method displays the attributes of the item.
