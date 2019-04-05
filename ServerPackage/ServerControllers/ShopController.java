@@ -386,6 +386,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
             order.createOrder(itemToOrder, quantityToOrder);
 			itemToOrder.setQuantity(itemToOrder.getQuantity() + quantityToOrder);
 			inv.updateItem(itemToOrder);
+			inv.updateItemsSuppliers(suppliers);
 			data.addItem(itemToOrder);
 		} catch (IOException readErr) {
 			System.err.println(readErr.getMessage());
@@ -419,7 +420,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		inv.updateItem(changeItem);
 		inv.updateItemsSuppliers(suppliers);
         checkQuantities();
-
 	}
 
 	/**
