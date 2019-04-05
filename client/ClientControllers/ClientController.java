@@ -816,6 +816,10 @@ public class ClientController implements SCCommunicationConstants {
 		{
 			return "Could not find item.";
 		}
+		if (a.getSupplier()==null)
+		{
+			return "No supplier found for that item!";
+		}
 		try
 		{
 			sendItemOrderUpdate(a, quantity);
