@@ -778,6 +778,10 @@ public class ClientController implements SCCommunicationConstants {
 				{
 					return "Not enough quantity to sell that much.";
 				}
+				else if (i.getSupplier()==null)
+				{
+					return "No supplier found for that item!";
+				}
 				else
 				{
 					i.setQuantity(i.getQuantity()-quantity);
