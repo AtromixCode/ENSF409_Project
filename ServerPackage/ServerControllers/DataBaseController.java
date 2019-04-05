@@ -21,7 +21,7 @@ public class DataBaseController {
         }
     }
 
-    protected   ArrayList<ItemModel> itemListFromDataBase (){
+    protected synchronized ArrayList<ItemModel> itemListFromDataBase (){
         ArrayList<ItemModel> temp = new ArrayList<ItemModel>();
         try {
             statement = dataCon.createStatement();
@@ -38,7 +38,7 @@ public class DataBaseController {
         return temp;
     }
 
-    protected    ArrayList<OrderLineModel> orderLineListFromDataBase (){
+    protected synchronized ArrayList<OrderLineModel> orderLineListFromDataBase (){
         ArrayList<OrderLineModel> orderLineList = new ArrayList<OrderLineModel>();
         try{
             statement = dataCon.createStatement();
@@ -56,7 +56,7 @@ public class DataBaseController {
         return orderLineList;
     }
 
-    protected    ArrayList<SupplierModel> supplierListFromDatabase (){
+    protected synchronized ArrayList<SupplierModel> supplierListFromDatabase (){
         ArrayList<SupplierModel> temp = new ArrayList<SupplierModel>();
         try {
             statement = dataCon.createStatement();
@@ -74,7 +74,7 @@ public class DataBaseController {
     }
 
 
-    protected    void addItem (ItemModel temp){
+    protected synchronized void addItem (ItemModel temp){
         try {
             System.out.println(temp.getQuantity());
             String overrideQuerry = "SELECT * FROM items WHERE ItemID =" + temp.getId();
@@ -104,7 +104,7 @@ public class DataBaseController {
 
     }
 
-    private   void addSupplier(SupplierModel temp){
+    private synchronized void addSupplier(SupplierModel temp){
         try {
             String overrideQuerry = "SELECT * FROM suppliers WHERE SupplierID ='" + temp.getId() + "'";
             statement = dataCon.createStatement();
@@ -126,7 +126,7 @@ public class DataBaseController {
         }
     }
 
-    protected   void updateItemList (ArrayList<ItemModel> updateItemList){
+    protected synchronized void updateItemList (ArrayList<ItemModel> updateItemList){
         try {
             statement = dataCon.createStatement();
             statement.executeUpdate("TRUNCATE TABLE items");

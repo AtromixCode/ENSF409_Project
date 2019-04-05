@@ -383,9 +383,9 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		try {
 			itemToOrder = (ItemModel) inputReader.readObject();
 			quantityToOrder = (Integer)inputReader.readObject();
-            order.createOrder(itemToOrder, quantityToOrder);
+            order.createOrder(inv.findItem(itemToOrder.getId()), quantityToOrder);
 			itemToOrder.setQuantity(itemToOrder.getQuantity() + quantityToOrder);
-			inv.updateItem(itemToOrder);
+			inv.updateItem(inv.findItem(itemToOrder.getId()));
 			inv.updateItemsSuppliers(suppliers);
 			data.addItem(itemToOrder);
 		} catch (IOException readErr) {
