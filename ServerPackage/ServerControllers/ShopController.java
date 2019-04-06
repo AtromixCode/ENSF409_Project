@@ -127,40 +127,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 				opcode += 30;
 
 			actOnOpCode(opcode);
-			
-			/*
-			if(clientOpeningMessage.contains(scQuery))
-			{
-				if(clientOpeningMessage.contains(scItem))
-					//return the item list
-				else if(clientOpeningMessage.contains(scSupplier))
-					//return the supplier list.
-				else if(clientOpeningMessage.contains(scOrder))
-					//return the order list.
-			}
-			else if(clientOpeningMessage.contains(scData))
-			{
-				if(clientOpeningMessage.contains(scItem))
-					//get an item list 
-				else if(clientOpeningMessage.contains(scSupplier))
-					//get a supplier list
-				else if(clientOpeningMessage.contains(scOrder))
-					//get an order list.
-			}
-			else if(clientOpeningMessage.contains(scSearch))
-			{
-				if(clientOpeningMessage.contains(scItem))
-				{
-					if(clientOpeningMessage.contains(scInt))
-						//return the item
-					else if(clientOpeningMessage.contains(scString))
-						//return the item
-				}
-			}
-			else
-				outputWriter.writeObject(scErr);
-			*/
-
 			return true;
 
 		}
@@ -179,9 +145,8 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 
 	/**
 	 *
-	 * TODO: Add a make order function with a received item (and perhaps quantity).
+	 *
 	 */
-
 	private void actOnOpCode(int opcode)
 	{
 		switch(opcode)
@@ -366,8 +331,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		data.updateOrderList(tempList);
 
 
-		//TODO
-		//update all the lists of orders to now be tempList
 	}
 
 	/**
@@ -396,7 +359,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			return;
 		}
 		
-		//TODO: order quantityToOrder of itemToOrder and update all order lists in the server and database
+
 	}
 	
 	

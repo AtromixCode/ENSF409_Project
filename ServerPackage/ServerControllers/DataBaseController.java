@@ -7,11 +7,35 @@ import Models.SupplierModel;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Data base controller class.
+ * This class is in charge of making a connection with the database and manage any operations related to it.
+ *
+ * @author Jake Liu
+ * @author Shamez Meghji
+ * @author Victor Sanchez
+ * @version 2.0
+ * @since April 1, 2019
+ */
 public class DataBaseController {
+    /**
+     * The connection to the data base
+     */
     private Connection dataCon;
+
+    /**
+     * the statement used to sent actions to the database server
+     */
     private Statement statement;
+
+    /**
+     * The result set to receive all outputs of the data base
+     */
     private ResultSet resultSet;
 
+    /**
+     * construct the data base with the
+     */
     public DataBaseController () {
         try {
             dataCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/shop", "root", "ENSFProjectPassword409!");
@@ -21,6 +45,10 @@ public class DataBaseController {
         }
     }
 
+    /**
+     * gets the list of items in the database and puts them in an array list to be used by the server and/or client
+     * @return temp the list of items from the data base
+     */
     protected synchronized ArrayList<ItemModel> itemListFromDataBase (){
         ArrayList<ItemModel> temp = new ArrayList<ItemModel>();
         try {
@@ -38,6 +66,10 @@ public class DataBaseController {
         return temp;
     }
 
+    /**
+     * gets the order lines list from the server and returns them to the server
+     * @return orderLineList is the list of orders gotten from the data base
+     */
     protected synchronized ArrayList<OrderLineModel> orderLineListFromDataBase (){
         ArrayList<OrderLineModel> orderLineList = new ArrayList<OrderLineModel>();
         try{
@@ -56,6 +88,10 @@ public class DataBaseController {
         return orderLineList;
     }
 
+    /**
+     * gets the supplier list from the data base
+     * @return temp is the list of suppliers gotten from the data base
+     */
     protected synchronized ArrayList<SupplierModel> supplierListFromDatabase (){
         ArrayList<SupplierModel> temp = new ArrayList<SupplierModel>();
         try {
@@ -74,6 +110,10 @@ public class DataBaseController {
     }
 
 
+    /**
+     * adds an item to the data base
+     * @param temp the item to add to the data base
+     */
     protected synchronized void addItem (ItemModel temp){
         try {
             System.out.println(temp.getQuantity());
@@ -104,6 +144,10 @@ public class DataBaseController {
 
     }
 
+    /**
+     * adds a supplier to the data base, it overrides if existing
+     * @param temp the supplier to add
+     */
     private synchronized void addSupplier(SupplierModel temp){
         try {
             String overrideQuerry = "SELECT * FROM suppliers WHERE SupplierID ='" + temp.getId() + "'";
@@ -126,6 +170,10 @@ public class DataBaseController {
         }
     }
 
+    /**
+     * updates the item list of the data base
+     * @param updateItemList the list of items to input to the data controller
+     */
     protected synchronized void updateItemList (ArrayList<ItemModel> updateItemList){
         try {
             statement = dataCon.createStatement();
@@ -141,8 +189,11 @@ public class DataBaseController {
         }
     }
 
-    //Done
-    protected   void updateSupplierList (ArrayList<SupplierModel> updatedSupplierList){
+    /**
+     *updates the supplier list in the data base to a given list
+     * @param updatedSupplierList the list to put into the data base
+     */
+    protected  synchronized void updateSupplierList (ArrayList<SupplierModel> updatedSupplierList){
         try {
             statement = dataCon.createStatement();
             statement.executeUpdate("TRUNCATE TABLE suppliers");
@@ -156,8 +207,11 @@ public class DataBaseController {
         }
     }
 
-    //Done
-    protected   void updateOrderList (ArrayList<OrderLineModel> updatedOrderList){
+    /**
+     * updates the list of orders in the data base to a given order list
+     * @param updatedOrderList the list to put in the database
+     */
+    protected synchronized void updateOrderList (ArrayList<OrderLineModel> updatedOrderList){
         try {
             statement = dataCon.createStatement();
             statement.executeUpdate("TRUNCATE TABLE orderlines");
@@ -172,7 +226,11 @@ public class DataBaseController {
         }
     }
 
-    protected   void addOrderLine (OrderLineModel temp){
+    /**
+     * adds an order to the data base
+     * @param temp the order to be added
+     */
+    protected synchronized void addOrderLine (OrderLineModel temp){
         try {
             String insertQuery = "INSERT orderlines (OrderID, DateOrdered, OrderDescription) VALUES (?,?,?)";
             PreparedStatement pStat = dataCon.prepareStatement(insertQuery);
@@ -189,7 +247,11 @@ public class DataBaseController {
 
     }
 
-    private   void insertItem (ItemModel temp ){
+    /**
+     * inserts an item to the data base
+     * @param temp the item to insert
+     */
+    private synchronized void insertItem (ItemModel temp ){
         try {
             String insertQuery = "INSERT items (ItemID, Description, Quantity, Price, SupplierID) VALUES (?,?,?,?,?)";
             PreparedStatement pStat = dataCon.prepareStatement(insertQuery);
@@ -207,8 +269,11 @@ public class DataBaseController {
     }
 
 
-
-    private   void insertSupplier (SupplierModel temp){
+    /**
+     * inserts a supplier to the data base
+     * @param temp the supplier to be added to the data base
+     */
+    private  synchronized void insertSupplier (SupplierModel temp){
         try {
             String query = "INSERT suppliers (SupplierID, SupplierName, Address, Contact) VALUES (?,?,?,?)";
             PreparedStatement pStat = dataCon.prepareStatement(query);
@@ -224,7 +289,11 @@ public class DataBaseController {
     }
 
 
-    protected   void removeItem (ItemModel item){
+    /**
+     * removes an item from the data base
+     * @param item item to be removed
+     */
+    protected  synchronized void removeItem (ItemModel item){
         try {
             String querry = "DELETE FROM items WHERE itemID = ?";
             PreparedStatement pStat = dataCon.prepareStatement(querry);

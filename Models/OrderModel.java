@@ -9,19 +9,51 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-
+/**
+ * Order class.
+ * controls the all the orders
+ *
+ * @author Jake Liu
+ * @author Shamez Meghji
+ * @author Victor Sanchez
+ * @version 2.0
+ * @since April 1, 2019
+ */
 public class OrderModel implements Serializable, Cloneable
 {
+    /**
+     * serialVersionUID, for serializing and deserialization
+     */
     static final long serialVersionUID = 62L;
 
-
-    private PrintWriter fileWrite;
+    /**
+     * list of orders
+     */
     private ArrayList<OrderLineModel> orderLines;
+
+    /**
+     * date object to use current date
+     */
     private Date date;
+
+    /**
+     * format of the date
+     */
     private SimpleDateFormat format;
+
+    /**
+     * the date in a string
+     */
     private String dateString;
+
+    /**
+     * the id of the order
+     */
     private int orderID;
 
+    /**
+     * constructs an order with an empty order list and generates a date and id
+     */
     public OrderModel()
     {
         orderLines = new ArrayList<OrderLineModel>();
@@ -31,18 +63,11 @@ public class OrderModel implements Serializable, Cloneable
         orderID = (int)(Math.random() * 90000) + 10000;
     }
 
-    public OrderModel (int id, String date, ArrayList<OrderLineModel> lines){
-        orderID = id;
-        dateString = date;
-        orderLines = lines;
-    }
-
 
     /**
-     *
-     * TODO: I think this is a problem because you end up replacing order lines with wrong info.
+     * adds a line to the list of order lines
+     * @param item the item to create the list around
      */
-
     public void addLine(ItemModel item)
     {
         OrderLineModel ol = new OrderLineModel(item, dateString, orderID);
@@ -50,12 +75,21 @@ public class OrderModel implements Serializable, Cloneable
 
     }
 
+    /**
+     * creates an order of an item with the given quantity
+     * @param i the item to create the order of
+     * @param quantity the amount to order
+     */
     public void createOrder (ItemModel i, int quantity){
         OrderLineModel ol = new OrderLineModel(i, dateString, orderID);
-        ol.setOrderLine(i.custumOrderInfo(quantity));
+        ol.setOrderLine(i.customOrderInfo(quantity));
         checkOrders(ol);
     }
 
+    /**
+     * checks if there is an order with the same date and uses that order parameters if there is and adds it to the list
+     * @param ol the order line to check
+     */
     private void checkOrders(OrderLineModel ol){
         if(!orderLines.isEmpty()) {
             for (OrderLineModel temp : orderLines) {
@@ -68,8 +102,12 @@ public class OrderModel implements Serializable, Cloneable
         orderLines.add(ol);
     }
 
-    public String getDateString(){return dateString;}
 
+    /**
+     * clones the order model
+     * @return the clone of the order model
+     * @throws CloneNotSupportedException if it doesn't support cloning
+     */
     public Object clone() throws CloneNotSupportedException
     {
         OrderModel temp = (OrderModel)super.clone();
@@ -89,14 +127,18 @@ public class OrderModel implements Serializable, Cloneable
         return temp;
     }
 
-    public int getOrderID (){
-        return orderID;
-    }
-
+    /**
+     * sets the order lines to a given list or order lines
+     * @param orders the lines to set
+     */
     public void setOrderLines(ArrayList<OrderLineModel> orders){
         orderLines = orders;
     }
 
+    /**
+     * gets the order lines
+     * @return the order lines
+     */
     public ArrayList <OrderLineModel> getOrderLines(){
         return orderLines;
     }
