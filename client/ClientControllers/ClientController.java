@@ -14,7 +14,6 @@ import Models.*;
  *
  * @author Jake Liu
  * @author Shamez Meghji
- * @author Shamez Meghji
  * @author Victor Sanchez
  * @version 1.0
  * @since April 5, 2019
