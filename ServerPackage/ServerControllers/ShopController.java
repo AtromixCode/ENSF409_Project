@@ -162,9 +162,9 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * 				   2 = data received from or sent to the client will be in String form.
 	 * 				   3 = data received from or sent to the client will be in user-defined object form.
 	 *
-	 * Ones digit:	   1 = data recieved from or sent to the client will be Items.
-	 *  			   1 = data recieved from or sent to the client will be Suppliers.
-	 *  			   1 = data recieved from or sent to the client will be Orders or order lines.
+	 * Ones digit:	   1 = data received from or sent to the client will be Items.
+	 *  			   1 = data received from or sent to the client will be Suppliers.
+	 *  			   1 = data received from or sent to the client will be Orders or order lines.
 	 *
 	 * @param opcode The opcode of the action to perform.
 	 */
