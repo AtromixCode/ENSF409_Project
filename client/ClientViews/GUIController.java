@@ -18,7 +18,7 @@ import java.util.Scanner;
  * @author Shamez Meghji
  * @author Victor Sanchez
  * @version 1.0
- * @since March 29, 2019
+ * @since April 5, 2019
  */
 class GUIController {
 
@@ -58,6 +58,9 @@ class GUIController {
 		retrieveAndDisplay();
 	}
 
+	/**
+	 * Sends display areas to the client controller for its use.
+	 */
 	protected void setUpCC()
 	{
 		cc.setItemDisplay(mv.getItemListModel());
@@ -66,6 +69,9 @@ class GUIController {
 	}
 
 
+	/**
+	 * Assigns all action listeners for buttons on the front end.
+	 */
 	protected void addActionListeners()
 	{
 		mv.addWindowListener(new WindowClose());
@@ -79,6 +85,10 @@ class GUIController {
 		sv.addSupplierActionListener(new AddSupplier());
 	}
 
+	/**
+	 * Retrieves and displays data from server. Displays
+	 * and error box to the user if this is unsuccessful.
+	 */
 	protected void retrieveAndDisplay()
 	{
 		if(!cc.fetchAndDisplayFromServer()) {
@@ -103,7 +113,7 @@ class GUIController {
 		int id;
 
 		/**
-		 * default constructor assigns the actions listeners to the 3 buttons
+		 * Default constructor assigns the actions listeners to the 3 buttons
 		 * dependent on there being at least one item to select.
 		 */
 		protected SelectItem()
@@ -137,6 +147,10 @@ class GUIController {
 		 */
 		public class SellItem implements ActionListener {
 
+			/**
+			 *
+			 * @param e The event that triggers the call to the method.
+			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				retrieveAndDisplay();
@@ -157,12 +171,18 @@ class GUIController {
 		}
 
 		/**
-		 * inner ActionListener class listens for the "Order Item" button
+		 * Inner ActionListener class listens for the "Order Item" button
 		 * to be pressed, whereupon a dialogue box asking for a specified amount
 		 * to order will appear. Handles errors and tells the user what went wrong.
 		 */
 		public class OrderItem implements ActionListener {
 
+			/**
+			 * Implementation of the action performed method that displays a
+			 * text box to the user for input on quantity for item ordering.
+			 *
+			 * @param e The event that triggers the call to the method.
+			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				retrieveAndDisplay();
@@ -188,6 +208,11 @@ class GUIController {
 		 */
 		public class RemoveItem implements ActionListener {
 
+			/**
+			 * Implementation of the action performed method that displays a
+			 * text box to the user to confirm an item removal.
+			 * @param e The event that triggers the call to the method.
+			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				retrieveAndDisplay();
@@ -210,8 +235,17 @@ class GUIController {
 	 */
 	public class AddItem implements ActionListener {
 
+		/**
+		 * The panel that is displayed to the user for inputting item information.
+		 */
 		UserPromptPanel panel;
 
+		/**
+		 * Implementation of the action performed method that displays a
+		 * text box to the user for inputting parameters to add an item.
+		 *
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			retrieveAndDisplay();
@@ -259,14 +293,45 @@ class GUIController {
 			retrieveAndDisplay();
 		}
 
+		/**
+		 * An inner class to the AddItem class that creates a panel with
+		 * appropriate fields for adding a new item.
+		 */
 		public class UserPromptPanel extends JPanel {
+
+			/**
+			 * The text field for the item id.
+			 */
 			private JTextField id = new JTextField(5);
+
+			/**
+			 * The text field for the item name.
+			 */
 			private JTextField name = new JTextField(10);
+
+			/**
+			 * The text field for the item quantity.
+			 */
 			private JTextField quantity = new JTextField(5);
+
+			/**
+			 * The text field for the item price.
+			 */
 			private JTextField price = new JTextField(8);
+
+			/**
+			 * The list that is used for the combobox.
+			 */
 			private String [] list = cc.supplierIdsandNames();
+
+			/**
+			 * The combo box of the suppliers to be added for the item.
+			 */
 			private JComboBox<String> suppliers = new JComboBox<String>(list);
 
+			/**
+			 * The constructor that assembles the panel.
+			 */
 			public UserPromptPanel() {
 				this.add(new JLabel("ID:"));
 				this.add(id);
@@ -281,15 +346,26 @@ class GUIController {
 			}
 		}
 	}
+
 	/**
-	 * inner ActionListener class listens for the "Add Supplier" button
+	 * Inner ActionListener class listens for the "Add Supplier" button
 	 * to be pressed, whereupon user input is taken to add a supplier,
 	 * and the supplier list is updated.
 	 *
 	 */
 	public class AddSupplier implements ActionListener
 	{
+		/**
+		 * The panel that is displayed to the user for inputting supplier information.
+		 */
 		UserPromptPanel panel = new UserPromptPanel();
+
+		/**
+		 * Implementation of the action performed method that displays a
+		 * text box to the user for inputting parameters to add a supplier.
+		 *
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			retrieveAndDisplay();
@@ -334,13 +410,35 @@ class GUIController {
 			retrieveAndDisplay();
 		}
 
+		/**
+		 * An inner class to the AddSupplier class that creates a panel with
+		 * appropriate fields for adding a new supplier.
+		 */
 		public class UserPromptPanel extends JPanel
 		{
+			/**
+			 * The text field for the supplier id.
+			 */
 			private JTextField id = new JTextField(5);
+
+			/**
+			 * The text field for the supplier name.
+			 */
 			private JTextField name = new JTextField(20);
+
+			/**
+			 * The text field for the supplier address.
+			 */
 			private JTextField address = new JTextField(50);
+
+			/**
+			 * The text field for the supplier contact name.
+			 */
 			private JTextField contact = new JTextField(20);
 
+			/**
+			 * The constructor that assembles the panel.
+			 */
 			public UserPromptPanel()
 			{
 				this.add(new JLabel("ID:"));
@@ -356,11 +454,18 @@ class GUIController {
 	}
 
 	/**
-	 * inner ActionListener class listens for the "View Orders" button
+	 * Inner ActionListener class listens for the "View Orders" button
 	 * to be pressed, whereupon the order window will be made visible.
 	 */
 	public class ViewOrders implements ActionListener
 	{
+
+		/**
+		 * Implementation of the action performed method that displays a
+		 * window to the user to view the orders made by the shop.
+		 *
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			retrieveAndDisplay();
@@ -376,6 +481,11 @@ class GUIController {
 	 */
 	public class ViewSuppliers implements ActionListener
 	{
+
+		/**
+		 *
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			retrieveAndDisplay();
@@ -386,12 +496,20 @@ class GUIController {
 	}
 
 	/**
-	 * inner ActionListener class listens for the "Import Items" button
+	 * Inner ActionListener class listens for the "Import Items" button
 	 * to be pressed, whereupon a prompt to import a file of items will appear.
 	 */
 	public class ImportItems implements ActionListener
 	{
+		/**
+		 *
+		 */
 		String filename;
+
+		/**
+		 *
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			retrieveAndDisplay();
@@ -412,12 +530,20 @@ class GUIController {
 	}
 
 	/**
-	 * inner ActionListener class listens for the "Import Suppliers" button
+	 * Inner ActionListener class listens for the "Import Suppliers" button
 	 * to be pressed, whereupon a prompt to import a file of suppliers will appear.
 	 */
 	public class ImportSuppliers implements ActionListener
 	{
+		/**
+		 *
+		 */
 		String filename;
+
+		/**
+		 *
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			retrieveAndDisplay();
@@ -437,18 +563,37 @@ class GUIController {
 		}
 	}
 
+	/**
+	 * Inner ActionListener class listens for the "Refresh" button to be pressed,
+	 * whereupon a the displays are updated and a loading circle is shown.
+	 */
 	public class Refresh implements ActionListener {
 
+		/**
+		 * Implementation of the action performed method that updates
+		 * the user displays and shows a loading circle.
+		 *
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			retrieveAndDisplay();
 			mv.loadingOn();
 			LoadThread lt = new LoadThread();
 			lt.start();
+			mv.setButtonsClickable(false);
 		}
 
+		/**
+		 * An inner class for the Refresh class used to display
+		 * the loading circle for a certain period of time.
+		 */
 		public class LoadThread extends Thread
 		{
+			/**
+			 * Sleeps the thread for 1 second before having it
+			 * removing the loading circle from being displayed.
+			 */
 			@Override
 			public void run()
 			{
@@ -462,28 +607,60 @@ class GUIController {
 
 	}
 
+	/**
+	 * Inner ActionListener class listens for main window events, mainly
+	 * when the window is closed. Ends the program when this happens.
+	 */
 	public class WindowClose implements WindowListener
 	{
+		/**
+		 * Unused.
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void windowOpened(WindowEvent e) { }
 
+		/**
+		 * Terminates the program when the main window is closed.
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void windowClosing(WindowEvent e) {
 			cc.terminate();
 		}
 
+		/**
+		 * Unused.
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void windowClosed(WindowEvent e) { }
 
+		/**
+		 * Unused.
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void windowIconified(WindowEvent e) { }
 
+		/**
+		 * Unused.
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void windowDeiconified(WindowEvent e) { }
 
+		/**
+		 * Unused.
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void windowActivated(WindowEvent e) { }
 
+		/**
+		 * Unused.
+		 * @param e The event that triggers the call to the method.
+		 */
 		@Override
 		public void windowDeactivated(WindowEvent e) { }
 	}
