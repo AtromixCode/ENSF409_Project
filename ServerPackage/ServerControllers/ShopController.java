@@ -149,9 +149,24 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	}
 
 	/**
-	 *	Calls an applicable function based on the opcode
-	 *	received. Used for sending shop data to and from
-	 *	the server to the client.
+	 * Make the shop do something based on the given opcode.
+	 * opcodes are translated from keywords in SCCommunicationConstants as follows:
+	 * Hundreds digit: 1 = sending data from the database to the client.
+	 * 				   2 = updating the database based on data from the client.
+	 * 				   3 = search the database for an object based on a given criteria and send it to the client.
+	 * 				   4 = remove an object from the database.
+	 * 				   5 = prompt the server to analyze and modify the data in the database
+	 *
+	 * Tens digit:	   0 = data received from or sent to the client will be in ArrayList form.
+	 * 				   1 = data received from or sent to the client will be in int form.
+	 * 				   2 = data received from or sent to the client will be in String form.
+	 * 				   3 = data received from or sent to the client will be in user-defined object form.
+	 *
+	 * Ones digit:	   1 = data recieved from or sent to the client will be Items.
+	 *  			   1 = data recieved from or sent to the client will be Suppliers.
+	 *  			   1 = data recieved from or sent to the client will be Orders or order lines.
+	 *
+	 * @param opcode The opcode of the action to perform.
 	 */
 	private void actOnOpCode(int opcode)
 	{
