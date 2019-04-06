@@ -6,31 +6,31 @@ import Models.SupplierModel;
 import java.util.ArrayList;
 
 /**
- * inventory controller class.
- * this class is used to manipulate the inventory and the items inside it
+ * Inventory controller class.
+ * This class is used to manipulate the inventory and the items inside it.
  *
  * @author Victor Sanchez
  * @author Shamez Meghji
  * @author Jake Lui
  * @version 2.0
- * @since April 1, 2019
+ * @since April 5, 2019
  */
 public class InventoryController
 {
 
     /**
-     * the items kept by the inventory
+     * The items kept by the inventory.
      */
     protected ArrayList<ItemModel> items;
 
     /**
-     * the data base controller to update it
+     * The database controller to update it.
      */
     private DataBaseController data;
 
     /**
-     * constructs the inventory with items found on the data base
-     * @param dc the data base controller gotten from the shop controller
+     * Constructs the inventory with items found on the database.
+     * @param dc the database controller gotten from the shop controller.
      */
     public InventoryController(DataBaseController dc)
     {
@@ -40,9 +40,10 @@ public class InventoryController
 
 
     /**
-     * finds the item using the id, returns null if not found
-     * @param id the id of the item to find
-     * @return the item found with the matching id
+     * Finds the item using the id, returns null if not found.
+     *
+     * @param id the id of the item to find.
+     * @return the item found with the matching id.
      */
     public ItemModel findItem(int id)
     {
@@ -54,9 +55,10 @@ public class InventoryController
     }
 
     /**
-     * finds the item using the name/description
-     * @param desc the name of the item to find
-     * @return the item found or null if not found
+     * Finds the item using the name/description.
+     *
+     * @param desc the name of the item to find.
+     * @return the item found or null if not found.
      */
     protected ItemModel findItem(String desc)
     {
@@ -68,8 +70,8 @@ public class InventoryController
     }
 
     /**
-     * checks if there is a need to order items
-     * @return true if there is a need to order
+     * Checks if there is a need to order items.
+     * @return true if there is a need to order.
      */
     protected boolean checkIfOrder()
     {
@@ -81,8 +83,8 @@ public class InventoryController
     }
 
     /**
-     * generates an order and updates the necessary list
-     * @param o the order model used to create an order line
+     * Generates an order and updates the necessary list.
+     * @param o the order model used to create an order line.
      */
     protected void generateOrder(OrderModel o)
     {
@@ -100,8 +102,8 @@ public class InventoryController
 
 
     /**
-     * updates a pre-existing item to a given item and adds it to the data base
-     * @param item the item to be added
+     * Updates a pre-existing item to a given item and adds it to the database.
+     * @param item the item to be added.
      */
 
     protected void updateItem (ItemModel item){
@@ -115,8 +117,8 @@ public class InventoryController
     }
 
     /**
-     * joins the items and the suppliers by updating the suppliers in the items
-     * @param supp the list of suppliers to add
+     * Joins the items and the suppliers by updating the suppliers in the items.
+     * @param supp the list of suppliers to add.
      */
     public void updateItemsSuppliers (ArrayList<SupplierModel> supp){
         for (SupplierModel tempSupp: supp) {
@@ -125,8 +127,8 @@ public class InventoryController
     }
 
     /**
-     * removes an item from the item list
-     * @param item the item to remove
+     * Removes an item from the item list.
+     * @param item the item to remove.
      */
     protected void removeItem (ItemModel item){
         for (ItemModel temp :items) {
@@ -138,20 +140,14 @@ public class InventoryController
     }
 
     /**
-     * gets the list of items
-     * @return the list of items
+     * Gets the list of items.
+     * @return the list of items.
      */
-    protected ArrayList<ItemModel> getItems()
-    {
-        return items;
-    }
+    protected ArrayList<ItemModel> getItems() { return items; }
 
     /**
-     * sets the list of items
-     * @param listItem the items to set the list of items to
+     * Sets the list of items.
+     * @param listItem the items to set the list of items to.
      */
-    protected void updateItemList (ArrayList<ItemModel> listItem){
-
-        items = listItem;
-    }
+    protected void updateItemList (ArrayList<ItemModel> listItem){ items = listItem; }
 }

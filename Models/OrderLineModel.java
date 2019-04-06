@@ -1,8 +1,6 @@
 package Models;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * OrderLine class.
@@ -12,12 +10,12 @@ import java.util.Date;
  * @author Shamez Meghji
  * @author Victor Sanchez
  * @version 2.0
- * @since April 1, 2019
+ * @since April 5, 2019
  */
 public class OrderLineModel implements Serializable, Cloneable
 {
     /**
-     * serialVersionUID, for serializing and deserialization
+     * SerialVersionUID, for serializing and deserialization
      */
     static final long serialVersionUID = 63L;
 
@@ -41,6 +39,14 @@ public class OrderLineModel implements Serializable, Cloneable
      */
     private int orderID;
 
+    /**
+     * The constructor for an order line, receives parameters
+     * and assigns them appropriately.
+     *
+     * @param i the item the order line is generated for.
+     * @param dateS the date of the order line.
+     * @param id the order id.
+     */
     public OrderLineModel(ItemModel i, String dateS, int id)
     {
         item = i;
@@ -50,8 +56,8 @@ public class OrderLineModel implements Serializable, Cloneable
     }
 
     /**
-     * copies the attributes of a given order
-     * @param ol the order model to copy attributes from
+     * Copies the attributes of a given order.
+     * @param ol the order model to copy attributes from.
      */
     protected void copyAttributes (OrderLineModel ol){
         dateString = ol.dateString;
@@ -59,10 +65,10 @@ public class OrderLineModel implements Serializable, Cloneable
     }
 
     /**
-     * constructs an order with a given id, date and line
-     * @param id the id of the order
-     * @param date the date of the order
-     * @param line the description of the order
+     * Constructs an order with a given id, date and line.
+     * @param id the id of the order.
+     * @param date the date of the order.
+     * @param line the description of the order.
      */
     public OrderLineModel (int id, String date, String line){
         dateString = date;
@@ -71,8 +77,8 @@ public class OrderLineModel implements Serializable, Cloneable
     }
 
     /**
-     * the to string method of the orderline function
-     * @return the orderline as a string
+     * The toString() method of the order line class.
+     * @return the order line as a string.
      */
     @Override
     public String toString()
@@ -81,7 +87,7 @@ public class OrderLineModel implements Serializable, Cloneable
     }
 
     /**
-     * Cloneable OrderLineModel clone function
+     * Cloneable OrderLineModel clone function.
      */
     public Object clone() throws CloneNotSupportedException
     {
@@ -109,16 +115,16 @@ public class OrderLineModel implements Serializable, Cloneable
     }
 
     /**
-     * gets the date of the order
-     * @return the date of the order in a string
+     * Gets the date of the order.
+     * @return the date of the order in a string.
      */
     public String getDateString (){
         return dateString;
     }
 
     /**
-     * sets the line of the order
-     * @param line the description of the order
+     * Sets the line of the order.
+     * @param line the description of the order.
      */
     public void setOrderLine (String line){
         orderLine = line;

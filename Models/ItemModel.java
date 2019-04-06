@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author Shamez Meghji
  * @author Victor Sanchez
  * @version 2.0
- * @since April 1, 2019
+ * @since April 5, 2019
  */
 public class ItemModel implements Serializable, Cloneable{
 
@@ -68,8 +68,8 @@ public class ItemModel implements Serializable, Cloneable{
     }
 
     /**
-     * sets the supplier for the item
-     * @param s supplier to supply the item
+     * Sets the supplier for the item.
+     * @param s supplier to supply the item.
      */
     public void setSupplier(SupplierModel s)
     {
@@ -86,8 +86,8 @@ public class ItemModel implements Serializable, Cloneable{
     }
 
     /**
-     *  generates the deagaule order info for the item
-     * @return the info for the default order
+     * Generates the default order info for the item.
+     * @return the info for the default order.
      */
     public String orderInfoItem()
     {
@@ -96,9 +96,9 @@ public class ItemModel implements Serializable, Cloneable{
     }
 
     /**
-     * generates the string for a custom order with a certain quantity
-     * @param Quantity the quantity to order
-     * @return the generated string to order
+     * Generates the string for a custom order with a certain quantity.
+     * @param Quantity the quantity to order.
+     * @return the generated string to order.
      */
     public String customOrderInfo(int Quantity){
         return "ItemModel description:\t" + desc + "\r\n" +
@@ -106,8 +106,8 @@ public class ItemModel implements Serializable, Cloneable{
     }
 
     /**
-     * get the info for the supplier
-     * @return the items supplier info
+     * Get the info for the supplier.
+     * @return the items supplier info.
      */
     public String orderInfoSupplier()
     {
@@ -124,7 +124,7 @@ public class ItemModel implements Serializable, Cloneable{
 
     /**
      * Gets the name of the item.
-     * @return a string containing an item description
+     * @return a string containing an item description.
      */
     public String getDesc() {
         return desc;
@@ -155,8 +155,8 @@ public class ItemModel implements Serializable, Cloneable{
     }
 
     /**
-     * copies the attributes of a given item into the current item
-     * @param item the item to copy the parameters from
+     * Copies the attributes of a given item into the current item.
+     * @param item the item to copy the parameters from.
      */
     public void copyAttributes (ItemModel item){
         supplier = item.supplier;
@@ -178,7 +178,7 @@ public class ItemModel implements Serializable, Cloneable{
 	}
 
     /**
-     * gets the price of the item.
+     * Gets the price of the item.
      * @return a float with the price of the item.
      */
     public float getPrice(){
@@ -186,8 +186,8 @@ public class ItemModel implements Serializable, Cloneable{
     }
 
     /**
-     * gets the supplier for the item
-     * @return the supplier for the item
+     * Gets the supplier for the item.
+     * @return the supplier for the item.
      */
     public SupplierModel getSupplier (){
         return supplier;

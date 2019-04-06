@@ -19,6 +19,7 @@ import java.util.concurrent.Executors;
  * the server runs indefinitely until shut off with cntrl-c.
  *
  * @author Jake Liu
+ * @author Shamez Meghji
  * @author Victor Sanchez
  * @version 1.0
  * @since March 29, 2019
@@ -26,23 +27,23 @@ import java.util.concurrent.Executors;
 public class ServerController 
 {
     /**
-     * the socket of the server
+     * The socket of the server.
      */
     private ServerSocket socket;
 
     /**
-     * the socket to accept new clients
+     * The socket to accept new clients.
      */
     private Socket clientSocket;
 
     /**
-     * the pool of threads where all the instances of the shop will run
+     * The pool of threads where all the instances of the shop will run.
      */
     private ExecutorService pool;
 
 	/**
 	 * Server Controller constructor.
-	 * Creates the server socket and the threadpool
+	 * Creates the server socket and the thread pool.
 	 * Runs the server indefinitely.
 	 */
     public ServerController(){
@@ -65,7 +66,7 @@ public class ServerController
 	 *
 	 * Until someone forcibly terminates the server, like with a cntrl-c command,
 	 * will continually accept connections to clients.
-	 * I/O streams on the socket are opened to each client for communcation.
+	 * I/O streams on the socket are opened to each client for communication.
 	 * A thread pool of 10 worker threads works with clients. Clients terminating
 	 * frees up worker threads to work with new clients.
 	 */
@@ -119,9 +120,11 @@ public class ServerController
 		pool.shutdown();
     }
 
-
+	/**
+	 * The main method that initializes and starts the server.
+	 * @param arg command line arguments (not used).
+	 */
     public static void main (String arg []){
         ServerController myServer = new ServerController();
     }
-
 }

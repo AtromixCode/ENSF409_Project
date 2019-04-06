@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author Shamez Meghji
  * @author Victor Sanchez
  * @version 2.0
- * @since April 1, 2019
+ * @since April 5, 2019
  */
 public class SupplierModel implements Serializable, Cloneable
 {
@@ -21,7 +21,7 @@ public class SupplierModel implements Serializable, Cloneable
     static final long serialVersionUID = 61L;
 
     /**
-     * Supplier ID
+     * Supplier ID.
      */
     private int id;
 
@@ -31,7 +31,7 @@ public class SupplierModel implements Serializable, Cloneable
     private String companyName;
 
     /**
-     * Company adress.
+     * Company address.
      */
     private String address;
 
@@ -58,8 +58,8 @@ public class SupplierModel implements Serializable, Cloneable
     }
 
     /**
-     * adds an the supplier to the suppliable items
-     * @param items the list of items to add the supplier to
+     * Adds an the supplier to the supplied items.
+     * @param items the list of items to add the supplier to.
      */
     public void addItem(ArrayList<ItemModel> items)
     {
@@ -71,8 +71,8 @@ public class SupplierModel implements Serializable, Cloneable
     }
 
     /**
-     * gets info of the supplier
-     * @return a string of the info of the supplier
+     * Gets info of the supplier.
+     * @return a string of the info of the supplier.
      */
     protected String info()
     {
@@ -80,8 +80,8 @@ public class SupplierModel implements Serializable, Cloneable
     }
 
     /**
-     * the to string method of the supplier
-     * @return the supplier as a string
+     * The toString() method of the supplier.
+     * @return the supplier as a string.
      */
     public String toString()
     {
@@ -89,42 +89,41 @@ public class SupplierModel implements Serializable, Cloneable
     }
 
     /**
-     * the clone function of the supplier
+     * The clone function of the supplier.
      */
     public Object clone() throws CloneNotSupportedException
     {
         SupplierModel temp = (SupplierModel)super.clone();
-
         return temp;
     }
 
     /**
-     * gets the id of the supplier
-     * @return an int with the id of the supplier
+     * Gets the id of the supplier.
+     * @return an int with the id of the supplier.
      */
     public int getId (){
         return id;
     }
 
     /**
-     * gets the name of the company of the supplier
-     * @return a string with the supplier company name
+     * Gets the name of the company of the supplier.
+     * @return a string with the supplier company name.
      */
     public String getCompanyName (){
         return companyName;
     }
 
     /**
-     * gets the address of the supplier
-     * @return a string with the address of the supplier
+     * Gets the address of the supplier.
+     * @return a string with the address of the supplier.
      */
     public String getAddress (){
         return address;
     }
 
     /**
-     * gets the contact for the supplier
-     * @return a string with the contact of the supplier
+     * Gets the contact for the supplier.
+     * @return a string with the contact of the supplier.
      */
     public String getSalesContact (){
         return salesContact;

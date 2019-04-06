@@ -3,51 +3,53 @@ package ServerPackage.ServerControllers;
 import Models.ItemModel;
 import Models.OrderLineModel;
 import Models.SupplierModel;
-
 import java.sql.*;
 import java.util.ArrayList;
 
 /**
- * Data base controller class.
+ * Database controller class.
  * This class is in charge of making a connection with the database and manage any operations related to it.
  *
  * @author Jake Liu
  * @author Shamez Meghji
  * @author Victor Sanchez
  * @version 2.0
- * @since April 1, 2019
+ * @since April 5, 2019
  */
 public class DataBaseController {
     /**
-     * The connection to the data base
+     * The connection to the database.
      */
     private Connection dataCon;
 
     /**
-     * the statement used to sent actions to the database server
+     * The statement used to sent actions to the database server.
      */
     private Statement statement;
 
     /**
-     * The result set to receive all outputs of the data base
+     * The result set to receive all outputs of the database.
      */
     private ResultSet resultSet;
 
     /**
-     * construct the data base with the
+     * Constructs the database controller, and connects to
+     * the database.
      */
     public DataBaseController () {
         try {
             dataCon = DriverManager.getConnection("jdbc:mysql://localhost:3306/shop", "root", "ENSFProjectPassword409!");
         }catch (java.sql.SQLException e){
-            System.err.println("Error connecting to the data base");
+            System.err.println("Error connecting to the database");
             System.err.println(e.getMessage());
         }
     }
 
     /**
-     * gets the list of items in the database and puts them in an array list to be used by the server and/or client
-     * @return temp the list of items from the data base
+     * Gets the list of items in the database and puts them in an
+     * array list to be used by the server and/or client.
+     *
+     * @return the list of items from the database.
      */
     protected synchronized ArrayList<ItemModel> itemListFromDataBase (){
         ArrayList<ItemModel> temp = new ArrayList<ItemModel>();
@@ -67,8 +69,9 @@ public class DataBaseController {
     }
 
     /**
-     * gets the order lines list from the server and returns them to the server
-     * @return orderLineList is the list of orders gotten from the data base
+     * Gets the order lines list from the server and returns them to the server.
+     *
+     * @return the list of orders gotten from the database.
      */
     protected synchronized ArrayList<OrderLineModel> orderLineListFromDataBase (){
         ArrayList<OrderLineModel> orderLineList = new ArrayList<OrderLineModel>();
@@ -81,7 +84,7 @@ public class DataBaseController {
             }
 
         }catch (java.sql.SQLException e){
-            System.err.println("Error trying to retrieve the orders from the data base");
+            System.err.println("Error trying to retrieve the orders from the database");
             e.printStackTrace();
         }
 
@@ -89,8 +92,9 @@ public class DataBaseController {
     }
 
     /**
-     * gets the supplier list from the data base
-     * @return temp is the list of suppliers gotten from the data base
+     * Gets the supplier list from the database.
+     *
+     * @return the list of suppliers gotten from the database.
      */
     protected synchronized ArrayList<SupplierModel> supplierListFromDatabase (){
         ArrayList<SupplierModel> temp = new ArrayList<SupplierModel>();
@@ -111,8 +115,8 @@ public class DataBaseController {
 
 
     /**
-     * adds an item to the data base
-     * @param temp the item to add to the data base
+     * Adds an item to the database.
+     * @param temp the item to add to the database.
      */
     protected synchronized void addItem (ItemModel temp){
         try {
@@ -137,7 +141,7 @@ public class DataBaseController {
 
 
         }catch (java.sql.SQLException e){
-            System.err.println("Error adding items into the data base");
+            System.err.println("Error adding items into the database");
             e.printStackTrace();
         }
 
@@ -145,8 +149,8 @@ public class DataBaseController {
     }
 
     /**
-     * adds a supplier to the data base, it overrides if existing
-     * @param temp the supplier to add
+     * Adds a supplier to the database, overriding it if it already exists.
+     * @param temp the supplier to add.
      */
     private synchronized void addSupplier(SupplierModel temp){
         try {
@@ -171,8 +175,8 @@ public class DataBaseController {
     }
 
     /**
-     * updates the item list of the data base
-     * @param updateItemList the list of items to input to the data controller
+     * Updates the item list of the database.
+     * @param updateItemList the list of items to input to the data controller.
      */
     protected synchronized void updateItemList (ArrayList<ItemModel> updateItemList){
         try {
@@ -184,14 +188,14 @@ public class DataBaseController {
             }
 
         }catch (java.sql.SQLException e){
-            System.err.println("Error updating the item table in the data base");
+            System.err.println("Error updating the item table in the database");
             e.printStackTrace();
         }
     }
 
     /**
-     *updates the supplier list in the data base to a given list
-     * @param updatedSupplierList the list to put into the data base
+     * Updates the supplier list in the database to a given list.
+     * @param updatedSupplierList the list to put into the database.
      */
     protected  synchronized void updateSupplierList (ArrayList<SupplierModel> updatedSupplierList){
         try {
@@ -203,13 +207,13 @@ public class DataBaseController {
             }
 
         }catch (java.sql.SQLException e){
-            System.err.println("Error updating the supplier table in the data base");
+            System.err.println("Error updating the supplier table in the database");
         }
     }
 
     /**
-     * updates the list of orders in the data base to a given order list
-     * @param updatedOrderList the list to put in the database
+     * Updates the list of orders in the database to a given order list.
+     * @param updatedOrderList the list to put in the database.
      */
     protected synchronized void updateOrderList (ArrayList<OrderLineModel> updatedOrderList){
         try {
@@ -222,13 +226,13 @@ public class DataBaseController {
             }
 
         }catch (java.sql.SQLException e){
-            System.err.println("Error updating the Order  table in the data base");
+            System.err.println("Error updating the Order  table in the database");
         }
     }
 
     /**
-     * adds an order to the data base
-     * @param temp the order to be added
+     * Adds an order to the database
+     * @param temp the order to be added.
      */
     protected synchronized void addOrderLine (OrderLineModel temp){
         try {
@@ -241,15 +245,15 @@ public class DataBaseController {
             pStat.executeUpdate();
 
         }catch (java.sql.SQLException e){
-            System.err.println("Error trying to insert an order line into the data base");
+            System.err.println("Error trying to insert an order line into the database");
             e.printStackTrace();
         }
 
     }
 
     /**
-     * inserts an item to the data base
-     * @param temp the item to insert
+     * Inserts an item to the database.
+     * @param temp the item to insert.
      */
     private synchronized void insertItem (ItemModel temp ){
         try {
@@ -270,8 +274,8 @@ public class DataBaseController {
 
 
     /**
-     * inserts a supplier to the data base
-     * @param temp the supplier to be added to the data base
+     * Inserts a supplier to the database.
+     * @param temp the supplier to be added to the database.
      */
     private  synchronized void insertSupplier (SupplierModel temp){
         try {
@@ -283,15 +287,15 @@ public class DataBaseController {
             pStat.setString(4, temp.getSalesContact());
             pStat.executeUpdate();
         }catch (java.sql.SQLException e){
-            System.err.println("Error inserting supplier to the data base");
+            System.err.println("Error inserting supplier to the database");
             e.printStackTrace();
         }
     }
 
 
     /**
-     * removes an item from the data base
-     * @param item item to be removed
+     * Removes an item from the database.
+     * @param item item to be removed.
      */
     protected  synchronized void removeItem (ItemModel item){
         try {
@@ -300,7 +304,7 @@ public class DataBaseController {
             pStat.setInt(1, item.getId());
             pStat.execute();
         }catch (java.sql.SQLException e){
-            System.err.println("Error removing an item from the data base, Already removed?");
+            System.err.println("Error removing an item from the database, Already removed?");
             e.printStackTrace();
         }
     }

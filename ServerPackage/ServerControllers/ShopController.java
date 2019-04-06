@@ -9,25 +9,36 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-
+/**
+ * The shop controller class that handles requests for information
+ * from the server controller. Handles all logic used in all shop
+ * features.
+ *
+ * @author Jake Liu
+ * @author Shamez Meghji
+ * @author Victor Sanchez
+ * @version 1.0
+ * @since April 5, 2019
+ */
 public class ShopController implements Runnable, SCCommunicationConstants {
+
 	/**
-	 * The list of orders corresponding to the shop
+	 * The list of orders corresponding to the shop.
 	 */
 	private ArrayList<OrderLineModel> orders;
 
-
 	/**
-	 * The order used to generate more orders
+	 * The order used to generate more orders.
 	 */
 	private OrderModel order;
+
 	/**
-	 * the socket used for communications with the client
+	 * The socket used for communications with the client.
 	 */
 	private Socket clientSocket;
 
 	/**
-	 * The list of suppliers in the shop
+	 * The list of suppliers in the shop.
 	 */
 	private ArrayList<SupplierModel> suppliers;
 
@@ -42,21 +53,19 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	private ObjectOutputStream outputWriter;
 
 	/**
-	 * The inventory of the shop
+	 * The inventory of the shop.
 	 */
 	private InventoryController inv;
 
 	/**
-	 * The data controller of the shop
+	 * The data controller of the shop.
 	 */
 	private DataBaseController data;
 
-
-
 	/**
-	 * Constructs a store and does the necessary callings to get up to date
-	 * information from the database
-	 * @param sc the accepted socket from the server used to communicate with the client
+	 * Constructs a store and does the necessary calling to get up to date
+	 * information from the database.
+	 * @param sc the accepted socket from the server used to communicate with the client.
 	 */
 	public ShopController(Socket sc)
 	{
