@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  * @author Shamez Meghji
  * @author Victor Sanchez
  * @version 1.0
- * @since March 29, 2019
+ * @since April 5, 2019
  */
 class SupplierView {
 
@@ -42,7 +42,7 @@ class SupplierView {
 	private DefaultListModel<String> supplierListModel;
 
 	/**
-	 * default constructor constructs the view.
+	 * Default constructor to assemble the view.
 	 * By default, it is not visible.
 	 */
 	protected SupplierView()
@@ -123,7 +123,7 @@ class SupplierView {
 
 	/**
 	 * Adds an anonymous inner class ActionListener to the close buttons
-	 * of the supplier window, in order to set off visibility.
+	 * of the supplier window, in order to turn off visibility of the window.
 	 */
 	protected void addCloseButtonListener(){
 		closeWindow.addActionListener(new ActionListener() {

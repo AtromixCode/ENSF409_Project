@@ -1,7 +1,6 @@
 package Models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * SupplierModel class.
@@ -11,7 +10,7 @@ import java.util.ArrayList;
  * @author Shamez Meghji
  * @author Victor Sanchez
  * @version 2.0
- * @since April 1, 2019
+ * @since April 5, 2019
  */
 public class SupplierModel implements Serializable, Cloneable
 {
@@ -31,7 +30,7 @@ public class SupplierModel implements Serializable, Cloneable
 	private String companyName;
 
 	/**
-	 * Company adress.
+	 * Company address.
 	 */
 	private String address;
 
@@ -65,6 +64,10 @@ public class SupplierModel implements Serializable, Cloneable
 		this.salesContact = sContact;
 	}
 
+	/**
+	 * Gets the id of the supplier.
+	 * @return an integer containing the supplier's id.
+	 */
 	public int getId(){return id;}
 
 	/**
@@ -76,16 +79,19 @@ public class SupplierModel implements Serializable, Cloneable
 		return "SupplierModel ID: "+ id + ", Company Name: "+ companyName +", address: "+ address +", Sales Contact: " + salesContact;
 	}
 
+	/**
+	 * Gets a string containing the id and name of the supplier.
+	 *
+	 * @return a string holding the id and company name of a supplier.
+	 */
 	public String idAndName()
-	{
-		return id + " " + companyName;
-	}
+	{ return id + " " + companyName; }
 
 	/**
-	 * Tabbed display information of the item, using HTML for preformatted text.
+	 * Tabbed display information of the item, using HTML for pre-formatted text.
 	 * This is intended for use by the GUI.
 	 *
-	 * @return The preformatted text of the item's attributes.
+	 * @return The pre-formatted text of the item's attributes.
 	 */
 	public String displayString(){
 		if(companyName.length()>23)
@@ -96,6 +102,10 @@ public class SupplierModel implements Serializable, Cloneable
 		{
 			return "<html><pre> "+id+"\t\t"+companyName+"\t\t"+address+"\t\t"+salesContact+"</pre></html>";
 		}
-		return "<html><pre> "+id+"\t\t"+companyName+"\t\t\t"+address+"\t\t"+salesContact+"</pre></html>";
+		else if (companyName.length()>7)
+		{
+			return "<html><pre> "+id+"\t\t"+companyName+"\t\t\t"+address+"\t\t"+salesContact+"</pre></html>";
+		}
+		return "<html><pre> "+id+"\t\t"+companyName+"\t\t\t\t"+address+"\t\t"+salesContact+"</pre></html>";
 	}
 }

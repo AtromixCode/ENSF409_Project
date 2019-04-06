@@ -13,12 +13,12 @@ import java.awt.event.WindowListener;
  * @author Shamez Meghji
  * @author Victor Sanchez
  * @version 1.0
- * @since March 29, 2019
+ * @since April 5, 2019
  */
 class MainView {
 
 	/**
-	 * main frame for the view.
+	 * Main frame for the view.
 	 */
 	private JFrame mainWindow;
 	
@@ -42,8 +42,14 @@ class MainView {
 	 */
 	private DefaultListModel<String> itemListModel;
 
+	/**
+	 * A panel that holds the loading circle.
+	 */
 	private JPanel loading;
 
+	/**
+	 * The icon of the loading circle.
+	 */
 	Icon icon = new ImageIcon("loading.gif");
 
 	/**
@@ -266,19 +272,30 @@ class MainView {
 		buttons[7].addActionListener(b);
 	}
 
-	protected void addButton9ActionListener(ActionListener b)
-	{
-		buttons[8].addActionListener(b);
-	}
 
+	/**
+	 *
+	 * Adds an ActionListener for the "Refresh" button
+	 *
+	 * @param b The ActionListener for clicking the button to refresh.
+	 */
+	protected void addButton9ActionListener(ActionListener b) { buttons[8].addActionListener(b); }
+
+	/**
+	 * Displays the loading circle.
+	 */
 	protected void loadingOn(){loading.setVisible(true);}
 
+	/**
+	 * Hides the loading circle.
+	 */
 	protected void loadingOff(){loading.setVisible(false);}
 
-	protected void addWindowListener(WindowListener w)
-	{
-		mainWindow.addWindowListener(w);
-	}
 
-
+	/**
+	 * Adds an action listener for window events.
+	 *
+	 * @param w The ActionListener for window events.
+	 */
+	protected void addWindowListener(WindowListener w) { mainWindow.addWindowListener(w); }
 }

@@ -17,7 +17,7 @@ import Models.*;
  * @author Shamez Meghji
  * @author Victor Sanchez
  * @version 1.0
- * @since April 4, 2019
+ * @since April 5, 2019
  */
 public class ClientController implements SCCommunicationConstants {
 	/**

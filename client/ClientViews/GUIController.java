@@ -476,13 +476,15 @@ class GUIController {
 	}
 
 	/**
-	 * inner ActionListener class listens for the "View Suppliers" button
+	 * Inner ActionListener class listens for the "View Suppliers" button
 	 * to be pressed, whereupon the supplier window will be made visible.
 	 */
 	public class ViewSuppliers implements ActionListener
 	{
 
 		/**
+		 * Implementation of the action performed method that displays a
+		 * window to the user to view the suppliers attached to the shop.
 		 *
 		 * @param e The event that triggers the call to the method.
 		 */
@@ -502,11 +504,14 @@ class GUIController {
 	public class ImportItems implements ActionListener
 	{
 		/**
-		 *
+		 * Stores the name of the file to be read in.
 		 */
 		String filename;
 
 		/**
+		 *	Implementation of the action performed method that ensures input was
+		 *  correct, telling the user if otherwise, and calling the readItems
+		 * 	method in the client controller, passing the filename.
 		 *
 		 * @param e The event that triggers the call to the method.
 		 */
@@ -536,11 +541,14 @@ class GUIController {
 	public class ImportSuppliers implements ActionListener
 	{
 		/**
-		 *
+		 * Stores the name of the file to be read in.
 		 */
 		String filename;
 
 		/**
+		 * 	Implementation of the action performed method that ensures input was
+		 *  correct, telling the user if otherwise, and calling the readSuppliers
+		 *  method in the client controller, passing the filename.
 		 *
 		 * @param e The event that triggers the call to the method.
 		 */
