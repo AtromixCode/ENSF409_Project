@@ -25,12 +25,12 @@ class MainView {
 	/**
 	 * List of the 8 buttons for the main functionality of the GUI.
 	 */
-	private JButton[] buttons = new JButton[8];
+	private JButton[] buttons = new JButton[9];
 	
 	/**
 	 * Descriptive names of the 8 main functional buttons of the GUI.
 	 */
-	private String[] buttonNames = {"Sell Item", "Order Item", "Remove Item", "Add Item", "View Orders", "View Suppliers", "Import Items", "Import Suppliers"};
+	private String[] buttonNames = {"Sell Item", "Order Item", "Remove Item", "Add Item", "View Orders", "View Suppliers", "Import Items", "Import Suppliers", "Refresh"};
 	
 	/**
 	 * The list of items' display information
@@ -41,6 +41,10 @@ class MainView {
 	 * The list of item's information.
 	 */
 	private DefaultListModel<String> itemListModel;
+
+	private JPanel loading;
+
+	Icon icon = new ImageIcon("loading.gif");
 
 	/**
 	 * Default constructor.
@@ -104,7 +108,10 @@ class MainView {
 	 */
 	private JPanel createButtonPanel()
 	{
-
+		loading = new JPanel ();
+		loading.setSize(20,20);
+		loading.add(new JLabel(icon));
+		loading.setVisible(false);
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
 		buttonPanel.add(Box.createRigidArea(new Dimension(150,50)));
@@ -119,6 +126,7 @@ class MainView {
 			buttonPanel.add(buttons[i]);
 			buttonPanel.add(Box.createRigidArea(new Dimension(100,10)));
 		}
+		buttonPanel.add(loading);
 		return buttonPanel;
 	}
 	
@@ -257,6 +265,15 @@ class MainView {
 	{
 		buttons[7].addActionListener(b);
 	}
+
+	protected void addButton9ActionListener(ActionListener b)
+	{
+		buttons[8].addActionListener(b);
+	}
+
+	protected void loadingOn(){loading.setVisible(true);}
+
+	protected void loadingOff(){loading.setVisible(false);}
 
 	protected void addWindowListener(WindowListener w)
 	{

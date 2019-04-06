@@ -75,17 +75,15 @@ class GUIController {
 		mv.addButton6ActionListener(new ViewSuppliers());
 		mv.addButton7ActionListener(new ImportItems());
 		mv.addButton8ActionListener(new ImportSuppliers());
+		mv.addButton9ActionListener(new Refresh());
 		sv.addSupplierActionListener(new AddSupplier());
 	}
 
 	protected void retrieveAndDisplay()
 	{
-		if(!cc.fetchAndDisplayFromServer())
-		{
-			JOptionPane.showMessageDialog(null, "Error communicating with server!",
-					"Error", JOptionPane.ERROR_MESSAGE);
+		if(!cc.fetchAndDisplayFromServer()) {
+			JOptionPane.showMessageDialog(null, "Error communicating with server!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
-
 	}
 
 	/**
@@ -113,6 +111,7 @@ class GUIController {
 			mv.addButton1ActionListener(new SellItem());
 			mv.addButton2ActionListener(new OrderItem());
 			mv.addButton3ActionListener(new RemoveItem());
+			retrieveAndDisplay();
 		}
 
 		/**
@@ -129,13 +128,12 @@ class GUIController {
 				scan.next();
 				id = scan.nextInt();
 			}
-			retrieveAndDisplay();
 		}
 
 		/**
 		 * inner ActionListener class listens for the "Sell Item" button
 		 * to be pressed, whereupon a dialogue box asking for a specified amount
-		 * will appear.
+		 * will appear. Handles errors and tells the user what went wrong.
 		 */
 		public class SellItem implements ActionListener {
 
@@ -144,21 +142,14 @@ class GUIController {
 				retrieveAndDisplay();
 				try {
 					int quantity = Integer.parseInt(JOptionPane.showInputDialog("Please enter the quantity sold:"));
-					if (quantity>0)
-					{
-						JOptionPane.showMessageDialog(null, cc.sellItem(id, quantity),
-								"Result", JOptionPane.INFORMATION_MESSAGE);
+					if (quantity>0) {
+						JOptionPane.showMessageDialog(null, cc.sellItem(id, quantity), "Result", JOptionPane.INFORMATION_MESSAGE);
 					}
-					else
-					{
-						JOptionPane.showMessageDialog(null, "Please enter a number greater than 0!",
-								"Error", JOptionPane.ERROR_MESSAGE);
+					else {
+						JOptionPane.showMessageDialog(null, "Please enter a number greater than 0!", "Error", JOptionPane.ERROR_MESSAGE);
 					}
-				}
-				catch (Exception ex)
-				{
-					JOptionPane.showMessageDialog(null, "Please enter an integer!",
-							"Error", JOptionPane.ERROR_MESSAGE);
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Please enter an integer!", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				mv.setButtonsClickable(false);
 				retrieveAndDisplay();
@@ -168,7 +159,7 @@ class GUIController {
 		/**
 		 * inner ActionListener class listens for the "Order Item" button
 		 * to be pressed, whereupon a dialogue box asking for a specified amount
-		 * to order will appear.
+		 * to order will appear. Handles errors and tells the user what went wrong.
 		 */
 		public class OrderItem implements ActionListener {
 
@@ -177,21 +168,14 @@ class GUIController {
 				retrieveAndDisplay();
 				try {
 					int quantity = Integer.parseInt(JOptionPane.showInputDialog("Please enter the quantity to order:"));
-					if (quantity>0)
-					{
-						JOptionPane.showMessageDialog(null, cc.orderItem(id, quantity),
-								"Result", JOptionPane.INFORMATION_MESSAGE);
+					if (quantity>0) {
+						JOptionPane.showMessageDialog(null, cc.orderItem(id, quantity), "Result", JOptionPane.INFORMATION_MESSAGE);
 					}
-					else
-					{
-						JOptionPane.showMessageDialog(null, "Please enter a number greater than 0!",
-								"Error", JOptionPane.ERROR_MESSAGE);
+					else {
+						JOptionPane.showMessageDialog(null, "Please enter a number greater than 0!", "Error", JOptionPane.ERROR_MESSAGE);
 					}
-				}
-				catch (Exception ex)
-				{
-					JOptionPane.showMessageDialog(null, "Please enter an integer!",
-							"Error", JOptionPane.ERROR_MESSAGE);
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Please enter an integer!", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				mv.setButtonsClickable(false);
 				retrieveAndDisplay();
@@ -199,7 +183,7 @@ class GUIController {
 		}
 
 		/**
-		 * inner ActionListener class listens for the "Remove Item" button
+		 * Inner ActionListener class listens for the "Remove Item" button
 		 * to be pressed, whereupon a dialogue box asking for confirmation will appear.
 		 */
 		public class RemoveItem implements ActionListener {
@@ -207,12 +191,9 @@ class GUIController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				retrieveAndDisplay();
-				int a = JOptionPane.showConfirmDialog(null,
-						"Please confirm you would like to remove Item #"+id+" from the store.");
-				if (a==0)
-				{
-					JOptionPane.showMessageDialog(null, cc.removeItem(id),
-							"Result", JOptionPane.INFORMATION_MESSAGE);
+				int a = JOptionPane.showConfirmDialog(null, "Please confirm you would like to remove Item #"+id+" from the store.");
+				if (a==0) {
+					JOptionPane.showMessageDialog(null, cc.removeItem(id), "Result", JOptionPane.INFORMATION_MESSAGE);
 					mv.setButtonsClickable(false);
 				}
 				mv.setButtonsClickable(false);
@@ -266,7 +247,7 @@ class GUIController {
 				{
 					JOptionPane.showMessageDialog(null, "The id, quantity, price, or supplier was not entered correctly.",
 							"Error", JOptionPane.ERROR_MESSAGE);
-					ex.printStackTrace();
+					//ex.printStackTrace();
 				}
 				catch(Exception ex)
 				{
@@ -454,6 +435,31 @@ class GUIController {
 			mv.setButtonsClickable(false);
 			retrieveAndDisplay();
 		}
+	}
+
+	public class Refresh implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			retrieveAndDisplay();
+			mv.loadingOn();
+			LoadThread lt = new LoadThread();
+			lt.start();
+		}
+
+		public class LoadThread extends Thread
+		{
+			@Override
+			public void run()
+			{
+				try {
+					sleep(1000);
+				}catch(InterruptedException ex)
+				{ }
+				mv.loadingOff();
+			}
+		}
+
 	}
 
 	public class WindowClose implements WindowListener
