@@ -1,17 +1,13 @@
 package ServerPackage.ServerControllers;
 
-import Models.ItemModel;
-import Models.OrderLineModel;
-import Models.OrderModel;
-import Models.SupplierModel;
-
+import Models.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
 /**
  * The shop controller class that handles requests for information
- * from the server controller. Handles all logic used in all shop
+ * from the server controller. Handles logic used in all shop
  * features.
  *
  * @author Jake Liu
@@ -153,8 +149,9 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	}
 
 	/**
-	 *
-	 *
+	 *	Calls an applicable function based on the opcode
+	 *	received. Used for sending shop data to and from
+	 *	the server to the client.
 	 */
 	private void actOnOpCode(int opcode)
 	{
@@ -179,7 +176,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 
 			default:	printErrorToClient();	break;
 		}
-
 	}
 
 	/**
@@ -254,8 +250,8 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 
 
 	/**
-	 * Recieve a list of ItemModel from the client.
-	 * updates the item list across the server and the database.
+	 * Receives a list of ItemModel from the client.
+	 * Updates the item list across the server and the database.
 	 */
 	private void updateItemListFromClient()
 	{
@@ -285,8 +281,8 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	}
 
 	/**
-	 * Receive a list of SupplierModel from the client.
-	 * updates the supplier list across the server and the database.
+	 * Receives a list of SupplierModel from the client.
+	 * Updates the supplier list across the server and the database.
 	 */
 	private void updateSupplierListFromClient()
 	{
@@ -315,8 +311,8 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 
 
 	/**
-	 * Receive a list of OrderModel from the client.
-	 * updates the supplier list across the server and the database.
+	 * Receives a list of OrderModel from the client.
+	 * Updates the supplier list across the server and the database.
 	 */
 	private void updateOrderListFromClient()
 	{
@@ -343,7 +339,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	}
 
 	/**
-	 * Recieve an item from the client, and a quantity to order.
+	 * Receives an item from the client, and a quantity to order.
 	 * Checks if the item exists in the server, and it it does,
 	 * orders the item according to the desired amount.
 	 */
@@ -373,7 +369,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	
 	
 	/**
-	 * Recieve an item from the client.
+	 * Receives an item from the client.
 	 * Across the server and in the database, either updates the item in the
 	 * item lists if it already exists, or adds a new item to those lists.
 	 */
@@ -397,7 +393,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	/**
 	 * Searches for an item, sending it to the client if it is found.
 	 * If the item cannot be found, sends an error message to the client.
-	 * If there is no search method for the given search paramter, do nothing. 
+	 * If there is no search method for the given search parameter, do nothing.
 	 *
 	 * @param searchChar What parameter to use when searching for an item.
 	 *					 'i' is for an int id, 's' is for an item name.
