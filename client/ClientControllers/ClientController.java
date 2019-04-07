@@ -260,7 +260,7 @@ public class ClientController implements SCCommunicationConstants {
 			throw new IOException("Error: could not properly read the object.");
 		}
 	}
-	
+
 	/**
 	 * Sends an Array List of Items to the server to update the
 	 * server items in the database.
@@ -339,7 +339,7 @@ public class ClientController implements SCCommunicationConstants {
 			throw new IOException("Error: item could not be cloned.");
 		}
 	}
-	
+
 	/**
 	 * Sends an item and a quantity to order to the server.
 	 * The server will generate an order line to add to their order list.
@@ -349,13 +349,13 @@ public class ClientController implements SCCommunicationConstants {
 	 *
 	 * @param itemToOrder The item being ordered.
 	 * @param quantityToOrder The quantity of the item to be ordered.
-	 * @throws IOException 
-	 */	
+	 * @throws IOException
+	 */
 	public void sendItemOrderUpdate(ItemModel itemToOrder, int quantityToOrder) throws IOException {
-	
+
 		if(quantityToOrder < 1)
 			throw new IOException("Error: cannot order less than 1 item.");
-		
+
 		try {
 			outputWriter.writeObject(scData + scItem + scInt);
 
@@ -633,26 +633,26 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void displayOrders()
 	{
-		orderDisplay.setText("***********************************************************************");
+		orderDisplay.setText("***********************************************************************\n");
 		if (!orderList.isEmpty()) {
 			String orderDate = orderList.get(0).getDateString();
 			int orderId = orderList.get(0).getOrderID();
 			orderDisplay.append("ORDER ID:\t\t" + orderId + "\n" +
-					"Date Ordered:\t\t" + orderDate);
+					"Date Ordered:\t\t" + orderDate +"\n");
 			for (OrderLineModel l: orderList)
 			{
 				if (l.getOrderID()==orderId&&orderDate.equals(l.getDateString()))
 				{
-					orderDisplay.append(l.getOrderLine());
+					orderDisplay.append(l.getOrderLine()+"\n");
 				}
 				else
 				{
 					orderDate = l.getDateString();
 					orderId = l.getOrderID();
-					orderDisplay.append("***********************************************************************");
+					orderDisplay.append("\n***********************************************************************\n");
 					orderDisplay.append("ORDER ID:\t\t" + orderId + "\n" +
-							"Date Ordered:\t\t" + orderDate);
-					orderDisplay.append(l.getOrderLine());
+							"Date Ordered:\t\t" + orderDate+"\n");
+					orderDisplay.append(l.getOrderLine()+"\n");
 				}
 			}
 		}
