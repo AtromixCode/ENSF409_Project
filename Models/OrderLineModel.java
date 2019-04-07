@@ -52,7 +52,7 @@ public class OrderLineModel implements Serializable, Cloneable
         item = i;
         dateString = dateS;
         orderID = id;
-        orderLine = "\r\n"+i.orderInfoItem()+ "\r\n" + i.orderInfoSupplier();
+        orderLine = i.orderInfoItem()+ "\r\n" + i.orderInfoSupplier();
     }
 
     /**

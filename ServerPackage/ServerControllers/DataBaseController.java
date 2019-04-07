@@ -81,6 +81,7 @@ public class DataBaseController {
             while(rs.next()){
                 OrderLineModel tempLine = new OrderLineModel(rs.getInt("OrderID"),rs.getString("DateOrdered"),
                         rs.getString("OrderDescription"));
+                orderLineList.add(tempLine);
             }
 
         }catch (java.sql.SQLException e){
@@ -226,7 +227,7 @@ public class DataBaseController {
             }
 
         }catch (java.sql.SQLException e){
-            System.err.println("Error updating the Order  table in the database");
+            System.err.println("Error updating the Order table in the database");
         }
     }
 

@@ -97,12 +97,12 @@ public class ItemModel implements Serializable, Cloneable{
 
     /**
      * Generates the string for a custom order with a certain quantity.
-     * @param Quantity the quantity to order.
+     * @param quantity the quantity to order.
      * @return the generated string to order.
      */
-    public String customOrderInfo(int Quantity){
+    public String customOrderInfo(int quantity){
         return "ItemModel description:\t" + desc + "\r\n" +
-                "Amount ordered:\t\t" + Quantity;
+                "Amount ordered:\t\t" + quantity+"\r\n" + orderInfoSupplier();
     }
 
     /**

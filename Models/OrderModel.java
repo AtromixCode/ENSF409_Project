@@ -65,9 +65,36 @@ public class OrderModel implements Serializable, Cloneable
      */
     public void addLine(ItemModel item)
     {
+        generateDate();
+        generateID();
         OrderLineModel ol = new OrderLineModel(item, dateString, orderID);
         checkOrders(ol);
+    }
 
+    /**
+     * Generates a date and formats it into the date string.
+     */
+    protected void generateDate()
+    {
+        date = new Date ();
+        format = new SimpleDateFormat("MMMM dd, yyyy");
+        dateString = format.format(date);
+    }
+
+    /**
+     * Generates an id if the date is different from the previous order.
+     */
+    protected void generateID()
+    {
+        if (orderLines.isEmpty())
+        {
+            return;
+        }
+        if(dateString.equals(orderLines.get(orderLines.size()-1).getDateString()))
+        {
+            return;
+        }
+        orderID = (int)(Math.random() * 90000) + 10000;
     }
 
     /**
@@ -76,6 +103,8 @@ public class OrderModel implements Serializable, Cloneable
      * @param quantity the amount to order.
      */
     public void createOrder (ItemModel i, int quantity){
+        generateDate();
+        generateID();
         OrderLineModel ol = new OrderLineModel(i, dateString, orderID);
         ol.setOrderLine(i.customOrderInfo(quantity));
         checkOrders(ol);
