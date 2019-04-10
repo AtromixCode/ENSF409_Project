@@ -57,8 +57,6 @@ public class ServerController
             System.err.println("Could not start the server");
             System.err.println(e.getMessage());
         }
-
-        runServer();
     }
 
 	/**
@@ -126,5 +124,6 @@ public class ServerController
 	 */
     public static void main (String arg []){
         ServerController myServer = new ServerController();
+        myServer.runServer();
     }
 }

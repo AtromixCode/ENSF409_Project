@@ -94,7 +94,6 @@ public class DataBaseController {
 
     /**
      * Gets the supplier list from the database.
-     *
      * @return the list of suppliers gotten from the database.
      */
     protected synchronized ArrayList<SupplierModel> supplierListFromDatabase (){
@@ -116,7 +115,7 @@ public class DataBaseController {
 
 
     /**
-     * Adds an item to the database.
+     * Adds an item to the database, overrides if existing, inserts the item otherwise.
      * @param temp the item to add to the database.
      */
     protected synchronized void addItem (ItemModel temp){
@@ -150,7 +149,7 @@ public class DataBaseController {
     }
 
     /**
-     * Adds a supplier to the database, overriding it if it already exists.
+     * Adds a supplier to the database, overriding it if it already exists or adding if it does not.
      * @param temp the supplier to add.
      */
     private synchronized void addSupplier(SupplierModel temp){
@@ -180,18 +179,9 @@ public class DataBaseController {
      * @param updateItemList the list of items to input to the data controller.
      */
     protected synchronized void updateItemList (ArrayList<ItemModel> updateItemList){
-        try {
-            statement = dataCon.createStatement();
-            statement.executeUpdate("TRUNCATE TABLE items");
-
             for (ItemModel temp: updateItemList ) {
-                insertItem(temp);
+                addItem(temp);
             }
-
-        }catch (java.sql.SQLException e){
-            System.err.println("Error updating the item table in the database");
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -199,17 +189,9 @@ public class DataBaseController {
      * @param updatedSupplierList the list to put into the database.
      */
     protected  synchronized void updateSupplierList (ArrayList<SupplierModel> updatedSupplierList){
-        try {
-            statement = dataCon.createStatement();
-            statement.executeUpdate("TRUNCATE TABLE suppliers");
-
             for (SupplierModel temp: updatedSupplierList) {
                 addSupplier(temp);
             }
-
-        }catch (java.sql.SQLException e){
-            System.err.println("Error updating the supplier table in the database");
-        }
     }
 
     /**
@@ -217,18 +199,8 @@ public class DataBaseController {
      * @param updatedOrderList the list to put in the database.
      */
     protected synchronized void updateOrderList (ArrayList<OrderLineModel> updatedOrderList){
-        try {
-            statement = dataCon.createStatement();
-            statement.executeUpdate("TRUNCATE TABLE orderlines");
-            System.out.println("here");
-
-            for (OrderLineModel temp: updatedOrderList) {
+            for (OrderLineModel temp: updatedOrderList) 
                 addOrderLine(temp);
-            }
-
-        }catch (java.sql.SQLException e){
-            System.err.println("Error updating the Order table in the database");
-        }
     }
 
     /**
@@ -236,20 +208,40 @@ public class DataBaseController {
      * @param temp the order to be added.
      */
     protected synchronized void addOrderLine (OrderLineModel temp){
-        try {
-            String insertQuery = "INSERT orderlines (OrderID, DateOrdered, OrderDescription) VALUES (?,?,?)";
-            PreparedStatement pStat = dataCon.prepareStatement(insertQuery);
+    	try {
+            String overrideQuerry = "SELECT * FROM orderlines WHERE OrderID ='" + temp.getOrderID() + "'";
+            statement = dataCon.createStatement();
+            resultSet = statement.executeQuery(overrideQuerry);
+            if (resultSet.next()) {
+                String updateQuerry = "UPDATE orderlines SET DateOrdered = ?, OrderDescription = ? ";
+                PreparedStatement pStat = dataCon.prepareStatement(updateQuerry);
 
-            pStat.setInt(1, temp.getOrderID());
-            pStat.setString(2, temp.getDateString());
-            pStat.setString(3, temp.getOrderLine());
-            pStat.executeUpdate();
-
+                pStat.setString(1, temp.getDateString());
+                pStat.setString(2, temp.getOrderLine());
+            } else {
+                insertOrderline(temp);
+            }
         }catch (java.sql.SQLException e){
-            System.err.println("Error trying to insert an order line into the database");
-            e.printStackTrace();
+            System.err.println("Error inserting a supplier into the database table");
         }
-
+    }
+    
+    /**
+     * Inserts an orderline given by the client to the data base 
+     * @param temp the order line to be inserted
+     */
+    protected synchronized void insertOrderline (OrderLineModel temp) {
+    	try {
+    		String indertQuerry = "INSERT orderlines (OrderID, DateOrdered, OrderDescription) VALUES (?,?,?)";
+    		PreparedStatement pStat = dataCon.prepareStatement(indertQuerry);
+    		pStat.setInt(1, temp.getOrderID());
+    		pStat.setString(2, temp.getDateString());
+    		pStat.setString(3, temp.getOrderLine());
+    		pStat.execute();
+    	}catch (java.sql.SQLException e) {
+    		System.err.println("Error inserting an orderline to the database, check that all the attributes are not empty");
+    		e.printStackTrace();
+    	}    	
     }
 
     /**
