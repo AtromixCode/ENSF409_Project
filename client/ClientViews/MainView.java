@@ -1,6 +1,7 @@
 package client.ClientViews;
 
 import javax.swing.*;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -31,7 +32,12 @@ class MainView {
 	 * Descriptive names of the 8 main functional buttons of the GUI.
 	 */
 	private String[] buttonNames = {"Sell Item", "Order Item", "Remove Item", "Add Item", "View Orders", "View Suppliers", "Import Items", "Import Suppliers", "Refresh"};
-	
+
+	/**
+	 * The search text field for finding an item.
+	 */
+	private JTextField searchArea;
+
 	/**
 	 * The list of items' display information
 	 */
@@ -72,7 +78,7 @@ class MainView {
 	/**
 	 * Creates the panel for the program title.
 	 * 
-	 * @return The title panel.
+	 * @return the title panel.
 	 */
 	private JPanel createTitlePanel()
 	{
@@ -86,7 +92,7 @@ class MainView {
 	/**
 	 * Creates the panel for displaying the item list information.
 	 * 
-	 * @return The item list display panel.
+	 * @return the item list display panel.
 	 */
 	private JPanel createListPanel()
 	{
@@ -104,13 +110,29 @@ class MainView {
 		itemList.setVisibleRowCount(20);
 		JScrollPane listPane = new JScrollPane(itemList);
 		listPanel.add(listPane, "Center");
+		listPanel.add(createSearchPanel(),"South");
 		return listPanel;
 	}
 
 	/**
+	 * Creates a panel with a text box and label used for searching items.
+	 *
+	 * @return a panel containing a text box and label.
+	 */
+	private JPanel createSearchPanel()
+	{
+		JPanel searchPanel = new JPanel();
+		searchPanel.add(new JLabel("Search Items: "));
+		searchArea = new JTextField(20);
+		searchPanel.add(searchArea);
+		return searchPanel;
+	}
+
+
+	/**
 	 * Creates the panel for the sidebar of functional buttons.
 	 * 
-	 * @return The button panel.
+	 * @return the button panel.
 	 */
 	private JPanel createButtonPanel()
 	{
@@ -147,12 +169,17 @@ class MainView {
 	}
 
 	/**
-	 * Clear the item text in the GUI.
+	 * Clear the search item text in the GUI.
 	 */
-	protected void clearText()
-	{
-		itemListModel.clear();
-	}
+	protected void clearSearchText(){searchArea.setText("");}
+
+	/**
+	 * Gets the text in the search box used for finding an item.
+	 *
+	 * @return a string containing user input.
+	 */
+	protected String getSearchText(){return searchArea.getText();}
+
 
 	/**
 	 * Toggle whether or not the first 3 functional buttons are enabled.
@@ -280,6 +307,14 @@ class MainView {
 	 * @param b The ActionListener for clicking the button to refresh.
 	 */
 	protected void addButton9ActionListener(ActionListener b) { buttons[8].addActionListener(b); }
+
+
+	/**
+	 * Adds an Document Listener for the text field used used to search for items.
+	 *
+	 * @param b The document listener for changes to the text field.
+	 */
+	protected void addSearchAreaDocumentListener(DocumentListener b) { searchArea.getDocument().addDocumentListener(b); }
 
 	/**
 	 * Displays the loading circle.

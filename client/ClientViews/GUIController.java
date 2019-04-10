@@ -4,10 +4,7 @@ import client.ClientControllers.ClientController;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.util.Scanner;
 
 /**
@@ -55,7 +52,7 @@ class GUIController {
 		cc = controller;
 		setUpCC();
 		addActionListeners();
-		retrieveAndDisplay();
+		retrieveAndDisplayItems();
 	}
 
 	/**
@@ -76,6 +73,7 @@ class GUIController {
 	{
 		mv.addWindowListener(new WindowClose());
 		mv.addListSelectionListener(new SelectItem());
+		mv.addSearchAreaDocumentListener(new searchItem());
 		mv.addButton4ActionListener(new AddItem());
 		mv.addButton5ActionListener(new ViewOrders());
 		mv.addButton6ActionListener(new ViewSuppliers());
@@ -89,9 +87,28 @@ class GUIController {
 	 * Retrieves and displays data from server. Displays
 	 * and error box to the user if this is unsuccessful.
 	 */
-	protected void retrieveAndDisplay()
+	protected void retrieveAndDisplayItems()
 	{
-		if(!cc.fetchAndDisplayFromServer()) {
+		if(!cc.fetchAndDisplayItems(mv.getSearchText())) {
+			JOptionPane.showMessageDialog(null, "Error communicating with server!", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		else
+		{
+
+		}
+	}
+
+	protected void retrieveAndDisplaySuppliers()
+	{
+		if (!cc.fetchAndDisplaySuppliers()) {
+			JOptionPane.showMessageDialog(null, "Error communicating with server!", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	protected void retrieveAndDisplayOrders()
+	{
+		if (!cc.fetchAndDisplayOrders())
+		{
 			JOptionPane.showMessageDialog(null, "Error communicating with server!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -121,7 +138,7 @@ class GUIController {
 			mv.addButton1ActionListener(new SellItem());
 			mv.addButton2ActionListener(new OrderItem());
 			mv.addButton3ActionListener(new RemoveItem());
-			retrieveAndDisplay();
+			retrieveAndDisplayItems();
 		}
 
 		/**
@@ -153,7 +170,6 @@ class GUIController {
 			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				retrieveAndDisplay();
 				try {
 					int quantity = Integer.parseInt(JOptionPane.showInputDialog("Please enter the quantity sold:"));
 					if (quantity>0) {
@@ -166,7 +182,7 @@ class GUIController {
 					JOptionPane.showMessageDialog(null, "Please enter an integer!", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				mv.setButtonsClickable(false);
-				retrieveAndDisplay();
+				retrieveAndDisplayItems();
 			}
 		}
 
@@ -185,11 +201,10 @@ class GUIController {
 			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				retrieveAndDisplay();
 				try {
 					int quantity = Integer.parseInt(JOptionPane.showInputDialog("Please enter the quantity to order:"));
 					if (quantity>0) {
-						JOptionPane.showMessageDialog(null, cc.orderItem(id, quantity), "Result", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, cc.orderItem(id, quantity, mv.getSearchText()), "Result", JOptionPane.INFORMATION_MESSAGE);
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Please enter a number greater than 0!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -198,7 +213,7 @@ class GUIController {
 					JOptionPane.showMessageDialog(null, "Please enter an integer!", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				mv.setButtonsClickable(false);
-				retrieveAndDisplay();
+				retrieveAndDisplayItems();
 			}
 		}
 
@@ -215,14 +230,13 @@ class GUIController {
 			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				retrieveAndDisplay();
 				int a = JOptionPane.showConfirmDialog(null, "Please confirm you would like to remove Item #"+id+" from the store.");
 				if (a==0) {
-					JOptionPane.showMessageDialog(null, cc.removeItem(id), "Result", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, cc.removeItem(id, mv.getSearchText()), "Result", JOptionPane.INFORMATION_MESSAGE);
 					mv.setButtonsClickable(false);
 				}
 				mv.setButtonsClickable(false);
-				retrieveAndDisplay();
+				retrieveAndDisplayItems();
 			}
 		}
 	}
@@ -248,7 +262,7 @@ class GUIController {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			retrieveAndDisplay();
+			retrieveAndDisplayItems();
 			panel = new UserPromptPanel();
 			int value = JOptionPane.showConfirmDialog(null, panel, "Add new item", JOptionPane.OK_CANCEL_OPTION);
 			if (value == JOptionPane.OK_OPTION) {
@@ -273,7 +287,7 @@ class GUIController {
 					}
 					else
 					{
-						JOptionPane.showMessageDialog(null, cc.addItem(id, name, quantity, price, supId),
+						JOptionPane.showMessageDialog(null, cc.addItem(id, name, quantity, price, supId, mv.getSearchText()),
 								"Result", JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
@@ -290,7 +304,7 @@ class GUIController {
 				}
 			}
 			mv.setButtonsClickable(false);
-			retrieveAndDisplay();
+			retrieveAndDisplayItems();
 		}
 
 		/**
@@ -368,7 +382,7 @@ class GUIController {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			retrieveAndDisplay();
+			retrieveAndDisplaySuppliers();
 			int value = JOptionPane.showConfirmDialog(null, panel, "Add new supplier", JOptionPane.OK_CANCEL_OPTION);
 			if (value == JOptionPane.OK_OPTION)
 			{
@@ -407,7 +421,7 @@ class GUIController {
 				}
 			}
 			mv.setButtonsClickable(false);
-			retrieveAndDisplay();
+			retrieveAndDisplaySuppliers();
 		}
 
 		/**
@@ -468,10 +482,10 @@ class GUIController {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			retrieveAndDisplay();
+			retrieveAndDisplayOrders();
 			ov.setWindowVisibility(true);
 			mv.setButtonsClickable(false);
-			retrieveAndDisplay();
+			retrieveAndDisplayOrders();
 		}
 	}
 
@@ -490,10 +504,10 @@ class GUIController {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			retrieveAndDisplay();
+			retrieveAndDisplaySuppliers();
 			sv.setSupplierWindowVisibility(true);
 			mv.setButtonsClickable(false);
-			retrieveAndDisplay();
+			retrieveAndDisplaySuppliers();
 		}
 	}
 
@@ -517,11 +531,12 @@ class GUIController {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			retrieveAndDisplay();
+			mv.clearSearchText();
+			retrieveAndDisplayItems();
 			filename = JOptionPane.showInputDialog("Please enter the file name:");
 			if (filename != null) {
 				if (!filename.equals("")) {
-					JOptionPane.showMessageDialog(null, cc.readItems(filename),
+					JOptionPane.showMessageDialog(null, cc.readItems(filename, mv.getSearchText()),
 							"Result", JOptionPane.INFORMATION_MESSAGE);
 				}
 				else {
@@ -530,7 +545,7 @@ class GUIController {
 				}
 			}
 			mv.setButtonsClickable(false);
-			retrieveAndDisplay();
+			retrieveAndDisplayItems();
 		}
 	}
 
@@ -554,7 +569,7 @@ class GUIController {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			retrieveAndDisplay();
+			retrieveAndDisplaySuppliers();
 			filename = JOptionPane.showInputDialog("Please enter the file name:");
 			if (filename != null) {
 				if (!filename.equals("")) {
@@ -567,7 +582,7 @@ class GUIController {
 				}
 			}
 			mv.setButtonsClickable(false);
-			retrieveAndDisplay();
+			retrieveAndDisplaySuppliers();
 		}
 	}
 
@@ -585,7 +600,8 @@ class GUIController {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			retrieveAndDisplay();
+			mv.clearSearchText();
+			retrieveAndDisplayItems();
 			mv.loadingOn();
 			LoadThread lt = new LoadThread();
 			lt.start();
@@ -671,6 +687,28 @@ class GUIController {
 		 */
 		@Override
 		public void windowDeactivated(WindowEvent e) { }
+	}
+
+	public class searchItem implements DocumentListener
+	{
+
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			mv.setButtonsClickable(false);
+			cc.displayItems(mv.getSearchText());
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			mv.setButtonsClickable(false);
+			cc.displayItems(mv.getSearchText());
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			mv.setButtonsClickable(false);
+			cc.displayItems(mv.getSearchText());
+		}
 	}
 
 	/**

@@ -527,14 +527,40 @@ public class ClientController implements SCCommunicationConstants {
 	 * Gets all data from server and inputs into display models.
 	 * @return true if communication with server was successful, false if otherwise.
 	 */
-	public boolean fetchAndDisplayFromServer()
+	public boolean fetchAndDisplayItems(String search)
 	{
 		try {
 			itemList = retrieveItemListFromServer();
+			displayItems(search);
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error retrieving from server!");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public boolean fetchAndDisplaySuppliers()
+	{
+		try {
 			supplierList = retrieveSupplierListFromServer();
-			orderList = retrieveOrderListFromServer();
-			displayItems();
 			displaySuppliers();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error retrieving from server!");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public boolean fetchAndDisplayOrders()
+	{
+		try {
+			orderList = retrieveOrderListFromServer();
 			displayOrders();
 		}
 		catch (Exception e)
@@ -555,13 +581,13 @@ public class ClientController implements SCCommunicationConstants {
 	 * @param fileName The name of the file to be read.
 	 * @return A description of how the attempt went.
 	 */
-	public String readItems(String fileName)
+	public String readItems(String fileName, String search)
 	{
 		if (fileInput.readItemFile(fileName, itemList))
 		{
 			try {
 				sendItemListToServer(itemList);
-				fetchAndDisplayFromServer();
+				fetchAndDisplayItems(search);
 			}
 			catch (Exception ex)
 			{
@@ -588,7 +614,7 @@ public class ClientController implements SCCommunicationConstants {
 		{
 			try {
 				sendSupplierListToServer(supplierList);
-				fetchAndDisplayFromServer();
+				fetchAndDisplaySuppliers();
 			}
 			catch (Exception ex)
 			{
@@ -618,12 +644,24 @@ public class ClientController implements SCCommunicationConstants {
 	 * Fills/overwrites a given list model with the strings of
 	 * the item list.
 	 */
-	public void displayItems()
+	public void displayItems(String search)
 	{
 		itemDisplay.clear();
-		for(ItemModel i: itemList)
+		if(search.equals("")) {
+
+			for (ItemModel i : itemList) {
+				itemDisplay.addElement(i.displayString());
+			}
+		}
+		else
 		{
-			itemDisplay.addElement(i.displayString());
+			for (ItemModel i: itemList)
+			{
+				if (i.toString().toLowerCase().contains(search))
+				{
+					itemDisplay.addElement(i.displayString());
+				}
+			}
 		}
 	}
 
@@ -643,7 +681,7 @@ public class ClientController implements SCCommunicationConstants {
 			{
 				if (l.getOrderID()==orderId&&orderDate.equals(l.getDateString()))
 				{
-					orderDisplay.append(l.getOrderLine()+"\n");
+					orderDisplay.append("\n"+l.getOrderLine()+"\n");
 				}
 				else
 				{
@@ -652,7 +690,7 @@ public class ClientController implements SCCommunicationConstants {
 					orderDisplay.append("\n***********************************************************************\n");
 					orderDisplay.append("ORDER ID:\t\t" + orderId + "\n" +
 							"Date Ordered:\t\t" + orderDate+"\n");
-					orderDisplay.append(l.getOrderLine()+"\n");
+					orderDisplay.append("\n"+l.getOrderLine()+"\n");
 				}
 			}
 		}
@@ -663,7 +701,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * @param id the id of the item to be removed.
 	 * @return a string giving the result of the removal.
 	 */
-	public String removeItem(int id)
+	public String removeItem(int id, String search)
 	{
 		for (ItemModel i: itemList)
 		{
@@ -672,7 +710,7 @@ public class ClientController implements SCCommunicationConstants {
 				try
 				{
 					sendDeletedItemUpdate(i);
-					fetchAndDisplayFromServer();
+					fetchAndDisplayItems(search);
 					return "Successfully removed item from shop.";
 				}
 				catch(Exception e)
@@ -706,7 +744,7 @@ public class ClientController implements SCCommunicationConstants {
 		{
 			supplierList.add(s);
 			sendSupplierListToServer(supplierList);
-			fetchAndDisplayFromServer();
+			fetchAndDisplaySuppliers();
 		}
 		catch(Exception ex)
 		{
@@ -726,7 +764,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * @param supId the supplier id of the item to be added.
 	 * @return the result of the item addition.
 	 */
-	public String addItem(int id, String name, int quantity, float price, int supId)
+	public String addItem(int id, String name, int quantity, float price, int supId, String search)
 	{
 		ItemModel i = null;
 		for(SupplierModel s: supplierList)
@@ -751,7 +789,7 @@ public class ClientController implements SCCommunicationConstants {
 		{
 			itemList.add(i);
 			sendItemListToServer(itemList);
-			fetchAndDisplayFromServer();
+			fetchAndDisplayItems(search);
 		}
 		catch(Exception ex)
 		{
@@ -813,7 +851,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * @param quantity the amount of the item that will be ordered.
 	 * @return The result of the item order.
 	 */
-	public String orderItem(int id, int quantity)
+	public String orderItem(int id, int quantity, String search)
 	{
 		ItemModel a=null;
 		for (ItemModel i: itemList)
@@ -842,7 +880,7 @@ public class ClientController implements SCCommunicationConstants {
 		try
 		{
 			sendItemOrderUpdate(a, quantity);
-			fetchAndDisplayFromServer();
+			fetchAndDisplayItems(search);
 			return "Successfully Ordered Item!";
 		}
 		catch (Exception ex)
