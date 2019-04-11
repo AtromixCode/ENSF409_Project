@@ -26,12 +26,12 @@ class MainView {
 	/**
 	 * List of the 8 buttons for the main functionality of the GUI.
 	 */
-	private JButton[] buttons = new JButton[2];
+	private JButton[] buttons = new JButton[3];
 	
 	/**
 	 * Descriptive names of the 8 main functional buttons of the GUI.
 	 */
-	private String[] buttonNames = {"Buy Item", "Refresh"};
+	private String[] buttonNames = {"Add Item","View Cart","Refresh"};
 
 	/**
 	 * The search text field for finding an item.
@@ -207,30 +207,13 @@ class MainView {
 	 * 
 	 * @param l The ActionListener for the list item selection.
 	 */
-	protected void addListSelectionListener(ListSelectionListener l)
-	{
-		itemList.addListSelectionListener(l);
-	}
+	protected void addListSelectionListener(ListSelectionListener l) { itemList.addListSelectionListener(l); }
 
-	/**
-	 * Adds an ActionListener for the "Sell Item" button
-	 * 
-	 * @param b The ActionListener for clicking the sell item button.
-	 */
-	protected void addButton1ActionListener(ActionListener b)
-	{
-		buttons[0].addActionListener(b);
-	}
+	protected void addButton1ActionListener(ActionListener b) { buttons[0].addActionListener(b); }
 	
-	/**
-	 * Adds an ActionListener for the "Order Item" button
-	 * 
-	 * @param b The ActionListener for clicking the order item button.
-	 */
-	protected void addButton2ActionListener(ActionListener b)
-	{
-		buttons[1].addActionListener(b);
-	}
+	protected void addButton2ActionListener(ActionListener b) { buttons[1].addActionListener(b); }
+
+	protected void addButton3ActionListener(ActionListener b) { buttons[2].addActionListener(b); }
 
 	/**
 	 * Adds an Document Listener for the text field used used to search for items.

@@ -44,10 +44,14 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	private ArrayList<SupplierModel> supplierList;
 
+	private ArrayList<ItemModel> cartItems;
+
 	/**
 	 * The display model that is used to display the list of items.
 	 */
 	private DefaultListModel<String> itemDisplay;
+
+	private DefaultListModel<String> cartDisplay;
 
 	/**
 	 * Verifies if the client-server connection can still run
@@ -233,7 +237,6 @@ public class ClientController implements SCCommunicationConstants {
 		}
 	}
 
-
 	/**
 	 * Sends an item to the server to update. This is for new items and changed items,
 	 * such as items that have had their quantity decreased.
@@ -256,37 +259,6 @@ public class ClientController implements SCCommunicationConstants {
 	}
 
 	/**
-	 * Sends an item and a quantity to order to the server.
-	 * The server will generate an order line to add to their order list.
-	 * The server will not automatically send the updated line.
-	 * If the item being ordered does not exist in the server's list, it will throw an error.
-	 * If less than 1 item is being ordered, it will throw an error.
-	 *
-	 * @param itemToOrder The item being ordered.
-	 * @param quantityToOrder The quantity of the item to be ordered.
-	 * @throws IOException
-	 */
-	public void sendItemOrderUpdate(ItemModel itemToOrder, int quantityToOrder) throws IOException {
-
-		if(quantityToOrder < 1)
-			throw new IOException("Error: cannot order less than 1 item.");
-
-		try {
-			outputWriter.writeObject(scData + scItem + scInt);
-
-			outputWriter.writeObject((ItemModel) itemToOrder.clone());
-			outputWriter.writeObject(quantityToOrder);
-
-			outputWriter.flush();
-		} catch (IOException writeErr) {
-			throw new IOException("Error: could not communicate to the server.");
-		} catch (CloneNotSupportedException cnsErr) {
-			throw new IOException("Error: item could not be cloned.");
-		}
-	}
-
-
-	/**
 	 * Generic method that returns a cloned version of a given ArrayList.
 	 * Requires T to be cloneable.
 	 *
@@ -307,6 +279,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void setItemDisplay(DefaultListModel<String> s){itemDisplay = s;}
 
+	public void setCartDisplay(DefaultListModel<String> s) {cartDisplay = s;}
 
 	/**
 	 * Gets all data from server and inputs into display models.
@@ -341,6 +314,21 @@ public class ClientController implements SCCommunicationConstants {
 		return true;
 	}
 
+	public boolean fetchItems()
+	{
+		try {
+			itemList = retrieveItemListFromServer();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error retrieving from server!");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+
 	/**
 	 * Fills/overwrites a given list model with the strings of
 	 * the item list.
@@ -366,50 +354,124 @@ public class ClientController implements SCCommunicationConstants {
 		}
 	}
 
+	public void displayCart()
+	{
+		cartDisplay.clear();
+		for (ItemModel i : cartItems) {
+			cartDisplay.addElement(i.displayString());
+		}
+	}
+
 	/**
 	 * Removes a certain quantity of the item, updating this on the server and client.
-	 * @param id the id of the item to be sold.
-	 * @param quantity the quantity to be sold of the item.
+	 *
 	 * @return the result of the item sale.
 	 */
-	public String buyItem(int id, int quantity)
+	public String buyItems()
 	{
+		if (!fetchItems())
+		{
+			return "Error communicating with server!";
+		}
+		fetchSuppliers();
+		if (cartItems.isEmpty())
+		{
+			return "Cart is empty!";
+		}
+		String success = "Purchased all items successfully!";
+		String failure = "";
+		boolean successful = true;
+		for (ItemModel item: cartItems) {
+			int id = item.getId();
+			int quantity = item.getQuantity();
+			for (ItemModel i : itemList) {
+				if (i.getId() == id) {
+					if (quantity > i.getQuantity()) {
+						successful = false;
+						failure += "Item with ID " + i.getId() + " did not have enough quantity to be purchased.\n";
+						break;
+					}
+					boolean check = false;
+					for (SupplierModel s : supplierList) {
+						if (s.getId() == i.getSupplierID()) {
+							check = true;
+						}
+					}
+					if (!check) {
+						failure += "Item with ID " + i.getId() + " can not be purchased right now.\n";
+						break;
+					} else {
+						i.setQuantity(i.getQuantity() - quantity);
+						try {
+							sendItemUpdate(i);
+							cartItems.remove(i);
+						} catch (Exception e) {
+							return "Error communicating with server!";
+						}
+					}
+				}
+			}
+		}
+		if (successful)
+		{
+			return success;
+		}
+		return failure;
+	}
+
+	public String addItem(int id, int quantity)
+	{
+		if(!fetchItems())
+		{
+			return "Error communicating with server!";
+		}
 		for (ItemModel i: itemList)
 		{
 			if (i.getId()==id)
 			{
-				if (quantity>i.getQuantity())
+				for (ItemModel i2: cartItems)
 				{
-					return "Not enough quantity to sell that much.";
-				}
-				boolean check = false;
-				for (SupplierModel s: supplierList)
-				{
-					if (s.getId()==i.getSupplierID())
+					if (i2.getId()==id)
 					{
-						check = true;
-					}
-				}
-				if (!check)
-				{
-					return "No supplier found for that item!";
-				}
-				else
-				{
-					i.setQuantity(i.getQuantity()-quantity);
-					try {
-						sendItemUpdate(i);
-						return "Successfully sold item!";
-					}
-					catch(Exception e)
-					{
-						return "Error communicating with server.";
+						if (quantity+i2.getQuantity()>i.getQuantity())
+						{
+							return "Not enough quantity available in store to buy that much!";
+						}
+						i2.setQuantity(quantity+i2.getQuantity());
+						return "Added item to cart!";
 					}
 
 				}
+				if (quantity>i.getQuantity())
+				{
+					return "Not enough quantity available in store to buy that much!";
+				}
+				try{
+					ItemModel a = (ItemModel)i.clone();
+					a.setQuantity(quantity);
+					cartItems.add(a);
+					return "Added item to cart";
+				}
+				catch (CloneNotSupportedException e)
+				{
+					return "Error adding that item to the cart.";
+				}
 			}
 		}
-		return "Item does not exist";
+		return "Error adding the item to the cart.";
+	}
+
+	public String removeItem(int id)
+	{
+		for (ItemModel i: cartItems)
+		{
+			if (i.getId()==id)
+			{
+				cartItems.remove(i);
+				return "Successfully removed item from cart!";
+			}
+		}
+		return "Could not remove item from cart";
 	}
 
 	/**
@@ -423,7 +485,7 @@ public class ClientController implements SCCommunicationConstants {
 	public ClientController(String serverName, int portNum) {
 		itemList = new ArrayList<ItemModel>();
 		supplierList = new ArrayList<SupplierModel>();
-
+		cartItems = new ArrayList<ItemModel>();
 		try {
 			clientSocket = new Socket(serverName, portNum);
 			outputWriter = new ObjectOutputStream(clientSocket.getOutputStream());

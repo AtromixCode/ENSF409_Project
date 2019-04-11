@@ -24,6 +24,8 @@ class GUIController {
 	 */
 	private MainView mv;
 
+	private CartView cv;
+
 	/**
 	 * Client to communicate with the server.
 	 */
@@ -35,8 +37,9 @@ class GUIController {
 	 *
 	 * @param controller
 	 */
-	protected GUIController (ClientController controller){
+	protected GUIController(ClientController controller) {
 		mv = new MainView();
+		cv = new CartView();
 		cc = controller;
 		setUpCC();
 		addActionListeners();
@@ -46,30 +49,31 @@ class GUIController {
 	/**
 	 * Sends display areas to the client controller for its use.
 	 */
-	protected void setUpCC()
-	{
+	protected void setUpCC() {
 		cc.setItemDisplay(mv.getItemListModel());
+		cc.setCartDisplay(cv.getCartListModel());
 	}
 
 
 	/**
 	 * Assigns all action listeners for buttons on the front end.
 	 */
-	protected void addActionListeners()
-	{
+	protected void addActionListeners() {
 		mv.addWindowListener(new WindowClose());
-		mv.addButton2ActionListener(new Refresh());
+		mv.addButton2ActionListener(new ViewCart());
+		mv.addButton3ActionListener(new Refresh());
 		mv.addListSelectionListener(new SelectItem());
 		mv.addSearchAreaDocumentListener(new searchItem());
+		cv.addCheckoutButtonListener(new CheckoutCart());
+		cv.addListSelectionListener(new SelectCart());
 	}
 
 	/**
 	 * Retrieves and displays data from server. Displays
 	 * and error box to the user if this is unsuccessful.
 	 */
-	protected void retrieveAndDisplayItems()
-	{
-		if(!(cc.fetchAndDisplayItems(mv.getSearchText())&&cc.fetchSuppliers())) {
+	protected void retrieveAndDisplayItems() {
+		if (!(cc.fetchAndDisplayItems(mv.getSearchText()) && cc.fetchSuppliers())) {
 			JOptionPane.showMessageDialog(null, "Error communicating with server!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -94,10 +98,8 @@ class GUIController {
 		 * Default constructor assigns the actions listeners to the 3 buttons
 		 * dependent on there being at least one item to select.
 		 */
-		protected SelectItem()
-		{
-			mv.addButton1ActionListener(new BuyItem());
-			retrieveAndDisplayItems();
+		protected SelectItem() {
+			mv.addButton1ActionListener(new AddItem());
 		}
 
 		/**
@@ -110,7 +112,7 @@ class GUIController {
 			if (index >= 0) {
 				data = (String) mv.getItemListModel().get(index);
 				mv.setButtonClickable(true);
-				Scanner scan = new Scanner (data);
+				Scanner scan = new Scanner(data);
 				scan.next();
 				id = scan.nextInt();
 			}
@@ -121,20 +123,18 @@ class GUIController {
 		 * to be pressed, whereupon a dialogue box asking for a specified amount
 		 * will appear. Handles errors and tells the user what went wrong.
 		 */
-		public class BuyItem implements ActionListener {
+		public class AddItem implements ActionListener {
 
 			/**
-			 *
 			 * @param e The event that triggers the call to the method.
 			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int quantity = Integer.parseInt(JOptionPane.showInputDialog("Please enter the quantity sold:"));
-					if (quantity>0) {
-						JOptionPane.showMessageDialog(null, cc.buyItem(id, quantity), "Result", JOptionPane.INFORMATION_MESSAGE);
-					}
-					else {
+					int quantity = Integer.parseInt(JOptionPane.showInputDialog("Please enter the quantity you want:"));
+					if (quantity > 0) {
+						JOptionPane.showMessageDialog(null, cc.addItem(id, quantity), "Result", JOptionPane.INFORMATION_MESSAGE);
+					} else {
 						JOptionPane.showMessageDialog(null, "Please enter a number greater than 0!", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception ex) {
@@ -143,6 +143,64 @@ class GUIController {
 				mv.setButtonClickable(false);
 				retrieveAndDisplayItems();
 			}
+		}
+	}
+
+	public class SelectCart implements ListSelectionListener {
+		String data;
+
+		int id;
+
+		public SelectCart() {
+			cv.addRemoveCartButtonListener(new RemoveItem());
+		}
+
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			int index = cv.getCartList().getSelectedIndex();
+			if (index >= 0) {
+				data = (String) cv.getCartListModel().get(index);
+				cv.setButtonClickable(true);
+				Scanner scan = new Scanner(data);
+				scan.next();
+				id = scan.nextInt();
+			}
+		}
+
+		public class RemoveItem implements ActionListener
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int a = JOptionPane.showConfirmDialog(null, "Remove this item?");
+				if (a==0) {
+					JOptionPane.showMessageDialog(null, cc.removeItem(id), "Result", JOptionPane.INFORMATION_MESSAGE);
+				}
+				cc.displayCart();
+			}
+		}
+	}
+
+	public class ViewCart implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			cv.setCartWindowVisibility(true);
+			cc.displayCart();
+			retrieveAndDisplayItems();
+			mv.setButtonClickable(false);
+		}
+	}
+
+	public class CheckoutCart implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int a = JOptionPane.showConfirmDialog(null, "Please confirm you would like to checkout now");
+			if (a==0) {
+				JOptionPane.showMessageDialog(null, cc.buyItems(), "Result", JOptionPane.INFORMATION_MESSAGE);
+			}
+			cc.displayCart();
+			retrieveAndDisplayItems();
 		}
 	}
 
