@@ -1,6 +1,7 @@
 package client.ClientControllers;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.*;
 import javax.swing.*;
@@ -381,6 +382,7 @@ public class ClientController implements SCCommunicationConstants {
 		String success = "Purchased all items successfully!";
 		String failure = "";
 		boolean successful = true;
+		ArrayList<ItemModel> toRemove = new ArrayList<ItemModel>();
 		for (ItemModel item: cartItems) {
 			int id = item.getId();
 			int quantity = item.getQuantity();
@@ -404,13 +406,17 @@ public class ClientController implements SCCommunicationConstants {
 						i.setQuantity(i.getQuantity() - quantity);
 						try {
 							sendItemUpdate(i);
-							cartItems.remove(i);
+							toRemove.add(item);
 						} catch (Exception e) {
 							return "Error communicating with server!";
 						}
 					}
 				}
 			}
+		}
+		for (ItemModel i: toRemove)
+		{
+			cartItems.remove(i);
 		}
 		if (successful)
 		{

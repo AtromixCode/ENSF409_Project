@@ -64,7 +64,7 @@ class MainView {
 	 */
 	protected MainView()
 	{
-		mainWindow = new JFrame("Specialized Users General Management Application");
+		mainWindow = new JFrame("Specialized for Users - General Management Application");
 		mainWindow.setSize(700,500);
 		mainWindow.add(createTitlePanel(), "North");
 		mainWindow.add(createButtonPanel(), "West");
@@ -82,7 +82,7 @@ class MainView {
 	private JPanel createTitlePanel()
 	{
 		JPanel titlePanel = new JPanel();
-		JLabel titleLabel = new JLabel("Specialized Users General Management Application");
+		JLabel titleLabel = new JLabel("Specialized for Users - General Management Application");
 		titleLabel.setFont(new Font("Arial", Font.BOLD,20));
 		titlePanel.add (titleLabel);
 		return titlePanel;

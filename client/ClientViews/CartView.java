@@ -22,7 +22,7 @@ public class CartView {
 
 	protected CartView()
 	{
-		cartWindow = new JFrame("Specialized for Users General Management Application");
+		cartWindow = new JFrame("Specialized for Users - General Management Application");
 		cartWindow.setSize(800,500);
 		cartWindow.setResizable(false);
 		cartWindow.add(createButtonPanel(), "South");
