@@ -646,6 +646,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void displayItems(String search)
 	{
+		search = search.toLowerCase();
 		itemDisplay.clear();
 		if(search.equals("")) {
 

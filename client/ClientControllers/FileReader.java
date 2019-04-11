@@ -55,6 +55,7 @@ public class FileReader {
 					if (i.getId()==a.getId())
 					{
 						check = true;
+						i.setQuantity(a.getQuantity());
 					}
 				}
 				if (check == false) {
