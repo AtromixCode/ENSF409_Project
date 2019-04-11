@@ -400,6 +400,7 @@ public class ClientController implements SCCommunicationConstants {
 						}
 					}
 					if (!check) {
+						successful=false;
 						failure += "Item with ID " + i.getId() + " can not be purchased right now.\n";
 						break;
 					} else {
