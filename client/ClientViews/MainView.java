@@ -26,12 +26,12 @@ class MainView {
 	/**
 	 * List of the 8 buttons for the main functionality of the GUI.
 	 */
-	private JButton[] buttons = new JButton[9];
+	private JButton[] buttons = new JButton[2];
 	
 	/**
 	 * Descriptive names of the 8 main functional buttons of the GUI.
 	 */
-	private String[] buttonNames = {"Sell Item", "Order Item", "Remove Item", "Add Item", "View Orders", "View Suppliers", "Import Items", "Import Suppliers", "Refresh"};
+	private String[] buttonNames = {"Buy Item", "Refresh"};
 
 	/**
 	 * The search text field for finding an item.
@@ -64,14 +64,13 @@ class MainView {
 	 */
 	protected MainView()
 	{
-		mainWindow = new JFrame("Logistics & Information General Management Application");
+		mainWindow = new JFrame("Specialized Users General Management Application");
 		mainWindow.setSize(700,500);
 		mainWindow.add(createTitlePanel(), "North");
 		mainWindow.add(createButtonPanel(), "West");
 		mainWindow.add(createListPanel(), "Center");
 		mainWindow.setVisible(true);
 		mainWindow.setResizable(false);
-		//mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
 
@@ -83,7 +82,7 @@ class MainView {
 	private JPanel createTitlePanel()
 	{
 		JPanel titlePanel = new JPanel();
-		JLabel titleLabel = new JLabel("Logistics & Information General Management Application");
+		JLabel titleLabel = new JLabel("Specialized Users General Management Application");
 		titleLabel.setFont(new Font("Arial", Font.BOLD,20));
 		titlePanel.add (titleLabel);
 		return titlePanel;
@@ -103,7 +102,7 @@ class MainView {
 		labelPanel.add(itemsLabel, "North");
 		labelPanel.add(Box.createRigidArea(new Dimension(10,10)));
 		labelPanel.add(new JLabel("Item ID:                      Item Name:               Quantity:             " +
-				"      Price:                        Supplier ID:"),"South");
+				"      Price:"),"South");
 		listPanel.add(labelPanel, "North");
 		itemListModel = new DefaultListModel<String>();
 		itemList = new JList<String>(itemListModel);
@@ -146,14 +145,11 @@ class MainView {
 		for (int i=0; i<buttons.length; i++)
 		{
 			buttons[i]= new JButton(buttonNames[i]);
-			if (i<3)
-			{
-				buttons[i].setEnabled(false);
-			}
 			buttons[i].setAlignmentX(Component.CENTER_ALIGNMENT);
 			buttonPanel.add(buttons[i]);
 			buttonPanel.add(Box.createRigidArea(new Dimension(100,10)));
 		}
+		setButtonClickable(false);
 		buttonPanel.add(loading);
 		return buttonPanel;
 	}
@@ -187,12 +183,9 @@ class MainView {
 	 * 
 	 * @param clickable True if the buttons are clickable, false if not.
 	 */
-	protected void setButtonsClickable(boolean clickable)
+	protected void setButtonClickable(boolean clickable)
 	{
-		for (int i = 0; i<3; i++)
-		{
-			buttons[i].setEnabled(clickable);
-		}
+		buttons[0].setEnabled(clickable);
 	}
 
 	/**
@@ -238,76 +231,6 @@ class MainView {
 	{
 		buttons[1].addActionListener(b);
 	}
-
-	/**
-	 * Adds an ActionListener for the "Remove Item" button
-	 * 
-	 * @param b The ActionListener for clicking the remove item button.
-	 */
-	protected void addButton3ActionListener(ActionListener b)
-	{
-		buttons[2].addActionListener(b);
-	}
-
-	/**
-	 * Adds an ActionListener for the "Add Item" button
-	 * 
-	 * @param b The ActionListener for clicking the add item button.
-	 */
-	protected void addButton4ActionListener(ActionListener b)
-	{
-		buttons[3].addActionListener(b);
-	}
-	
-	/**
-	 * Adds an ActionListener for the "View Orders" button
-	 * 
-	 * @param b The ActionListener for clicking the button to view orders.
-	 */
-	protected void addButton5ActionListener(ActionListener b)
-	{
-		buttons[4].addActionListener(b);
-	}
-
-	/**
-	 * Adds an ActionListener for the "View Suppliers" button
-	 * 
-	 * @param b The ActionListener for clicking the button to view suppliers.
-	 */
-	protected void addButton6ActionListener(ActionListener b)
-	{
-		buttons[5].addActionListener(b);
-	}
-
-	/**
-	 * Adds an ActionListener for the "Import Items" button
-	 * 
-	 * @param b The ActionListener for clicking the button to import items from a file.
-	 */
-	protected void addButton7ActionListener(ActionListener b)
-	{
-		buttons[6].addActionListener(b);
-	}
-
-	/**
-	 * Adds an ActionListener for the "Import Suppliers" button
-	 * 
-	 * @param b The ActionListener for clicking the button to import suppliers from a file.
-	 */
-	protected void addButton8ActionListener(ActionListener b)
-	{
-		buttons[7].addActionListener(b);
-	}
-
-
-	/**
-	 *
-	 * Adds an ActionListener for the "Refresh" button
-	 *
-	 * @param b The ActionListener for clicking the button to refresh.
-	 */
-	protected void addButton9ActionListener(ActionListener b) { buttons[8].addActionListener(b); }
-
 
 	/**
 	 * Adds an Document Listener for the text field used used to search for items.

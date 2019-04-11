@@ -97,9 +97,9 @@ public class ItemModel implements Serializable, Cloneable {
 	public String displayString() {
 		if (desc.length()>7)
 		{
-			return "<html><pre> "+id+"\t\t"+desc+"\t"+quantity+"\t\t"+price+"\t\t"+supplierID+"</pre></html>";
+			return "<html><pre> "+id+"\t\t"+desc+"\t"+quantity+"\t\t"+price+"</pre></html>";
 		}
-		return "<html><pre> "+id+"\t\t"+desc+"\t\t"+quantity+"\t\t"+price+"\t\t"+supplierID+"</pre></html>";
+		return "<html><pre> "+id+"\t\t"+desc+"\t\t"+quantity+"\t\t"+price+"</pre></html>";
 	}
 
 	/**
