@@ -657,7 +657,7 @@ public class ClientController implements SCCommunicationConstants {
 		{
 			for (ItemModel i: itemList)
 			{
-				if (i.toString().toLowerCase().contains(search))
+				if (i.idAndName().toLowerCase().contains(search))
 				{
 					itemDisplay.addElement(i.displayString());
 				}
