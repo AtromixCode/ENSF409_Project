@@ -336,6 +336,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void displayItems(String search)
 	{
+		search = search.toLowerCase();
 		itemDisplay.clear();
 		if(search.equals("")) {
 
@@ -347,7 +348,7 @@ public class ClientController implements SCCommunicationConstants {
 		{
 			for (ItemModel i: itemList)
 			{
-				if (i.toString().toLowerCase().contains(search))
+				if (i.idAndName().toLowerCase().contains(search))
 				{
 					itemDisplay.addElement(i.displayString());
 				}

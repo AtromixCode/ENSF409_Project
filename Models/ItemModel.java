@@ -124,6 +124,8 @@ public class ItemModel implements Serializable, Cloneable {
 
 	public float getPrice(){return price;}
 
+	public String idAndName() { return id + " " + desc; }
+
 	/**
 	 * Gets the item's supplier id .
 	 * @return an integer that is the supplier id for the item.
