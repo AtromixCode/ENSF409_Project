@@ -176,6 +176,7 @@ class GUIController {
 					JOptionPane.showMessageDialog(null, cc.removeItem(id), "Result", JOptionPane.INFORMATION_MESSAGE);
 				}
 				cc.displayCart();
+				cv.setButtonClickable(false);
 			}
 		}
 	}
@@ -201,6 +202,7 @@ class GUIController {
 			}
 			cc.displayCart();
 			retrieveAndDisplayItems();
+			cv.setButtonClickable(false);
 		}
 	}
 

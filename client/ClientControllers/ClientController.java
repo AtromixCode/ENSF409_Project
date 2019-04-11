@@ -444,6 +444,7 @@ public class ClientController implements SCCommunicationConstants {
 							return "Not enough quantity available in store to buy that much!";
 						}
 						i2.setQuantity(quantity+i2.getQuantity());
+						i2.setPrice(i.getPrice()*i2.getQuantity());
 						return "Added item to cart!";
 					}
 
@@ -455,6 +456,7 @@ public class ClientController implements SCCommunicationConstants {
 				try{
 					ItemModel a = (ItemModel)i.clone();
 					a.setQuantity(quantity);
+					a.setPrice(a.getPrice()*a.getQuantity());
 					cartItems.add(a);
 					return "Added item to cart";
 				}

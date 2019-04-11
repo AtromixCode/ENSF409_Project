@@ -23,7 +23,7 @@ public class CartView {
 	protected CartView()
 	{
 		cartWindow = new JFrame("Specialized for Users - General Management Application");
-		cartWindow.setSize(800,500);
+		cartWindow.setSize(500,500);
 		cartWindow.setResizable(false);
 		cartWindow.add(createButtonPanel(), "South");
 		cartWindow.add(createListPanel(),"Center");
@@ -52,7 +52,7 @@ public class CartView {
 		labelPanel.add(cartLabel, "North");
 		labelPanel.add(Box.createRigidArea(new Dimension(10,10)));
 		labelPanel.add(new JLabel("Item ID:                      Item Name:          Quantity Selected:         " +
-				"      Price:"), "South");
+				"      Total:"), "South");
 		listPanel.add(labelPanel, "North");
 		cartListModel = new DefaultListModel<String>();
 		cartList = new JList<String>(cartListModel);

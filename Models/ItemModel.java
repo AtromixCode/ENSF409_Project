@@ -120,6 +120,10 @@ public class ItemModel implements Serializable, Cloneable {
 	 */
 	public void setQuantity(int q){this.quantity = q;}
 
+	public void setPrice(float price){this.price = price;}
+
+	public float getPrice(){return price;}
+
 	/**
 	 * Gets the item's supplier id .
 	 * @return an integer that is the supplier id for the item.
