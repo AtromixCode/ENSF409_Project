@@ -102,12 +102,13 @@ public class OrderModel implements Serializable, Cloneable
      * @param i the item to create the order of.
      * @param quantity the amount to order.
      */
-    public void createOrder (ItemModel i, int quantity){
+    public OrderLineModel createOrder (ItemModel i, int quantity){
         generateDate();
         generateID();
         OrderLineModel ol = new OrderLineModel(i, dateString, orderID);
         ol.setOrderLine(i.customOrderInfo(quantity));
         checkOrders(ol);
+        return ol;
     }
 
     /**

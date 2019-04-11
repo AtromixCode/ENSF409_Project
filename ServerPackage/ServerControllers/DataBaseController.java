@@ -67,60 +67,23 @@ public class DataBaseController {
         }
         return temp;
     }
-
+    
     /**
-     * Gets the order lines list from the server and returns them to the server.
-     *
-     * @return the list of orders gotten from the database.
+     * Updates the item list of the database.
+     * @param updateItemList the list of items to input to the data controller.
      */
-    protected synchronized ArrayList<OrderLineModel> orderLineListFromDataBase (){
-        ArrayList<OrderLineModel> orderLineList = new ArrayList<OrderLineModel>();
-        try{
-            statement = dataCon.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM shop.orderlines");
-            while(rs.next()){
-                OrderLineModel tempLine = new OrderLineModel(rs.getInt("OrderID"),rs.getString("DateOrdered"),
-                        rs.getString("OrderDescription"));
-                orderLineList.add(tempLine);
+    protected synchronized void updateItemList (ArrayList<ItemModel> updateItemList){
+            for (ItemModel temp: updateItemList ) {
+                addItem(temp);
             }
-
-        }catch (java.sql.SQLException e){
-            System.err.println("Error trying to retrieve the orders from the database");
-            e.printStackTrace();
-        }
-
-        return orderLineList;
     }
-
-    /**
-     * Gets the supplier list from the database.
-     * @return the list of suppliers gotten from the database.
-     */
-    protected synchronized ArrayList<SupplierModel> supplierListFromDatabase (){
-        ArrayList<SupplierModel> temp = new ArrayList<SupplierModel>();
-        try {
-            statement = dataCon.createStatement();
-            ResultSet rs =  statement.executeQuery("SELECT * FROM shop.suppliers");
-            while (rs.next()){
-                SupplierModel tempSupplier = new SupplierModel(rs.getInt("SupplierID"), rs.getString("SupplierName"),
-                        rs.getString("Address"),rs.getString("Contact"));
-                temp.add(tempSupplier);
-            }
-        }catch (java.sql.SQLException e){
-            System.err.println("Error while trying to get the list of suppliers from the server");
-            e.printStackTrace();
-        }
-        return temp;
-    }
-
-
+    
     /**
      * Adds an item to the database, overrides if existing, inserts the item otherwise.
      * @param temp the item to add to the database.
      */
     protected synchronized void addItem (ItemModel temp){
         try {
-            System.out.println(temp.getQuantity());
             String overrideQuerry = "SELECT * FROM items WHERE ItemID =" + temp.getId();
             statement = dataCon.createStatement();
             resultSet = statement.executeQuery(overrideQuerry);
@@ -145,9 +108,76 @@ public class DataBaseController {
             e.printStackTrace();
         }
 
-
     }
+    
+    /**
+     * Inserts an item to the database.
+     * @param temp the item to insert.
+     */
+    private synchronized void insertItem (ItemModel temp ){
+        try {
+            String insertQuery = "INSERT items (ItemID, Description, Quantity, Price, SupplierID) VALUES (?,?,?,?,?)";
+            PreparedStatement pStat = dataCon.prepareStatement(insertQuery);
+            pStat.setInt(1, temp.getId());
+            pStat.setString(2, temp.getDesc());
+            pStat.setInt(3, temp.getQuantity());
+            pStat.setFloat(4,temp.getPrice());
+            pStat.setInt(5, temp.getSupplierID());
 
+            pStat.executeUpdate();
+        }catch (java.sql.SQLException e){
+            System.err.println("Error inserting an item to the table");
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Removes an item from the database.
+     * @param item item to be removed.
+     */
+    protected  synchronized void removeItem (ItemModel item){
+        try {
+            String querry = "DELETE FROM items WHERE itemID = ?";
+            PreparedStatement pStat = dataCon.prepareStatement(querry);
+            pStat.setInt(1, item.getId());
+            pStat.execute();
+        }catch (java.sql.SQLException e){
+            System.err.println("Error removing an item from the database, Already removed?");
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Gets the supplier list from the database.
+     * @return the list of suppliers gotten from the database.
+     */
+    protected synchronized ArrayList<SupplierModel> supplierListFromDatabase (){
+        ArrayList<SupplierModel> temp = new ArrayList<SupplierModel>();
+        try {
+            statement = dataCon.createStatement();
+            ResultSet rs =  statement.executeQuery("SELECT * FROM shop.suppliers");
+            while (rs.next()){
+                SupplierModel tempSupplier = new SupplierModel(rs.getInt("SupplierID"), rs.getString("SupplierName"),
+                        rs.getString("Address"),rs.getString("Contact"));
+                temp.add(tempSupplier);
+            }
+        }catch (java.sql.SQLException e){
+            System.err.println("Error while trying to get the list of suppliers from the server");
+            e.printStackTrace();
+        }
+        return temp;
+    }
+    
+    /**
+     * Updates the supplier list in the database to a given list.
+     * @param updatedSupplierList the list to put into the database.
+     */
+    protected  synchronized void updateSupplierList (ArrayList<SupplierModel> updatedSupplierList){
+            for (SupplierModel temp: updatedSupplierList) {
+                addSupplier(temp);
+            }
+    }
+    
     /**
      * Adds a supplier to the database, overriding it if it already exists or adding if it does not.
      * @param temp the supplier to add.
@@ -175,23 +205,47 @@ public class DataBaseController {
     }
 
     /**
-     * Updates the item list of the database.
-     * @param updateItemList the list of items to input to the data controller.
+     * Inserts a supplier to the database.
+     * @param temp the supplier to be added to the database.
      */
-    protected synchronized void updateItemList (ArrayList<ItemModel> updateItemList){
-            for (ItemModel temp: updateItemList ) {
-                addItem(temp);
-            }
+    private  synchronized void insertSupplier (SupplierModel temp){
+        try {
+            String query = "INSERT suppliers (SupplierID, SupplierName, Address, Contact) VALUES (?,?,?,?)";
+            PreparedStatement pStat = dataCon.prepareStatement(query);
+            pStat.setInt(1, temp.getId());
+            pStat.setString(2, temp.getCompanyName());
+            pStat.setString(3, temp.getAddress());
+            pStat.setString(4, temp.getSalesContact());
+            pStat.executeUpdate();
+        }catch (java.sql.SQLException e){
+            System.err.println("Error inserting supplier to the database");
+            e.printStackTrace();
+        }
     }
 
+
+
     /**
-     * Updates the supplier list in the database to a given list.
-     * @param updatedSupplierList the list to put into the database.
+     * Gets the order lines list from the server and returns them to the server.
+     *
+     * @return the list of orders gotten from the database.
      */
-    protected  synchronized void updateSupplierList (ArrayList<SupplierModel> updatedSupplierList){
-            for (SupplierModel temp: updatedSupplierList) {
-                addSupplier(temp);
+    protected synchronized ArrayList<OrderLineModel> orderLineListFromDataBase (){
+        ArrayList<OrderLineModel> orderLineList = new ArrayList<OrderLineModel>();
+        try{
+            statement = dataCon.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM shop.orderlines");
+            while(rs.next()){
+                OrderLineModel tempLine = new OrderLineModel(rs.getInt("OrderID"),rs.getString("DateOrdered"),
+                        rs.getString("OrderDescription"));
+                orderLineList.add(tempLine);
             }
+
+        }catch (java.sql.SQLException e){
+            System.err.println("Error trying to retrieve the orders from the database");
+            e.printStackTrace();
+        }
+        return orderLineList;
     }
 
     /**
@@ -200,30 +254,7 @@ public class DataBaseController {
      */
     protected synchronized void updateOrderList (ArrayList<OrderLineModel> updatedOrderList){
             for (OrderLineModel temp: updatedOrderList) 
-                addOrderLine(temp);
-    }
-
-    /**
-     * Adds an order to the database
-     * @param temp the order to be added.
-     */
-    protected synchronized void addOrderLine (OrderLineModel temp){
-    	try {
-            String overrideQuerry = "SELECT * FROM orderlines WHERE OrderID ='" + temp.getOrderID() + "'";
-            statement = dataCon.createStatement();
-            resultSet = statement.executeQuery(overrideQuerry);
-            if (resultSet.next()) {
-                String updateQuerry = "UPDATE orderlines SET DateOrdered = ?, OrderDescription = ? ";
-                PreparedStatement pStat = dataCon.prepareStatement(updateQuerry);
-
-                pStat.setString(1, temp.getDateString());
-                pStat.setString(2, temp.getOrderLine());
-            } else {
                 insertOrderline(temp);
-            }
-        }catch (java.sql.SQLException e){
-            System.err.println("Error inserting a supplier into the database table");
-        }
     }
     
     /**
@@ -244,62 +275,5 @@ public class DataBaseController {
     	}    	
     }
 
-    /**
-     * Inserts an item to the database.
-     * @param temp the item to insert.
-     */
-    private synchronized void insertItem (ItemModel temp ){
-        try {
-            String insertQuery = "INSERT items (ItemID, Description, Quantity, Price, SupplierID) VALUES (?,?,?,?,?)";
-            PreparedStatement pStat = dataCon.prepareStatement(insertQuery);
-            pStat.setInt(1, temp.getId());
-            pStat.setString(2, temp.getDesc());
-            pStat.setInt(3, temp.getQuantity());
-            pStat.setFloat(4,temp.getPrice());
-            pStat.setInt(5, temp.getSupplierID());
-
-            pStat.executeUpdate();
-        }catch (java.sql.SQLException e){
-            System.err.println("Error inserting an item to the table");
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * Inserts a supplier to the database.
-     * @param temp the supplier to be added to the database.
-     */
-    private  synchronized void insertSupplier (SupplierModel temp){
-        try {
-            String query = "INSERT suppliers (SupplierID, SupplierName, Address, Contact) VALUES (?,?,?,?)";
-            PreparedStatement pStat = dataCon.prepareStatement(query);
-            pStat.setInt(1, temp.getId());
-            pStat.setString(2, temp.getCompanyName());
-            pStat.setString(3, temp.getAddress());
-            pStat.setString(4, temp.getSalesContact());
-            pStat.executeUpdate();
-        }catch (java.sql.SQLException e){
-            System.err.println("Error inserting supplier to the database");
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * Removes an item from the database.
-     * @param item item to be removed.
-     */
-    protected  synchronized void removeItem (ItemModel item){
-        try {
-            String querry = "DELETE FROM items WHERE itemID = ?";
-            PreparedStatement pStat = dataCon.prepareStatement(querry);
-            pStat.setInt(1, item.getId());
-            pStat.execute();
-        }catch (java.sql.SQLException e){
-            System.err.println("Error removing an item from the database, Already removed?");
-            e.printStackTrace();
-        }
-    }
 }
 

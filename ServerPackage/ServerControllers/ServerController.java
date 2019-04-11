@@ -71,6 +71,7 @@ public class ServerController
     private void runServer () {
         try 
 		{	
+        	System.out.println("Server running....");
             while (true) 
 			{
 				//Accept a connection to a client.

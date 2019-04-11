@@ -72,7 +72,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		inv.updateItemsSuppliers(suppliers);
 		orders = data.orderLineListFromDataBase();
 		order = new OrderModel();
-		order.setOrderLines(data.orderLineListFromDataBase());
+		order.setOrderLines(orders);
 		checkQuantities();
 
 		try
@@ -206,7 +206,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			inv.updateItemList(data.itemListFromDataBase());
 			inv.updateItemsSuppliers(suppliers);
 			outputWriter.writeObject(cloneArrayList(inv.getItems()));
-            System.out.println("Sent ItemList");
 
 			outputWriter.flush();
 		}
@@ -229,7 +228,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			outputWriter.writeObject(scOkay);
 			suppliers = data.supplierListFromDatabase();
 			outputWriter.writeObject(cloneArrayList(suppliers));
-			System.out.println("Sent SupplierList");
 
 			outputWriter.flush();
 		}
@@ -252,7 +250,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			outputWriter.writeObject(scOkay);
 			orders = data.orderLineListFromDataBase();
 			outputWriter.writeObject(cloneArrayList(orders));
-			System.out.println("Sent OrderList");
 
 			outputWriter.flush();
 		}
@@ -367,11 +364,10 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			itemToOrder = (ItemModel) inputReader.readObject();
 			quantityToOrder = (Integer)inputReader.readObject();
 			inv.updateItemsSuppliers(suppliers);
-            order.createOrder(inv.findItem(itemToOrder.getId()), quantityToOrder);
+            data.insertOrderline(order.createOrder(inv.findItem(itemToOrder.getId()), quantityToOrder));
 			itemToOrder.setQuantity(itemToOrder.getQuantity() + quantityToOrder);
 			inv.updateItem(inv.findItem(itemToOrder.getId()));
 			data.addItem(itemToOrder);
-			data.updateOrderList(order.getOrderLines());
 		} catch (IOException readErr) {
 			System.err.println(readErr.getMessage());
 			return;
@@ -379,8 +375,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			System.err.println(classErr.getMessage());
 			return;
 		}
-		
-
 	}
 	
 	

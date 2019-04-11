@@ -93,7 +93,6 @@ public class InventoryController
             if (i.getQuantity()< 40 && i.getSupplier()!= null){
                 o.addLine(i);
                 i.setQuantity(50);
-                System.out.printf("item quntity = %d\n", i.getQuantity());
                 data.addItem(i);
             }
         }
