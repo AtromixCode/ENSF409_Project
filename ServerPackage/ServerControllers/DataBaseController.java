@@ -244,14 +244,14 @@ public class DataBaseController {
         return orderLineList;
     }
 
-    /**
-     * Updates the list of orders in the database to a given order list.
-     * @param updatedOrderList the list to put in the database.
-     */
-    protected synchronized void updateOrderList (ArrayList<OrderLineModel> updatedOrderList){
-            for (OrderLineModel temp: updatedOrderList) 
-                insertOrderline(temp);
-    }
+//    /**
+//     * Updates the list of orders in the database to a given order list.
+//     * @param updatedOrderList the list to put in the database.
+//     */
+//    protected synchronized void updateOrderList (ArrayList<OrderLineModel> updatedOrderList){
+//            for (OrderLineModel temp: updatedOrderList) 
+//                insertOrderline(temp);
+//    }
     
     /**
      * Inserts an orderline given by the client to the data base 

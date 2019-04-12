@@ -63,12 +63,13 @@ public class OrderModel implements Serializable, Cloneable
      * Adds a line to the list of order lines.
      * @param item the item to create the list around.
      */
-    public void addLine(ItemModel item)
+    public OrderLineModel addLine(ItemModel item)
     {
         generateDate();
         generateID();
         OrderLineModel ol = new OrderLineModel(item, dateString, orderID);
         checkOrders(ol);
+        return ol;
     }
 
     /**

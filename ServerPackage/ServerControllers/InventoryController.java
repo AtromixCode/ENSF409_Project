@@ -91,12 +91,11 @@ public class InventoryController
 
         for (ItemModel i: items){
             if (i.getQuantity()< 40 && i.getSupplier()!= null){
-                o.addLine(i);
+            	data.insertOrderline(o.addLine(i));
                 i.setQuantity(50);
                 data.addItem(i);
             }
         }
-        data.updateOrderList(o.getOrderLines());
     }
 
 
