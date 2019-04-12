@@ -419,14 +419,10 @@ public class ClientController implements SCCommunicationConstants {
 	public String buyItems()
 	{
 		if (!fetchItems())
-		{
 			return "Error communicating with server!";
-		}
 		fetchSuppliers();
 		if (cartItems.isEmpty())
-		{
 			return "Cart is empty!";
-		}
 		String success = "Purchased all items successfully!";
 		String failure = "";
 		boolean successful = true;
@@ -443,9 +439,8 @@ public class ClientController implements SCCommunicationConstants {
 					}
 					boolean check = false;
 					for (SupplierModel s : supplierList) {
-						if (s.getId() == i.getSupplierID()) {
+						if (s.getId() == i.getSupplierID())
 							check = true;
-						}
 					}
 					if (!check) {
 						successful=false;
@@ -464,42 +459,29 @@ public class ClientController implements SCCommunicationConstants {
 			}
 		}
 		for (ItemModel i: toRemove)
-		{
 			cartItems.remove(i);
-		}
 		if (successful)
-		{
 			return success;
-		}
 		return failure;
 	}
 
 	public String addItem(int id, int quantity)
 	{
 		if(!fetchItems())
-		{
 			return "Error communicating with server!";
-		}
-		for (ItemModel i: itemList)
-		{
-			if (i.getId()==id)
-			{
-				for (ItemModel i2: cartItems)
-				{
-					if (i2.getId()==id)
-					{
-						if (quantity+i2.getQuantity()>i.getQuantity())
-						{
+		for (ItemModel i: itemList) {
+			if (i.getId()==id) {
+				for (ItemModel i2: cartItems) {
+					if (i2.getId()==id) {
+						if (quantity+i2.getQuantity()>i.getQuantity()) {
 							return "Not enough quantity available in store to buy that much!";
 						}
 						i2.setQuantity(quantity+i2.getQuantity());
 						i2.setPrice(i.getPrice()*i2.getQuantity());
 						return "Added item to cart!";
 					}
-
 				}
-				if (quantity>i.getQuantity())
-				{
+				if (quantity>i.getQuantity()) {
 					return "Not enough quantity available in store to buy that much!";
 				}
 				try{
@@ -520,10 +502,8 @@ public class ClientController implements SCCommunicationConstants {
 
 	public String removeItem(int id)
 	{
-		for (ItemModel i: cartItems)
-		{
-			if (i.getId()==id)
-			{
+		for (ItemModel i: cartItems) {
+			if (i.getId()==id) {
 				cartItems.remove(i);
 				return "Successfully removed item from cart!";
 			}
