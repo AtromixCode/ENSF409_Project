@@ -255,7 +255,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			case(2110):	updateItemFromClient();			break;	//read an item to add/replace
 			case(2210):	updateItemListFromClient();		break;	//read an item list
 			case(2220):	updateSupplierListFromClient();	break;	//read an supplier list
-			//case(2230):	updateOrderListFromClient();	break;	//read an order list
 			case(2233):	updateOrderListFromClientPrompt();		//check the quantites of the items and
 						break;									//order some if necessary.
 						
@@ -418,32 +417,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		if(!inv.items.isEmpty())
 			updateOrderListFromClientPrompt();
 	}
-
-//	/**
-//	 * Receives a list of OrderModel from the client.
-//	 * Updates the supplier list across the server and the database.
-//	 */
-//	private void updateOrderListFromClient()
-//	{
-//		ArrayList<OrderLineModel> tempList;
-//		try
-//		{
-//			tempList = (ArrayList<OrderLineModel>)inputReader.readObject();
-//		}
-//		catch(IOException readErr)
-//		{
-//			System.err.println(readErr.getMessage());
-//			return;
-//		}
-//		catch(ClassNotFoundException classErr)
-//		{
-//			System.err.println(classErr.getMessage());
-//			return;
-//		}
-//
-//		orders = tempList;
-//		data.updateOrderList(tempList);
-//	}
 
 	
 	/**
