@@ -55,92 +55,6 @@ public class ClientController implements SCCommunicationConstants {
 	private DefaultListModel<String> cartDisplay;
 
 	/**
-	 * Verifies if the client-server connection can still run
-	 * close all streams and terminate.
-	 */
-	 /*
-	public void connection()
-	{
-		try
-		{
-			while(true)
-			{
-				//Get a message from the server
-				String serverMessage = (String)inputReader.readObject();
-
-				//Session is over, so stop communicating with the server
-				if(serverMessage.equals("Client Quit"))
-					break;
-
-				//Act on the server's message.
-				interpretServerMessage(serverMessage);
-			}
-		}
-		catch(IOException ioErr)
-		{
-			System.out.println(ioErr.getMessage());
-		}
-
-		//close client processes before terminating.
-		try
-		{
-			inputReader.close();
-			outputWriter.close();
-			cSocket.close();
-		}
-		catch(IOException shutDownErr)
-		{
-			System.out.println("Error when closing: " + shutDownErr.getMessage());
-		}
-	}
-*/
-	/**
-	 * Verifies if the client-server connection can still run.
-	 * If it cannot, then the client will close all streams and terminate.
-	 *
-	 * @return true if the connection is still valid. If false, then a new client
-	 * 				will need to be created.
-	 */
-	/*
-	public boolean checkConnection()
-	{
-		try
-		{
-			while(true)
-			{
-
-
-				//Get a message from the server
-				String serverMessage = (String)inputReader.readObject();
-
-				//Session is over, so stop communicating with the server
-				if(serverMessage.equals("Client Quit"))
-					break;
-
-				//Act on the server's message.
-				interpretServerMessage(serverMessage);
-			}
-		}
-		catch(IOException ioErr)
-		{
-			System.out.println(ioErr.getMessage());
-		}
-
-		try
-		{
-			inputReader.close();
-			outputWriter.close();
-			cSocket.close();
-		}
-		catch(IOException shutDownErr)
-		{
-			System.out.println("Error when closing: " + shutDownErr.getMessage());
-		}
-		return true;
-	}
-	*/
-
-	/**
 	 * Informs the server that the client is done communicating with the server.
 	 * closes all streams and sockets.
 	 */
@@ -171,7 +85,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public ArrayList<ItemModel> retrieveItemListFromServer() throws IOException {
 		try {
-			outputWriter.writeObject(scQuery + scItem);
+			outputWriter.writeObject(scSend + scList + scItem + scDefault);
 			outputWriter.flush();
 		} catch (IOException writeErr) {
 			throw new IOException("Error: could not send opening message to the server.");
@@ -199,7 +113,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public ArrayList<SupplierModel> retrieveSupplierListFromServer() throws IOException {
 		try {
-			outputWriter.writeObject(scQuery + scSupplier);
+			outputWriter.writeObject(scSend + scList + scSupplier + scDefault);
 			outputWriter.flush();
 		} catch (IOException writeErr) {
 			throw new IOException("Error: could not send opening message to the server.");
@@ -218,7 +132,6 @@ public class ClientController implements SCCommunicationConstants {
 		}
 	}
 
-
 	/**
 	 * Sends an Array List of Items to the server to update the
 	 * server items in the database.
@@ -228,9 +141,29 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void sendItemListToServer(ArrayList<ItemModel> itemList) throws IOException {
 		try {
-			outputWriter.writeObject(scData + scItem);
+			outputWriter.writeObject(scUpdate + scList + scItem + scDefault);
 
 			outputWriter.writeObject(cloneArrayList(itemList));
+
+			outputWriter.flush();
+		} catch (IOException writeErr) {
+			throw new IOException("Error: could not communicate to the server.");
+		}
+	}
+
+
+	/**
+	 * Sends an Array List of Suppliers to the server to update the
+	 * server Suppliers in the database.
+	 *
+	 * @param supplierList An ArrayList of SupplierModel to update the database.
+	 * @throws IOException
+	 */
+	public void sendSupplierListToServer(ArrayList<SupplierModel> supplierList) throws IOException {
+		try {
+			outputWriter.writeObject(scUpdate + scList + scSupplier + scDefault);
+
+			outputWriter.writeObject(cloneArrayList(supplierList));
 
 			outputWriter.flush();
 		} catch (IOException writeErr) {
@@ -247,9 +180,123 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void sendItemUpdate(ItemModel updateItem) throws IOException {
 		try {
-			outputWriter.writeObject(scData + scItem + scObject);
+			outputWriter.writeObject(scUpdate + scSingle + scItem + scDefault);
 
 			outputWriter.writeObject((ItemModel) updateItem.clone());
+
+			outputWriter.flush();
+		} catch (IOException writeErr) {
+			throw new IOException("Error: could not communicate to the server.");
+		} catch (CloneNotSupportedException cnsErr) {
+			throw new IOException("Error: item could not be cloned.");
+		}
+	}
+
+	/**
+	 * Sends an item and a quantity to order to the server.
+	 * The server will generate an order line to add to their order list.
+	 * The server will not automatically send the updated line.
+	 * If the item being ordered does not exist in the server's list, it will throw an error.
+	 * If less than 1 item is being ordered, it will throw an error.
+	 *
+	 * @param itemToOrder The item being ordered.
+	 * @param quantityToOrder The quantity of the item to be ordered.
+	 * @throws IOException
+	 */
+	public void sendItemOrderUpdate(ItemModel itemToOrder, int quantityToOrder) throws IOException {
+
+		if(quantityToOrder < 1)
+			throw new IOException("Error: cannot order less than 1 item.");
+
+		try {
+			outputWriter.writeObject(scCreate + scSingle + scOrder + scInt +
+									 Integer.toString(quantityToOrder) + ";");
+			outputWriter.writeObject((ItemModel) itemToOrder.clone());
+			
+			outputWriter.flush();
+		} catch (IOException writeErr) {
+			throw new IOException("Error: could not communicate to the server.");
+		} catch (CloneNotSupportedException cnsErr) {
+			throw new IOException("Error: item could not be cloned.");
+		}
+	}
+
+	/**
+	 * Searches for an item in the server.
+	 *
+	 * @param itemId The ID of the item being searched for.
+	 * @return The found item or null.
+	 * @throws IOException
+	 */
+	public ItemModel sendItemSearch(int itemId) throws IOException {
+		try {
+			outputWriter.writeObject(scVerify + scSingle + scItem + scInt + 
+									 Integer.toString(itemId));
+
+			outputWriter.flush();
+		} catch (IOException writeErr) {
+			throw new IOException("Error: could not communicate to the server.");
+		}
+
+		try {
+			String serverResponse = (String) inputReader.readObject();
+
+			if (serverResponse.contains(scError))
+				return null;
+
+			return (ItemModel) inputReader.readObject();
+		} catch (IOException readErr) {
+			throw new IOException("Error: could not read the server's message.");
+		} catch (ClassNotFoundException classErr) {
+			throw new IOException("Error: could not properly read the object.");
+		}
+	}
+
+
+	/**
+	 * Searches for an item in the server.
+	 *
+	 * @param itemName The name of the item being searched for.
+	 * @return The found item or null.
+	 * @throws IOException
+	 */
+	public ItemModel sendItemSearch(String itemName) throws IOException {
+		try {
+			itemName.replaceAll(";","");		//remove all colons from the name.
+			outputWriter.writeObject(scVerify + scSingle + scItem + scString + 
+					 				 itemName + ";");
+			outputWriter.flush();
+		} catch (IOException writeErr) {
+			throw new IOException("Error: could not communicate to the server.");
+		}
+
+		try {
+			String serverResponse = (String) inputReader.readObject();
+
+			if (serverResponse.contains(scError))
+				return null;
+
+			return (ItemModel) inputReader.readObject();
+		} catch (IOException readErr) {
+			throw new IOException("Error: could not read the server's message.");
+		} catch (ClassNotFoundException classErr) {
+			throw new IOException("Error: could not properly read the object.");
+		}
+	}
+
+	/**
+	 * Sends an item to the server to remove.
+	 * Therefore, before removing an item in the client side, this method
+	 * should be used to remove the item from the server properly.
+	 *
+	 * @param deleteItem The item to remove in the server.
+	 * @throws IOException
+	 */
+	public void sendDeletedItemUpdate(ItemModel deleteItem) throws IOException {
+		try {
+			outputWriter.writeObject(scDelete + scSingle + scItem + scDefault);
+
+			outputWriter.writeObject((ItemModel) deleteItem.clone());
 
 			outputWriter.flush();
 		} catch (IOException writeErr) {
