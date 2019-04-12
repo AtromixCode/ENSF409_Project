@@ -223,7 +223,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void sendOrderListToServer(ArrayList<OrderLineModel> orderList) throws IOException {
 		try {
-			outputWriter.writeObject(scSend + scList + scOrder + scDefault);
+			outputWriter.writeObject(scUpdate + scList + scOrder + scDefault);
 
 			outputWriter.writeObject(cloneArrayList(orderList));
 
