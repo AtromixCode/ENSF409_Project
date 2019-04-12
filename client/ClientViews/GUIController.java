@@ -342,7 +342,7 @@ class GUIController {
 	 */
 	public static void main(String args[])
 	{
-		ClientController client = new ClientController("localhost", 8428);
+		ClientController client = new ClientController("10.13.146.120", 8428);
 		GUIController g = new GUIController(client);
 	}
 }

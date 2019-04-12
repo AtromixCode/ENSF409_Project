@@ -51,7 +51,10 @@ public class ClientController implements SCCommunicationConstants {
 	 * The display model that is used to display the list of items.
 	 */
 	private DefaultListModel<String> itemDisplay;
-
+	
+	/**
+	 * The display model that is used to display the customer's cart.
+	 */
 	private DefaultListModel<String> cartDisplay;
 
 	/**
@@ -348,6 +351,10 @@ public class ClientController implements SCCommunicationConstants {
 		return true;
 	}
 
+	/**
+	 * Retrieves a list of suppliers from the server.
+	 * @return true if the retrieval was successful, false if not.
+	 */
 	public boolean fetchSuppliers()
 	{
 		try {
@@ -362,6 +369,10 @@ public class ClientController implements SCCommunicationConstants {
 		return true;
 	}
 
+	/**
+	 * Retrieves a list of items from the server.
+	 * @return true if the retrieval was successful, false if not.
+	 */
 	public boolean fetchItems()
 	{
 		try {
@@ -385,30 +396,23 @@ public class ClientController implements SCCommunicationConstants {
 	{
 		search = search.toLowerCase();
 		itemDisplay.clear();
-		if(search.equals("")) {
-
-			for (ItemModel i : itemList) {
+		if(search.equals("")) 
+			for (ItemModel i : itemList) 
 				itemDisplay.addElement(i.displayString());
-			}
-		}
-		else
-		{
+		else		
 			for (ItemModel i: itemList)
-			{
-				if (i.idAndName().toLowerCase().contains(search))
-				{
+				if (i.idAndName().toLowerCase().contains(search))	
 					itemDisplay.addElement(i.displayString());
-				}
-			}
-		}
 	}
-
+	
+	/**
+	 * Displays the items in the cart in the cart view.
+	 */
 	public void displayCart()
 	{
 		cartDisplay.clear();
-		for (ItemModel i : cartItems) {
+		for (ItemModel i : cartItems)
 			cartDisplay.addElement(i.displayString());
-		}
 	}
 
 	/**
@@ -419,14 +423,12 @@ public class ClientController implements SCCommunicationConstants {
 	public String buyItems()
 	{
 		if (!fetchItems())
-		{
 			return "Error communicating with server!";
-		}
+		
 		fetchSuppliers();
 		if (cartItems.isEmpty())
-		{
 			return "Cart is empty!";
-		}
+		
 		String success = "Purchased all items successfully!";
 		String failure = "";
 		boolean successful = true;
@@ -442,11 +444,9 @@ public class ClientController implements SCCommunicationConstants {
 						break;
 					}
 					boolean check = false;
-					for (SupplierModel s : supplierList) {
-						if (s.getId() == i.getSupplierID()) {
+					for (SupplierModel s : supplierList)
+						if (s.getId() == i.getSupplierID())
 							check = true;
-						}
-					}
 					if (!check) {
 						successful=false;
 						failure += "Item with ID " + i.getId() + " can not be purchased right now.\n";
@@ -464,13 +464,11 @@ public class ClientController implements SCCommunicationConstants {
 			}
 		}
 		for (ItemModel i: toRemove)
-		{
 			cartItems.remove(i);
-		}
+		
 		if (successful)
-		{
 			return success;
-		}
+		
 		return failure;
 	}
 
