@@ -113,6 +113,12 @@ public class ItemModel implements Serializable, Cloneable {
 	 */
 	public int getId(){return id;}
 
+    /**
+     * Gets the name of the item.
+     * @return a string containing an item description.
+     */
+    public String getDesc() { return desc; }
+	
 	/**
 	 * Gets the quantity of the item.
 	 * @return an integer containing the item quantity.

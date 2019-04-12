@@ -14,7 +14,8 @@ import java.awt.event.ActionListener;
  * @version 1.0
  * @since April 5, 2019
  */
-class OrderView {
+class OrderView 
+{
 	/**
 	 * Main JFrame of the window.
 	 */

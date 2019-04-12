@@ -70,92 +70,6 @@ public class ClientController implements SCCommunicationConstants {
 	private JTextArea orderDisplay;
 
 	/**
-	 * Verifies if the client-server connection can still run
-	 * close all streams and terminate.
-	 */
-	 /*
-	public void connection()
-	{
-		try
-		{
-			while(true)
-			{
-				//Get a message from the server
-				String serverMessage = (String)inputReader.readObject();
-
-				//Session is over, so stop communicating with the server
-				if(serverMessage.equals("Client Quit"))
-					break;
-
-				//Act on the server's message.
-				interpretServerMessage(serverMessage);
-			}
-		}
-		catch(IOException ioErr)
-		{
-			System.out.println(ioErr.getMessage());
-		}
-
-		//close client processes before terminating.
-		try
-		{
-			inputReader.close();
-			outputWriter.close();
-			cSocket.close();
-		}
-		catch(IOException shutDownErr)
-		{
-			System.out.println("Error when closing: " + shutDownErr.getMessage());
-		}
-	}
-*/
-	/**
-	 * Verifies if the client-server connection can still run.
-	 * If it cannot, then the client will close all streams and terminate.
-	 *
-	 * @return true if the connection is still valid. If false, then a new client
-	 * 				will need to be created.
-	 */
-	/*
-	public boolean checkConnection()
-	{
-		try
-		{
-			while(true)
-			{
-
-
-				//Get a message from the server
-				String serverMessage = (String)inputReader.readObject();
-
-				//Session is over, so stop communicating with the server
-				if(serverMessage.equals("Client Quit"))
-					break;
-
-				//Act on the server's message.
-				interpretServerMessage(serverMessage);
-			}
-		}
-		catch(IOException ioErr)
-		{
-			System.out.println(ioErr.getMessage());
-		}
-
-		try
-		{
-			inputReader.close();
-			outputWriter.close();
-			cSocket.close();
-		}
-		catch(IOException shutDownErr)
-		{
-			System.out.println("Error when closing: " + shutDownErr.getMessage());
-		}
-		return true;
-	}
-	*/
-
-	/**
 	 * Informs the server that the client is done communicating with the server.
 	 * closes all streams and sockets.
 	 */
@@ -186,7 +100,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public ArrayList<ItemModel> retrieveItemListFromServer() throws IOException {
 		try {
-			outputWriter.writeObject(scQuery + scItem);
+			outputWriter.writeObject(scSend + scList + scItem + scDefault);
 			outputWriter.flush();
 		} catch (IOException writeErr) {
 			throw new IOException("Error: could not send opening message to the server.");
@@ -214,7 +128,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public ArrayList<SupplierModel> retrieveSupplierListFromServer() throws IOException {
 		try {
-			outputWriter.writeObject(scQuery + scSupplier);
+			outputWriter.writeObject(scSend + scList + scSupplier + scDefault);
 			outputWriter.flush();
 		} catch (IOException writeErr) {
 			throw new IOException("Error: could not send opening message to the server.");
@@ -242,7 +156,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public ArrayList<OrderLineModel> retrieveOrderListFromServer() throws IOException {
 		try {
-			outputWriter.writeObject(scQuery + scOrder);
+			outputWriter.writeObject(scSend + scList + scOrder + scDefault);
 			outputWriter.flush();
 		} catch (IOException writeErr) {
 			throw new IOException("Error: could not send opening message to the server.");
@@ -270,7 +184,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void sendItemListToServer(ArrayList<ItemModel> itemList) throws IOException {
 		try {
-			outputWriter.writeObject(scData + scItem);
+			outputWriter.writeObject(scUpdate + scList + scItem + scDefault);
 
 			outputWriter.writeObject(cloneArrayList(itemList));
 
@@ -290,7 +204,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void sendSupplierListToServer(ArrayList<SupplierModel> supplierList) throws IOException {
 		try {
-			outputWriter.writeObject(scData + scSupplier);
+			outputWriter.writeObject(scUpdate + scList + scSupplier + scDefault);
 
 			outputWriter.writeObject(cloneArrayList(supplierList));
 
@@ -309,7 +223,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void sendOrderListToServer(ArrayList<OrderLineModel> orderList) throws IOException {
 		try {
-			outputWriter.writeObject(scData + scOrder);
+			outputWriter.writeObject(scSend + scList + scOrder + scDefault);
 
 			outputWriter.writeObject(cloneArrayList(orderList));
 
@@ -328,7 +242,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void sendItemUpdate(ItemModel updateItem) throws IOException {
 		try {
-			outputWriter.writeObject(scData + scItem + scObject);
+			outputWriter.writeObject(scUpdate + scSingle + scItem + scDefault);
 
 			outputWriter.writeObject((ItemModel) updateItem.clone());
 
@@ -357,11 +271,10 @@ public class ClientController implements SCCommunicationConstants {
 			throw new IOException("Error: cannot order less than 1 item.");
 
 		try {
-			outputWriter.writeObject(scData + scItem + scInt);
-
+			outputWriter.writeObject(scCreate + scSingle + scOrder + scInt +
+									 Integer.toString(quantityToOrder) + ";");
 			outputWriter.writeObject((ItemModel) itemToOrder.clone());
-			outputWriter.writeObject(quantityToOrder);
-
+			
 			outputWriter.flush();
 		} catch (IOException writeErr) {
 			throw new IOException("Error: could not communicate to the server.");
@@ -379,9 +292,8 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public ItemModel sendItemSearch(int itemId) throws IOException {
 		try {
-			outputWriter.writeObject(scSearch + scItem + scInt);
-
-			outputWriter.writeObject(itemId);
+			outputWriter.writeObject(scVerify + scSingle + scItem + scInt + 
+									 Integer.toString(itemId));
 
 			outputWriter.flush();
 		} catch (IOException writeErr) {
@@ -412,10 +324,9 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public ItemModel sendItemSearch(String itemName) throws IOException {
 		try {
-			outputWriter.writeObject(scSearch + scItem + scString);
-
-			outputWriter.writeObject(itemName);
-
+			itemName.replaceAll(";","");		//remove all colons from the name.
+			outputWriter.writeObject(scVerify + scSingle + scItem + scString + 
+					 				 itemName + ";");
 			outputWriter.flush();
 		} catch (IOException writeErr) {
 			throw new IOException("Error: could not communicate to the server.");
@@ -445,7 +356,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void sendDeletedItemUpdate(ItemModel deleteItem) throws IOException {
 		try {
-			outputWriter.writeObject(scRemove + scItem);
+			outputWriter.writeObject(scDelete + scSingle + scItem + scDefault);
 
 			outputWriter.writeObject((ItemModel) deleteItem.clone());
 
@@ -467,7 +378,7 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public ArrayList<OrderLineModel> sendQuantityCheck() throws IOException {
 		try {
-			outputWriter.writeObject(scCheck + scItem);
+			outputWriter.writeObject(scUpdate + scList + scOrder + scPrompt);
 			outputWriter.flush();
 
 			return retrieveOrderListFromServer();
@@ -483,7 +394,8 @@ public class ClientController implements SCCommunicationConstants {
 	 * @param ogList The original list to clone.
 	 * @return a cloned list.
 	 */
-	public <T> ArrayList<T> cloneArrayList(ArrayList<T> ogList) {
+	public <T> ArrayList<T> cloneArrayList(ArrayList<T> ogList) 
+	{
 		ArrayList<T> cloneList = new ArrayList<T>();
 		for (T objInList : ogList)
 			cloneList.add((T) objInList);
@@ -517,9 +429,8 @@ public class ClientController implements SCCommunicationConstants {
 	{
 		ArrayList<String> list = new ArrayList<String>();
 		for (SupplierModel s: supplierList)
-		{
 			list.add(s.idAndName());
-		}
+		
 		return list.toArray(new String [0]);
 	}
 
@@ -529,7 +440,8 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public boolean fetchAndDisplayItems(String search)
 	{
-		try {
+		try 
+		{
 			itemList = retrieveItemListFromServer();
 			displayItems(search);
 		}
@@ -542,9 +454,14 @@ public class ClientController implements SCCommunicationConstants {
 		return true;
 	}
 
+	/**
+	 * Update the current lists of suppliers from the server data.
+	 * @return true if the operation was successful, false if not.
+	 */
 	public boolean fetchAndDisplaySuppliers()
 	{
-		try {
+		try 
+		{
 			supplierList = retrieveSupplierListFromServer();
 			displaySuppliers();
 		}
@@ -557,9 +474,14 @@ public class ClientController implements SCCommunicationConstants {
 		return true;
 	}
 
+	/**
+	 * Update the current lists of orders from the server data.
+	 * @return true if the operation was successful, false if not.
+	 */
 	public boolean fetchAndDisplayOrders()
 	{
-		try {
+		try 
+		{
 			orderList = retrieveOrderListFromServer();
 			displayOrders();
 		}
@@ -571,7 +493,6 @@ public class ClientController implements SCCommunicationConstants {
 		}
 		return true;
 	}
-
 
 	/**
 	 * Attempts to read a file with the given filename,converting it into
@@ -585,7 +506,8 @@ public class ClientController implements SCCommunicationConstants {
 	{
 		if (fileInput.readItemFile(fileName, itemList))
 		{
-			try {
+			try 
+			{
 				sendItemListToServer(itemList);
 				fetchAndDisplayItems(search);
 			}
@@ -612,7 +534,8 @@ public class ClientController implements SCCommunicationConstants {
 	{
 		if (fileInput.readSupplierFile(fileName, supplierList))
 		{
-			try {
+			try 
+			{
 				sendSupplierListToServer(supplierList);
 				fetchAndDisplaySuppliers();
 			}
@@ -635,9 +558,7 @@ public class ClientController implements SCCommunicationConstants {
 	{
 		supplierDisplay.clear();
 		for(SupplierModel s: supplierList)
-		{
 			supplierDisplay.addElement(s.displayString());
-		}
 	}
 
 	/**
@@ -648,22 +569,13 @@ public class ClientController implements SCCommunicationConstants {
 	{
 		search = search.toLowerCase();
 		itemDisplay.clear();
-		if(search.equals("")) {
-
-			for (ItemModel i : itemList) {
+		if(search.equals("")) 
+			for (ItemModel i : itemList) 
 				itemDisplay.addElement(i.displayString());
-			}
-		}
 		else
-		{
 			for (ItemModel i: itemList)
-			{
 				if (i.idAndName().toLowerCase().contains(search))
-				{
 					itemDisplay.addElement(i.displayString());
-				}
-			}
-		}
 	}
 
 	/**
@@ -673,7 +585,8 @@ public class ClientController implements SCCommunicationConstants {
 	public void displayOrders()
 	{
 		orderDisplay.setText("***********************************************************************\n");
-		if (!orderList.isEmpty()) {
+		if (!orderList.isEmpty()) 
+		{
 			String orderDate = orderList.get(0).getDateString();
 			int orderId = orderList.get(0).getOrderID();
 			orderDisplay.append("ORDER ID:\t\t" + orderId + "\n" +
@@ -681,9 +594,7 @@ public class ClientController implements SCCommunicationConstants {
 			for (OrderLineModel l: orderList)
 			{
 				if (l.getOrderID()==orderId&&orderDate.equals(l.getDateString()))
-				{
 					orderDisplay.append("\n"+l.getOrderLine()+"\n");
-				}
 				else
 				{
 					orderDate = l.getDateString();
@@ -734,12 +645,9 @@ public class ClientController implements SCCommunicationConstants {
 	public String addSupplier(int id, String name, String address, String contact)
 	{
 		for(SupplierModel s: supplierList)
-		{
 			if (s.getId()==id)
-			{
 				return "Supplier already exists!";
-			}
-		}
+			
 		SupplierModel s = new SupplierModel(id, name, address, contact);
 		try
 		{
@@ -769,23 +677,16 @@ public class ClientController implements SCCommunicationConstants {
 	{
 		ItemModel i = null;
 		for(SupplierModel s: supplierList)
-		{
 			if (s.getId()==supId)
-			{
 				i = new ItemModel(id, name, quantity, price,s);
-			}
-		}
+			
 		if (i==null)
-		{
 			return "Item not found!";
-		}
+		
 		for (ItemModel item: itemList)
-		{
-			if (item.getId()==id)
-			{
+			if (item.getId() == id || item.getDesc().equals(name))
 				return "Item already exists!";
-			}
-		}
+			
 		try
 		{
 			itemList.add(i);
@@ -796,7 +697,6 @@ public class ClientController implements SCCommunicationConstants {
 		{
 			return "Error communicating with server.";
 		}
-
 		return "Successfully added item.";
 	}
 
@@ -810,24 +710,20 @@ public class ClientController implements SCCommunicationConstants {
 	{
 		for (ItemModel i: itemList)
 		{
-			if (i.getId()==id)
+			if (i.getId() == id)
 			{
-				if (quantity>i.getQuantity())
-				{
+				if (quantity > i.getQuantity())
 					return "Not enough quantity to sell that much.";
-				}
+				
 				boolean check = false;
 				for (SupplierModel s: supplierList)
-				{
-					if (s.getId()==i.getSupplierID())
-					{
+					if (s.getId() == i.getSupplierID())
 						check = true;
-					}
-				}
+					
+				
 				if (!check)
-				{
 					return "No supplier found for that item!";
-				}
+				
 				else
 				{
 					i.setQuantity(i.getQuantity()-quantity);
@@ -839,7 +735,6 @@ public class ClientController implements SCCommunicationConstants {
 					{
 						return "Error communicating with server.";
 					}
-
 				}
 			}
 		}
@@ -854,30 +749,22 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public String orderItem(int id, int quantity, String search)
 	{
-		ItemModel a=null;
+		ItemModel a = null;
 		for (ItemModel i: itemList)
-		{
 			if (i.getId()==id)
-			{
 				a = i;
-			}
-		}
+		
 		if (a==null)
-		{
 			return "Could not find item.";
-		}
+		
 		boolean check = false;
 		for (SupplierModel s: supplierList)
-		{
 			if (s.getId()==a.getSupplierID())
-			{
 				check = true;
-			}
-		}
+		
 		if (!check)
-		{
 			return "No supplier found for that item!";
-		}
+		
 		try
 		{
 			sendItemOrderUpdate(a, quantity);

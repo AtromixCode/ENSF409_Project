@@ -51,16 +51,13 @@ public class FileReader {
 				ItemModel a = readItemValues(line);
 				boolean check = false;
 				for (ItemModel i:items)
-				{
 					if (i.getId()==a.getId())
 					{
 						check = true;
 						i.setQuantity(a.getQuantity());
 					}
-				}
-				if (check == false) {
+				if (check == false)
 					items.add(a);
-				}
 				line = read.readLine();
 			}
 			return true;
@@ -93,15 +90,10 @@ public class FileReader {
 				SupplierModel a = readSupplierValues(line);
 				boolean check = false;
 				for (SupplierModel s:suppliers)
-				{
-					if (s.getId()==a.getId())
-					{
+					if (s.getId()==a.getId())	
 						check = true;
-					}
-				}
-				if (check == false) {
+				if (check == false)
 					suppliers.add(a);
-				}
 				line = read.readLine();
 			}
 			return true;

@@ -299,7 +299,6 @@ class MainView {
 		buttons[7].addActionListener(b);
 	}
 
-
 	/**
 	 *
 	 * Adds an ActionListener for the "Refresh" button
@@ -307,7 +306,6 @@ class MainView {
 	 * @param b The ActionListener for clicking the button to refresh.
 	 */
 	protected void addButton9ActionListener(ActionListener b) { buttons[8].addActionListener(b); }
-
 
 	/**
 	 * Adds an Document Listener for the text field used used to search for items.
@@ -325,7 +323,6 @@ class MainView {
 	 * Hides the loading circle.
 	 */
 	protected void loadingOff(){loading.setVisible(false);}
-
 
 	/**
 	 * Adds an action listener for window events.

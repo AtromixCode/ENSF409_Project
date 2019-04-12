@@ -3,39 +3,17 @@ package client.ClientControllers;
 /**
  * Contains constant String variables for server-client 
  * message communication.
+ * Messages take the format of: Opening ArgDegree ArgType ArgExtra
+ * Messages are from the perspective of the server.
  *
  * @author Jake Liu
  * @author Shamez Meghji
  * @author Victor Sanchez
- * @version 1.0
+ * @version 2.0
  * @since April 1, 2019
  */
-interface SCCommunicationConstants
+public interface SCCommunicationConstants 
 {
-	/**
-	 * A string message containing this string is asking for objects.
-	 * Needs an object type specifying string to also be in the string.
-	 * The following object messages can be assumed to be of the object 
-	 * type specified, or an error.
-	 */
-	static final String scQuery = "QUERY;";
-	
-	/**
-	 * A string message containing this string is about to send objects, to update
-	 * data. Needs an object type specifying string to also be in the string.
-	 * The following object messages can be assumed to be of the object 
-	 * type specified.
-	 */
-	static final String scData = "DATA;";
-	
-	/**
-	 * A string message containing this string is asking for an object.
-	 * Needs an object type specifying string to also be in the string.
-	 * The following object message can be assumed to be of the object 
-	 * type specified, or an error.
-	 */
-	static final String scSearch = "SEARCH;";
-	
 	/**
 	 * A string message containing this string indicates that an error has occurred
 	 * when attempting to respond to a query by sending data.
@@ -43,52 +21,88 @@ interface SCCommunicationConstants
 	static final String scError = "ERROR;";
 	
 	/**
-	 * A string message containing this string indicates that ItemModel objects
-	 * are needed to be sent or read.
+	 * String message Opening, that indicates that data will be sent over to the socket. 
+	 */
+	static final String scSend = "SEND;";
+	
+	/**
+	 * String message Opening, that indicates that data in the reader will change, and new data may or may not be added.
+	 * If necessary, data will overwrite data in the reader if data with the same identity attributes exists.
+	 */
+	static final String scUpdate = "UPDATE;";
+	
+	/**
+	 * String message Opening, that indicates that data will be received from the socket.
+	 * New data will be created in the reader based on the received data.
+	 */
+	static final String scCreate = "CREATE;";
+	
+	/**
+	 * String message Opening, that indicates that data will be received from the socket.
+	 * Data in the reader will be deleted based on the received data.
+	 */
+	static final String scDelete = "DELETE;";
+	
+	/**
+	 * String message Opening, that indicates that data in the reader needs to be checked to
+	 * verify if data in the sender matches the reader's data.
+	 */
+	static final String scVerify = "VERIFY;";
+	
+	
+	
+	/**
+	 * String message ArgDegree indicates that a singular object will be needed to be operated on.
+	 */
+	static final String scSingle = "SINGLE;";
+	
+	/**
+	 * String message ArgDegree indicates that a list of objects will be needed to be operated on.
+	 */
+	static final String scList = "LIST;";
+	
+	
+	
+	/**
+	 * String message ArgType indicates that ItemModel objects will need to be operated on.
 	 */
 	static final String scItem = "ITEM;";
 	
 	/**
-	 * A string message containing this string indicates that SupplierModel objects
-	 * are needed to be sent or read.
+	 * String message ArgType indicates that SupplierModel objects will need to be operated on.
 	 */
 	static final String scSupplier = "SUPPLIER;";
 	
 	/**
-	 * A string message containing this string indicates that OrderModel objects
-	 * are needed to be sent or read.
+	 * String message ArgType indicates that OrderLineModel objects will need to be operated on.
 	 */
 	static final String scOrder = "ORDER;";
 	
+	
+	
 	/**
-	 * A string message containing this string indicates that Integer objects 
-	 * are needed to be sent or read.
+	 * String message ArgExtra indicates that the only data items to be read from the socket
+	 * are user-defined objects.
+	 */
+	static final String scDefault = "DEFAULT;";
+	
+	/**
+	 * String message ArgExtra indicates that there is an int argument sent over in the opening message.
 	 */
 	static final String scInt = "INT;";
 	
 	/**
-	 * A string message containing this string indicates that String objects 
-	 * are needed to be sent or read.
+	 * String message ArgExtra indicates that there is a String argument sent over in the opening message.
 	 */
 	static final String scString = "STRING;";
 	
 	/**
-	 * A string message containing this string indicates that an object 
-	 * will be needed to be sent or read.
+	 * String message ArgExtra indicates that there are no data items or extra arguments to be read at all.
 	 */
-	static final String scObject = "OBJECT;";
+	static final String scPrompt = "PROMPT;";
 	
-	/**
-	 * A string message containing this string indicates that objects 
-	 * are needed to be removed.
-	 */
-	static final String scRemove = "REMOVE;";
 	
-	/**
-	 * A string message containing this string indicates that objects 
-	 * are needed to be removed.
-	 */
-	static final String scCheck = "CHECK;";
+	
 	
 	/**
 	 * A string message containing this string indicates that a request
@@ -100,5 +114,5 @@ interface SCCommunicationConstants
 	 * A string message containing this string indicates that the entity is
 	 * quitting/terminating.
 	 */
-	static final String scQuit = "QUIT;";	
+	static final String scQuit = "QUIT;";
 }

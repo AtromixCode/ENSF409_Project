@@ -17,8 +17,8 @@ import java.util.Scanner;
  * @version 1.0
  * @since April 5, 2019
  */
-class GUIController {
-
+class GUIController 
+{
 	/**
 	 * Main view is always seen.
 	 */
@@ -45,7 +45,8 @@ class GUIController {
 	 *
 	 * @param controller
 	 */
-	protected GUIController (ClientController controller){
+	protected GUIController (ClientController controller)
+	{
 		mv = new MainView();
 		sv = new SupplierView();
 		ov = new OrderView();
@@ -65,7 +66,6 @@ class GUIController {
 		cc.setOrderDisplay(ov.getOrderDisplay());
 	}
 
-
 	/**
 	 * Assigns all action listeners for buttons on the front end.
 	 */
@@ -84,41 +84,41 @@ class GUIController {
 	}
 
 	/**
-	 * Retrieves and displays data from server. Displays
+	 * Retrieves and displays item data from server. Displays
 	 * and error box to the user if this is unsuccessful.
 	 */
 	protected void retrieveAndDisplayItems()
 	{
-		if(!cc.fetchAndDisplayItems(mv.getSearchText())) {
+		if(!cc.fetchAndDisplayItems(mv.getSearchText()))
 			JOptionPane.showMessageDialog(null, "Error communicating with server!", "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		else
-		{
-
-		}
 	}
 
+	/**
+	 * Retrieves and displays supplier data from server. Displays
+	 * and error box to the user if this is unsuccessful.
+	 */
 	protected void retrieveAndDisplaySuppliers()
 	{
-		if (!cc.fetchAndDisplaySuppliers()) {
+		if (!cc.fetchAndDisplaySuppliers()) 
 			JOptionPane.showMessageDialog(null, "Error communicating with server!", "Error", JOptionPane.ERROR_MESSAGE);
-		}
 	}
 
+	/**
+	 * Retrieves and displays order data from server. Displays
+	 * and error box to the user if this is unsuccessful.
+	 */
 	protected void retrieveAndDisplayOrders()
 	{
 		if (!cc.fetchAndDisplayOrders())
-		{
 			JOptionPane.showMessageDialog(null, "Error communicating with server!", "Error", JOptionPane.ERROR_MESSAGE);
-		}
 	}
 
 	/**
 	 * inner ListSelectionListener class handles objects that have been selected by the user.
 	 * involves actions that require at least one object/item to be present.
 	 */
-	public class SelectItem implements ListSelectionListener {
-
+	public class SelectItem implements ListSelectionListener 
+	{
 		/**
 		 * The String representation of the selected object's data/attributes.
 		 */
@@ -221,8 +221,8 @@ class GUIController {
 		 * Inner ActionListener class listens for the "Remove Item" button
 		 * to be pressed, whereupon a dialogue box asking for confirmation will appear.
 		 */
-		public class RemoveItem implements ActionListener {
-
+		public class RemoveItem implements ActionListener 
+		{
 			/**
 			 * Implementation of the action performed method that displays a
 			 * text box to the user to confirm an item removal.
@@ -265,7 +265,8 @@ class GUIController {
 			retrieveAndDisplayItems();
 			panel = new UserPromptPanel();
 			int value = JOptionPane.showConfirmDialog(null, panel, "Add new item", JOptionPane.OK_CANCEL_OPTION);
-			if (value == JOptionPane.OK_OPTION) {
+			if (value == JOptionPane.OK_OPTION) 
+			{
 				try
 				{
 					int id = Integer.parseInt(panel.id.getText());
@@ -276,20 +277,14 @@ class GUIController {
 					int supId = scan.nextInt();
 					String name = panel.name.getText();
 					if (name.equals(""))
-					{
 						JOptionPane.showMessageDialog(null, "Item name was left blank!",
 								"Error", JOptionPane.ERROR_MESSAGE);
-					}
 					else if(quantity<0||price<0)
-					{
 						JOptionPane.showMessageDialog(null, "Please enter a number greater than 0!",
 								"Error", JOptionPane.ERROR_MESSAGE);
-					}
 					else
-					{
 						JOptionPane.showMessageDialog(null, cc.addItem(id, name, quantity, price, supId, mv.getSearchText()),
 								"Result", JOptionPane.INFORMATION_MESSAGE);
-					}
 				}
 				catch(NumberFormatException ex)
 				{
@@ -381,7 +376,8 @@ class GUIController {
 		 * @param e The event that triggers the call to the method.
 		 */
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent e) 
+		{
 			retrieveAndDisplaySuppliers();
 			int value = JOptionPane.showConfirmDialog(null, panel, "Add new supplier", JOptionPane.OK_CANCEL_OPTION);
 			if (value == JOptionPane.OK_OPTION)
@@ -389,15 +385,14 @@ class GUIController {
 				try
 				{
 					int id = Integer.parseInt(panel.id.getText());
-					if (id>=0) {
+					if (id>=0) 
+					{
 						String name = panel.name.getText();
 						String address = panel.address.getText();
 						String contact = panel.contact.getText();
 						if (name.equals("")||address.equals("")||contact.equals(""))
-						{
 							JOptionPane.showMessageDialog(null, "One of the fields was left blank!",
 									"Error", JOptionPane.ERROR_MESSAGE);
-						}
 						else
 						{
 							JOptionPane.showMessageDialog(null, cc.addSupplier(id, name, address, contact),
@@ -409,10 +404,9 @@ class GUIController {
 						}
 					}
 					else
-					{
 						JOptionPane.showMessageDialog(null, "Please enter a positive number!",
 								"Error", JOptionPane.ERROR_MESSAGE);
-					}
+					
 				}
 				catch(Exception ex)
 				{
@@ -688,7 +682,11 @@ class GUIController {
 		@Override
 		public void windowDeactivated(WindowEvent e) { }
 	}
-
+	
+	/**
+	 * Inner DocumentListener class updates the item list displayed
+	 * to only have names containing what the user searches.
+	 */
 	public class searchItem implements DocumentListener
 	{
 
