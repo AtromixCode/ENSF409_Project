@@ -4,6 +4,7 @@ import Models.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * The shop controller class that handles requests for information
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * @author Jake Liu
  * @author Shamez Meghji
  * @author Victor Sanchez
- * @version 1.0
+ * @version 2.0
  * @since April 5, 2019
  */
 public class ShopController implements Runnable, SCCommunicationConstants {
@@ -73,7 +74,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		orders = data.orderLineListFromDataBase();
 		order = new OrderModel();
 		order.setOrderLines(orders);
-		checkQuantities();
+		updateOrderListFromClientPrompt();
 
 		try
 		{
@@ -87,109 +88,188 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	}
 
 	/**
-	 * Read opening messages from the client and then respond appropriately.
+	 * Read opening messages from the client, translate it into opcode,
+	 * and then respond appropriately.
 	 * @return False if the user quits.
 	 */
-	private boolean readClientMessage()
+	private boolean readClientOpeningMessage()
 	{
-		try
-		{
+		try {
 			String clientOpeningMessage = (String)inputReader.readObject();
-
 			if(clientOpeningMessage.contains(scQuit)) {
 				System.out.println("Client Disconnected");
 				return false;
 			}
+			Scanner openingMessageScanner = new Scanner(clientOpeningMessage).useDelimiter(";");
+			int opcode = convertOpeningMessageToOpcode(openingMessageScanner);
+			
+			int extraArgInt = -1;
+			String extraArgString = null;
+			if(opcode % 10 == 1) extraArgInt = openingMessageScanner.nextInt();
+			else if(opcode % 10 == 2) extraArgString = openingMessageScanner.next();
 
-			int opcode = 0;
-
-			//type of operation
-			if(clientOpeningMessage.contains(scQuery))
-				opcode += 100;
-			else if(clientOpeningMessage.contains(scData))
-				opcode += 200;
-			else if(clientOpeningMessage.contains(scSearch))
-				opcode += 300;
-			else if(clientOpeningMessage.contains(scRemove))
-				opcode += 400;
-			else if(clientOpeningMessage.contains(scCheck))
-				opcode += 500;
-
-			//type of object involved
-			if(clientOpeningMessage.contains(scItem))
-				opcode += 1;
-			else if(clientOpeningMessage.contains(scSupplier))
-				opcode += 2;
-			else if(clientOpeningMessage.contains(scOrder))
-				opcode += 3;
-
-			//type of identifier sent
-			if(clientOpeningMessage.contains(scInt))
-				opcode += 10;
-			else if(clientOpeningMessage.contains(scString))
-				opcode += 20;
-			else if(clientOpeningMessage.contains(scObject))
-				opcode += 30;
-
-			actOnOpCode(opcode);
+			openingMessageScanner.close();
+			actOnOpCode(opcode, extraArgInt, extraArgString);
 			return true;
-
 		}
-		catch(IOException readErr)
-		{
+		catch(IOException readErr) {
 			System.err.println("Error: Could not read.");
 			return false;
-		}
-		catch(ClassNotFoundException classErr)
-		{
+		} 
+		catch(ClassNotFoundException classErr) {
 			System.err.println("Error: Could not read class.");
 		}
-
 		return true;
 	}
 
 	/**
+	 * Converts the opening message into opcode.
+	 * 
+	 * @param openingMessageScanner The scanner scanning the opening message. Needs to be starting at the front. 
+	 * @return the opcode representation of the opening message.
+	 */
+	public int convertOpeningMessageToOpcode(Scanner openingMessageScanner)
+	{		
+		int opcode = 0;
+		opcode += convertOpeningMessageOperationToOpcode(openingMessageScanner.next() + ";");
+		opcode += convertOpeningMessageArgDegreeToOpcode(openingMessageScanner.next() + ";");
+		opcode += convertOpeningMessageArgTypeToOpcode(openingMessageScanner.next() + ";");
+		opcode += convertOpeningMessageArgExtraToOpcode(openingMessageScanner.next() + ";");
+		
+		return opcode;
+	}
+	
+	/**
+	 * Converts the opening message Operation keyword into a number value.
+	 * Operation keyword values are in the 1000s
+	 * 
+	 * @param operationKeyword The Operation keyword of the opening message.
+	 * @return The opcode representation of the Operation keyword.
+	 */
+	private int convertOpeningMessageOperationToOpcode(String operationKeyword)
+	{
+		if(operationKeyword.equals(scSend))
+			return 1000;
+		else if(operationKeyword.equals(scUpdate))
+			return 2000;
+		else if(operationKeyword.equals(scCreate))
+			return 3000;
+		else if(operationKeyword.equals(scDelete))
+			return 4000;
+		else if(operationKeyword.equals(scVerify))
+			return 5000;
+		else
+			return -10000;
+	}
+	
+	/**
+	 * Converts the opening message Argument Degree keyword into a number value.
+	 * Argument Degree keyword values are in the 100s
+	 * 
+	 * @param argDegreeKeyword The Argument Degree keyword of the opening message.
+	 * @return The opcode representation of the Argument Degree keyword.
+	 */
+	private int convertOpeningMessageArgDegreeToOpcode(String argDegreeKeyword)
+	{
+		if(argDegreeKeyword.equals(scSingle))
+			return 100;
+		else if(argDegreeKeyword.equals(scList))
+			return 200;
+		else
+			return -10000;
+	}
+	
+	/**
+	 * Converts the opening message Argument Type keyword into a number value.
+	 * Argument Type keyword values are in the 10s
+	 * 
+	 * @param argTypeKeyword The Argument Type keyword of the opening message.
+	 * @return The opcode representation of the Argument Type keyword.
+	 */
+	private int convertOpeningMessageArgTypeToOpcode(String argTypeKeyword)
+	{
+		if(argTypeKeyword.equals(scItem))
+			return 10;
+		else if(argTypeKeyword.equals(scSupplier))
+			return 20;
+		else if(argTypeKeyword.equals(scOrder))
+			return 30;
+		else
+			return -10000;
+	}
+	
+	/**
+	 * Converts the opening message Extra Argument keyword into a number value.
+	 * Extra Argument keyword values are in the 1s
+	 * 
+	 * @param argExtraKeyword The Extra Argument keyword of the opening message.
+	 * @return The opcode representation of the Extra Argument keyword.
+	 */
+	private int convertOpeningMessageArgExtraToOpcode(String argExtraKeyword)
+	{
+		if(argExtraKeyword.equals(scDefault))
+			return 0;
+		else if(argExtraKeyword.equals(scInt))
+			return 1;
+		else if(argExtraKeyword.equals(scString))
+			return 2;
+		else if(argExtraKeyword.equals(scPrompt))
+			return 3;
+		else
+			return -10000;
+	}
+	
+	/**
 	 * Make the shop do something based on the given opcode.
 	 * opcodes are translated from keywords in SCCommunicationConstants as follows:
-	 * Hundreds digit: 1 = sending data from the database to the client.
-	 * 				   2 = updating the database based on data from the client.
-	 * 				   3 = search the database for an object based on a given criteria and send it to the client.
-	 * 				   4 = remove an object from the database.
-	 * 				   5 = prompt the server to analyze and modify the data in the database
-	 *
-	 * Tens digit:	   0 = data received from or sent to the client will be in ArrayList form.
-	 * 				   1 = data received from or sent to the client will be in int form.
-	 * 				   2 = data received from or sent to the client will be in String form.
-	 * 				   3 = data received from or sent to the client will be in user-defined object form.
-	 *
-	 * Ones digit:	   1 = data received from or sent to the client will be Items.
-	 *  			   2 = data received from or sent to the client will be Suppliers.
-	 *  			   3 = data received from or sent to the client will be Orders or order lines.
+	 * Operation keyword:	1 = Data is being sent to the client.
+	 * Thousands digit:		2 = Data needs to be added or updated/replaced.
+	 * 						3 = Data needs to be created.
+	 * 						4 = Data needs to be deleted.
+	 * 						5 = Data needs to be verified or searched for.
+	 *  
+	 * ArgDegree keyword:	1 = Mainly involves only a single object.
+	 * Hundreds digit:		2 = Mainly involves a list of objects.
+	 * 
+	 * ArgType keyword:		1 = Concerns items.
+	 * Tens digit:			2 = Concerns suppliers.
+	 * 						3 = Concerns orders/order lines.
+	 * 
+	 * ArgExtra keyword:	0 = User-defined objects will be needed.
+	 * Ones digit:			1 = An integer in the opening message will be needed.
+	 *						2 = A String in the opening message will be needed.
+	 *						3 = Nothing from the client will be needed to change data in the DB.
 	 *
 	 * @param opcode The opcode of the action to perform.
+	 * @param extraParamInt Any extra integer parameter read from the client opening message.
+	 * @param extraParamString Any extra String parameter read from the client opening message.
 	 */
-	private void actOnOpCode(int opcode)
+	private void actOnOpCode(int opcode, int extraParamInt, String extraParamString)
 	{
 		switch(opcode)
 		{
-			case(101):	sendItemListToClient();			break;	//return the item list 
-			case(102):	sendSupplierListToClient();		break;	//return the supplier list 
-			case(103):	sendOrderListToClient();		break;	//return the order list 
+			case(1210):	sendItemListToClient();			break;	//return the item list 
+			case(1220):	sendSupplierListToClient();		break;	//return the supplier list 
+			case(1230):	sendOrderListToClient();		break;	//return the order list 
+			
+			case(2110):	updateItemFromClient();			break;	//read an item to add/replace
+			case(2210):	updateItemListFromClient();		break;	//read an item list
+			case(2220):	updateSupplierListFromClient();	break;	//read an supplier list
+			case(2230):	updateOrderListFromClient();	break;	//read an order list
+			case(2233):	updateOrderListFromClientPrompt();		//check the quantites of the items and
+						break;									//order some if necessary.
+						
+			case(3131): createOrderFromClientIntQuantity(extraParamInt);
+						break;									//read an item and order extraParamInt of it.
 
-			case(201):	updateItemListFromClient();		break;	//read an item list
-			case(202):	updateSupplierListFromClient();	break;	//read an supplier list
-			case(203):	updateOrderListFromClient();	break;	//read an order list
-			case(211):	updateOrderListFromClientOrder();	break;	// read an item and quantity to order and order it.
-			case(231):	updateItemFromClient();			break;	//read an item to add/replace
+			case(4110):	deleteItemFromClient();			break;	//delete an item
+						
+			case(5111):	searchItemFromClient(extraParamInt);			
+						break;									//search for an item using an id
+			case(5112):	searchItemFromClient(extraParamString);			
+						break;									//search for an item using a String name
 
-			case(311):	searchItemFromClient('i');			break;	//search for an item using an id
-			case(321):	searchItemFromClient('s');			break;	//search for an item using a String name
-
-			case(401):	deleteItemFromClient();			break;	//delete an item
-
-			case(501):	checkQuantities();				break;	//check the quantities of the items
-
-			default:	printErrorToClient();	break;
+			default:	sendErrorToClient();			break;	//send an error to the client
 		}
 	}
 
@@ -212,7 +292,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		catch(IOException writeErr)
 		{
 			System.err.println(writeErr.getMessage());
-			printErrorToClient();
+			sendErrorToClient();
 		}
 	}
 
@@ -234,7 +314,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		catch(IOException writeErr)
 		{
 			System.err.println(writeErr.getMessage());
-			printErrorToClient();
+			sendErrorToClient();
 		}
 	}
 
@@ -256,11 +336,32 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		catch(IOException writeErr)
 		{
 			System.err.println(writeErr.getMessage());
-			printErrorToClient();
+			sendErrorToClient();
 		}
 	}
 
+	/**
+	 * Receives an item from the client.
+	 * Across the server and in the database, either updates the item in the
+	 * item lists if it already exists, or adds a new item to those lists.
+	 */
+	private void updateItemFromClient() {
+		ItemModel changeItem;
 
+		try {
+			changeItem = (ItemModel) inputReader.readObject();
+		} catch (IOException readErr) {
+			System.err.println(readErr.getMessage());
+			return;
+		} catch (ClassNotFoundException classErr) {
+			System.err.println(classErr.getMessage());
+			return;
+		}
+		inv.updateItem(changeItem);
+		inv.updateItemsSuppliers(suppliers);
+		updateOrderListFromClientPrompt();
+	}
+	
 	/**
 	 * Receives a list of ItemModel from the client.
 	 * Updates the item list across the server and the database.
@@ -286,10 +387,8 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		inv.updateItemList(tempList);
 		inv.updateItemsSuppliers(suppliers);
 		data.updateItemList(tempList);
-		if(!suppliers.isEmpty()){
-			checkQuantities();
-		}
-
+		if(!suppliers.isEmpty())
+			updateOrderListFromClientPrompt();
 	}
 
 	/**
@@ -316,11 +415,9 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		suppliers = tempList;
 		data.updateSupplierList(tempList);
 		inv.updateItemsSuppliers(tempList);
-		if(!inv.items.isEmpty()) {
-			checkQuantities();
-		}
+		if(!inv.items.isEmpty())
+			updateOrderListFromClientPrompt();
 	}
-
 
 	/**
 	 * Receives a list of OrderModel from the client.
@@ -346,23 +443,33 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 
 		orders = tempList;
 		data.updateOrderList(tempList);
-
-
 	}
 
+	
+	/**
+	 * Checks the quantities of the items in the item lists.
+	 * If necessary, create orders and update all server order lists
+	 * and the database.
+	 */
+	private void updateOrderListFromClientPrompt()
+	{
+		if(inv.checkIfOrder()){
+			inv.generateOrder(order);
+			orders = order.getOrderLines();
+		}
+	}
+	
 	/**
 	 * Receives an item from the client, and a quantity to order.
 	 * Checks if the item exists in the server, and it it does,
 	 * orders the item according to the desired amount.
+	 * @param quantityToOrder The amount of the item to order. 
 	 */
-	private void updateOrderListFromClientOrder()
+	private void createOrderFromClientIntQuantity(int quantityToOrder)
 	{
-		ItemModel itemToOrder;
-		int quantityToOrder;
-		
+		ItemModel itemToOrder;		
 		try {
 			itemToOrder = (ItemModel) inputReader.readObject();
-			quantityToOrder = (Integer)inputReader.readObject();
 			inv.updateItemsSuppliers(suppliers);
             data.insertOrderline(order.createOrder(inv.findItem(itemToOrder.getId()), quantityToOrder));
 			itemToOrder.setQuantity(itemToOrder.getQuantity() + quantityToOrder);
@@ -375,84 +482,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			System.err.println(classErr.getMessage());
 			return;
 		}
-	}
-	
-	
-	/**
-	 * Receives an item from the client.
-	 * Across the server and in the database, either updates the item in the
-	 * item lists if it already exists, or adds a new item to those lists.
-	 */
-	private void updateItemFromClient() {
-		ItemModel changeItem;
-
-		try {
-			changeItem = (ItemModel) inputReader.readObject();
-		} catch (IOException readErr) {
-			System.err.println(readErr.getMessage());
-			return;
-		} catch (ClassNotFoundException classErr) {
-			System.err.println(classErr.getMessage());
-			return;
-		}
-		inv.updateItem(changeItem);
-		inv.updateItemsSuppliers(suppliers);
-        checkQuantities();
-	}
-
-	/**
-	 * Searches for an item, sending it to the client if it is found.
-	 * If the item cannot be found, sends an error message to the client.
-	 * If there is no search method for the given search parameter, do nothing.
-	 *
-	 * @param searchChar What parameter to use when searching for an item.
-	 *					 'i' is for an int id, 's' is for an item name.
-	 */
-	private void searchItemFromClient(char searchChar)
-	{
-
-		try
-		{
-			ItemModel searchItem = null;
-
-			if(searchChar == 'i')
-			{
-				int searchId = (Integer)inputReader.readObject();
-				searchItem = inv.findItem(searchId);
-			}
-			else if(searchChar == 'c')
-			{
-				String searchName = (String)inputReader.readObject();
-				searchItem = inv.findItem(searchName);
-			}
-			else
-				return;
-
-			if(searchItem != null)
-			{
-				outputWriter.writeObject(scOkay);
-				outputWriter.writeObject((ItemModel)searchItem.clone());
-				outputWriter.flush();
-			}
-			else
-				printErrorToClient();
-		}
-		catch(IOException readErr)
-		{
-			System.err.println(readErr.getMessage());
-			return;
-		}
-		catch(ClassNotFoundException classErr)
-		{
-			System.err.println(classErr.getMessage());
-			return;
-		}
-		catch(CloneNotSupportedException cnsErr)
-		{
-			System.err.println(cnsErr.getMessage());
-			return;
-		}
-	}
+	}	
 
 	/**
 	 * Searches for a given item from the client.
@@ -466,7 +496,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			ItemModel deleteItem = (ItemModel)inputReader.readObject();
 			inv.removeItem(deleteItem);
 			data.removeItem(deleteItem);
-
 		}
 		catch(IOException readErr)
 		{
@@ -481,34 +510,93 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	}
 
 	/**
-	 * Checks the quantities of the items in the item lists.
-	 * If necessary, create orders and update all server order lists
-	 * and the database.
+	 * Searches for an item using an id, sending it to the client if it is found.
+	 * If the item cannot be found, sends an error message to the client.
+	 * If there is no search method for the given search parameter, do nothing.
+	 *
+	 * @param itemSearchId The item id to look for.
 	 */
-	private void checkQuantities()
+	private void searchItemFromClient(int itemSearchId)
 	{
-		if(inv.checkIfOrder()){
-			inv.generateOrder(order);
-			orders = order.getOrderLines();
+		try
+		{
+			ItemModel searchItem = null;
+			
+			searchItem = inv.findItem(itemSearchId);
+
+			if(searchItem != null)
+			{
+				outputWriter.writeObject(scOkay);
+				outputWriter.writeObject((ItemModel)searchItem.clone());
+				outputWriter.flush();
+			}
+			else
+				sendErrorToClient();
+		}
+		catch(IOException readErr)
+		{
+			System.err.println(readErr.getMessage());
+			return;
+		}
+		catch(CloneNotSupportedException cnsErr)
+		{
+			System.err.println(cnsErr.getMessage());
+			return;
 		}
 	}
-
+	
 	/**
-	 * Indicate to the client that an error occurred when handling
-	 * a client request.
+	 * Searches for an item using a name, sending it to the client if it is found.
+	 * If the item cannot be found, sends an error message to the client.
+	 * If there is no search method for the given search parameter, do nothing.
+	 *
+	 * @param itemSearchName The item name to look for.
 	 */
-	private void printErrorToClient()
+	private void searchItemFromClient(String itemSearchName)
+	{
+		try
+		{
+			ItemModel searchItem = null;
+			
+			searchItem = inv.findItem(itemSearchName);
+
+			if(searchItem != null)
+			{
+				outputWriter.writeObject(scOkay);
+				outputWriter.writeObject((ItemModel)searchItem.clone());
+				outputWriter.flush();
+			}
+			else
+				sendErrorToClient();
+		}
+		catch(IOException readErr)
+		{
+			System.err.println(readErr.getMessage());
+			return;
+		}
+		catch(CloneNotSupportedException cnsErr)
+		{
+			System.err.println(cnsErr.getMessage());
+			return;
+		}
+	}
+	
+	/**
+	 * Writes an error to the client.
+	 */
+	protected void sendErrorToClient()
 	{
 		try
 		{
 			outputWriter.writeObject(scError);
+			outputWriter.flush();	
 		}
 		catch(IOException ioErr)
 		{
 			System.err.println(ioErr.getMessage());
 		}
 	}
-
+	
 	/**
 	 * Generic method that returns a cloned version of a given ArrayList.
 	 * Requires T to be cloneable.
@@ -516,7 +604,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	 * @param ogList The original list to clone.
 	 * @return a cloned list.
 	 */
-	private <T> ArrayList<T> cloneArrayList(ArrayList<T> ogList)
+	protected <T> ArrayList<T> cloneArrayList(ArrayList<T> ogList)
 	{
 		ArrayList<T> cloneList = new ArrayList<T>();
 		for(T objInList : ogList)
@@ -535,9 +623,9 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	@Override
 	public void run ()
 	{
-		System.out.println("Doing shop things");
+		System.out.println("A shop is now running.");
 
-		while(readClientMessage())
+		while(readClientOpeningMessage())
 		{
 		}
 
@@ -552,6 +640,5 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 			System.out.println("Could not close inputs and outputs");
 			shutDownErr.printStackTrace();
 		}
-
 	}
 }

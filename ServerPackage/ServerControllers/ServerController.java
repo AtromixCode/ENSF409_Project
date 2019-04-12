@@ -71,7 +71,7 @@ public class ServerController
     private void runServer () {
         try 
 		{	
-        	System.out.println("Server running....");
+        	System.out.println("Server is running.");
             while (true) 
 			{
 				//Accept a connection to a client.
@@ -80,35 +80,6 @@ public class ServerController
 				ShopController shop = new ShopController(clientSocket);
 				
 				pool.execute(shop);
-				/*
-				//Accept a connection to an X player client
-				xSocket = sSocket.accept();
-				//Get I/O streams for the X player client socket
-				inputReaderX = new BufferedReader(new InputStreamReader(xSocket.getInputStream()));
-				outputWriterX = new PrintWriter(xSocket.getOutputStream(), true);
-				
-				//Inform the user that they have connected to the game and are waiting for the opponent.
-				outputWriterX.println("~~~~~~~~~~~~~~~ WELCOME TO THE GAME OF TIC-TAC-TOE ~~~~~~~~~~~~~~~\n");
-				outputWriterX.println("Connected to the server successfully."); 
-				outputWriterX.println("Waiting for an opponent to connect...");
-
-				//Accept a connection to an O player client
-				oSocket = sSocket.accept();
-				//Get I/O streams for the O player client socket
-				inputReaderO = new BufferedReader(new InputStreamReader(oSocket.getInputStream()));
-				outputWriterO = new PrintWriter(oSocket.getOutputStream(), true);
-				outputWriterO.println("~~~~~~~~~~~~~~~ WELCOME TO THE GAME OF TIC-TAC-TOE ~~~~~~~~~~~~~~~\n");
-				outputWriterO.println("Connected to the server successfully."); 
-				outputWriterO.println("Waiting for the \'X\' player to choose their name...");
-									  
-				//Start a new Game using the client socket I/O streams
-				Runnable ticTacToeGame = new Game(inputReaderX, outputWriterX,
-												  inputReaderO, outputWriterO);
-				
-				System.out.println("Started a new game...");
-				
-				threadPool.execute(ticTacToeGame);
-				*/
 			}
 		}
        //close all streams.

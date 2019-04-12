@@ -98,10 +98,8 @@ public class DataBaseController {
                 pStat.setInt(5, temp.getId());          //The id of the GIVEN item
                 pStat.executeUpdate();
             } else {
-
                 insertItem(temp);
             }
-
 
         }catch (java.sql.SQLException e){
             System.err.println("Error adding items into the database");
@@ -222,8 +220,6 @@ public class DataBaseController {
             e.printStackTrace();
         }
     }
-
-
 
     /**
      * Gets the order lines list from the server and returns them to the server.
