@@ -71,8 +71,6 @@ class MainView {
 		mainWindow.add(createListPanel(), "Center");
 		mainWindow.setVisible(true);
 		mainWindow.setResizable(false);
-		//mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 	}
 
 	/**

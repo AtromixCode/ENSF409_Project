@@ -102,6 +102,10 @@ public class ItemModel implements Serializable, Cloneable {
 		return "<html><pre> "+id+"\t\t"+desc+"\t\t"+quantity+"\t\t"+price+"\t\t"+supplierID+"</pre></html>";
 	}
 
+	/**
+	 * Gets a string containing the id and name of the item.
+	 * @return a string with the item's id and name.
+	 */
 	public String idAndName()
 	{
 		return id + " " + desc;

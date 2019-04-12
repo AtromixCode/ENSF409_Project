@@ -385,16 +385,14 @@ class GUIController
 				try
 				{
 					int id = Integer.parseInt(panel.id.getText());
-					if (id>=0) 
-					{
+					if (id>=0) {
 						String name = panel.name.getText();
 						String address = panel.address.getText();
 						String contact = panel.contact.getText();
 						if (name.equals("")||address.equals("")||contact.equals(""))
 							JOptionPane.showMessageDialog(null, "One of the fields was left blank!",
 									"Error", JOptionPane.ERROR_MESSAGE);
-						else
-						{
+						else {
 							JOptionPane.showMessageDialog(null, cc.addSupplier(id, name, address, contact),
 									"Result", JOptionPane.INFORMATION_MESSAGE);
 							panel.id.setText("");
@@ -404,14 +402,11 @@ class GUIController
 						}
 					}
 					else
-						JOptionPane.showMessageDialog(null, "Please enter a positive number!",
-								"Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Please enter a positive number!", "Error", JOptionPane.ERROR_MESSAGE);
 					
 				}
-				catch(Exception ex)
-				{
-					JOptionPane.showMessageDialog(null, "Please enter an integer!",
-							"Error", JOptionPane.ERROR_MESSAGE);
+				catch(Exception ex) {
+					JOptionPane.showMessageDialog(null, "Please enter an integer!", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			mv.setButtonsClickable(false);
@@ -467,7 +462,6 @@ class GUIController
 	 */
 	public class ViewOrders implements ActionListener
 	{
-
 		/**
 		 * Implementation of the action performed method that displays a
 		 * window to the user to view the orders made by the shop.
@@ -622,7 +616,6 @@ class GUIController
 				mv.loadingOff();
 			}
 		}
-
 	}
 
 	/**
@@ -719,7 +712,7 @@ class GUIController
 	 */
 	public static void main(String args[])
 	{
-		ClientController client = new ClientController("localhost", 8428);
+		ClientController client = new ClientController("10.13.146.120", 8428);
 		GUIController g = new GUIController(client);
 	}
 }
