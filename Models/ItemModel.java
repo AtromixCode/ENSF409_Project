@@ -115,15 +115,27 @@ public class ItemModel implements Serializable, Cloneable {
 	public int getQuantity(){return quantity;}
 
 	/**
-	 * Sets the quanitity of the item.
+	 * Sets the quantity of the item.
 	 * @param q the new quantity of the item.
 	 */
 	public void setQuantity(int q){this.quantity = q;}
 
+	/**
+	 * Sets the price of the item.
+	 * @param price The price of the item in $.
+	 */
 	public void setPrice(float price){this.price = price;}
-
+	
+	/**
+	 * Get the price of the item.
+	 * @return The price of the item in $.
+	 */
 	public float getPrice(){return price;}
 
+	/**
+	 * Return the id and name of the item in String format.
+	 * @return Return the id and name of the item in String format.
+	 */
 	public String idAndName() { return id + " " + desc; }
 
 	/**

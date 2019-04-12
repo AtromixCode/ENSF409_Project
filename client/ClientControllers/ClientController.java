@@ -330,6 +330,10 @@ public class ClientController implements SCCommunicationConstants {
 	 */
 	public void setItemDisplay(DefaultListModel<String> s){itemDisplay = s;}
 
+	/**
+	 * Sets the display model for the cart items.
+	 * @param s The display model used in the GUI.
+	 */
 	public void setCartDisplay(DefaultListModel<String> s) {cartDisplay = s;}
 
 	/**
@@ -386,7 +390,6 @@ public class ClientController implements SCCommunicationConstants {
 		}
 		return true;
 	}
-
 
 	/**
 	 * Fills/overwrites a given list model with the strings of
@@ -474,6 +477,14 @@ public class ClientController implements SCCommunicationConstants {
 		return failure;
 	}
 
+	/**
+	 * Adds an item to the customer cart.
+	 * @param id The id of the item to add to the customer cart.
+	 * @param quantity The quantity of items to be bought.
+	 * @return The outcome of the attempt. An error message if the
+	 * 		   store doesn't have enough items in stock. A success
+	 * 		   message if the cart has the item added.
+	 */
 	public String addItem(int id, int quantity)
 	{
 		if(!fetchItems())
@@ -509,14 +520,19 @@ public class ClientController implements SCCommunicationConstants {
 		return "Error adding the item to the cart.";
 	}
 
+	/**
+	 * Remove an item from the cart
+	 * @param id The id of the item to remove.
+	 * @return A success or fail message.
+	 */
 	public String removeItem(int id)
 	{
-		for (ItemModel i: cartItems) {
+		for (ItemModel i: cartItems) 
 			if (i.getId()==id) {
 				cartItems.remove(i);
 				return "Successfully removed item from cart!";
 			}
-		}
+		
 		return "Could not remove item from cart";
 	}
 

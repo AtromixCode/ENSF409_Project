@@ -24,6 +24,9 @@ class GUIController {
 	 */
 	private MainView mv;
 
+	/**
+	 * Cart view to display the items in the cart.
+	 */
 	private CartView cv;
 
 	/**
@@ -146,15 +149,30 @@ class GUIController {
 		}
 	}
 
+	/**
+	 * Nested class selection listener for the selection of items in the cart.
+	 */
 	public class SelectCart implements ListSelectionListener {
+		/**
+		 * The data in the cart being selected.
+		 */
 		String data;
 
+		/**
+		 * The id of the item being selected.
+		 */
 		int id;
 
+		/**
+		 * Set the action listener for the remove item button
+		 */
 		public SelectCart() {
 			cv.addRemoveCartButtonListener(new RemoveItem());
 		}
 
+		/**
+		 * Get the data of a selected item in the cart.
+		 */
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			int index = cv.getCartList().getSelectedIndex();
@@ -167,8 +185,16 @@ class GUIController {
 			}
 		}
 
+		/**
+		 * Nested inner class action listener for the remove item button
+		 * Removes a selected item from the cart.
+		 */
 		public class RemoveItem implements ActionListener
 		{
+			/**
+			 * Removes an item on button press.
+			 * @param e The action event.
+			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int a = JOptionPane.showConfirmDialog(null, "Remove this item?");
@@ -181,8 +207,15 @@ class GUIController {
 		}
 	}
 
+	/**
+	 * Inner class implements action listener to display the cart.
+	 */
 	public class ViewCart implements ActionListener
 	{
+		/**
+		 * Acts on the button press to make the cart window visible.
+		 * @param e Action event of button press
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			cv.setCartWindowVisibility(true);
@@ -192,8 +225,15 @@ class GUIController {
 		}
 	}
 
+	/**
+	 * Actionlistener class for the checkout confirmation prompt.
+	 */
 	public class CheckoutCart implements ActionListener
 	{
+		/**
+		 * Acts on an button press to prompt the user to confirm or cancel checkout.
+		 * @param e ActionEvent button press.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int a = JOptionPane.showConfirmDialog(null, "Please confirm you would like to checkout now");
@@ -205,7 +245,6 @@ class GUIController {
 			cv.setButtonClickable(false);
 		}
 	}
-
 
 	/**
 	 * Inner ActionListener class listens for the "Refresh" button to be pressed,
@@ -310,21 +349,39 @@ class GUIController {
 		public void windowDeactivated(WindowEvent e) { }
 	}
 
+	/**
+	 * Document listener for searching for items 
+	 */
 	public class searchItem implements DocumentListener
 	{
 
+		/**
+		 * Documentlistener acts on document event to turn off buttons.
+		 * When an insert update is made.
+		 * @param e DocumentEvent 
+		 */
 		@Override
 		public void insertUpdate(DocumentEvent e) {
 			mv.setButtonClickable(false);
 			cc.displayItems(mv.getSearchText());
 		}
 
+		/**
+		 * Documentlistener acts on document text removed event 
+		 * to turn off buttons and display the search text.
+		 * @param e DocumentEvent
+		 */
 		@Override
 		public void removeUpdate(DocumentEvent e) {
 			mv.setButtonClickable(false);
 			cc.displayItems(mv.getSearchText());
 		}
 
+		/**
+		 * Documentlistener acts on document text changed event 
+		 * to turn off buttons and display the search text.
+		 * @param e DocumentEvent
+		 */
 		@Override
 		public void changedUpdate(DocumentEvent e) {
 			mv.setButtonClickable(false);

@@ -209,10 +209,22 @@ class MainView {
 	 */
 	protected void addListSelectionListener(ListSelectionListener l) { itemList.addListSelectionListener(l); }
 
+	/**
+	 * Adds an action listener for the add item button.
+	 * @param b Actionlistener for button press
+	 */
 	protected void addButton1ActionListener(ActionListener b) { buttons[0].addActionListener(b); }
 	
+	/**
+	 * Adds an action listener for the view cart button.
+	 * @param b Actionlistener for button press
+	 */
 	protected void addButton2ActionListener(ActionListener b) { buttons[1].addActionListener(b); }
-
+	
+	/**
+	 * Adds an action listener for the refresh button.
+	 * @param b Actionlistener for button press
+	 */
 	protected void addButton3ActionListener(ActionListener b) { buttons[2].addActionListener(b); }
 
 	/**
