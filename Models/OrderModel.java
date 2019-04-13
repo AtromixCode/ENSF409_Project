@@ -62,6 +62,7 @@ public class OrderModel implements Serializable, Cloneable
     /**
      * Adds a line to the list of order lines.
      * @param item the item to create the list around.
+     * @return the order line created
      */
     public OrderLineModel addLine(ItemModel item)
     {
@@ -102,6 +103,7 @@ public class OrderModel implements Serializable, Cloneable
      * Creates an order of an item with the given quantity.
      * @param i the item to create the order of.
      * @param quantity the amount to order.
+     * @return the order line created
      */
     public OrderLineModel createOrder (ItemModel i, int quantity){
         generateDate();

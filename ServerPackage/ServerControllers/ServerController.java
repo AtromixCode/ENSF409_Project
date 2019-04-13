@@ -1,6 +1,8 @@
 package ServerPackage.ServerControllers;
 
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -49,7 +51,8 @@ public class ServerController
     public ServerController(){
         try 
 		{
-            socket = new ServerSocket(8428, 10);
+        	InetAddress yay = InetAddress.getByName("10.13.146.120");
+            socket = new ServerSocket(8428, 10, yay );
             pool = Executors.newFixedThreadPool(10);
         }
 		catch (IOException e) 

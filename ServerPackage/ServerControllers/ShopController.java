@@ -110,6 +110,7 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 
 			openingMessageScanner.close();
 			actOnOpCode(opcode, extraArgInt, extraArgString);
+			openingMessageScanner.close();
 			return true;
 		}
 		catch(IOException readErr) {
@@ -444,6 +445,8 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 		try {
 			itemToOrder = (ItemModel) inputReader.readObject();
             data.insertOrderline(order.createOrder(inv.findItem(itemToOrder.getId()), quantityToOrder));
+            
+            
 			itemToOrder.setQuantity(itemToOrder.getQuantity() + quantityToOrder);
 			inv.updateItem(inv.findItem(itemToOrder.getId()));
 			data.addItem(itemToOrder);
@@ -572,7 +575,6 @@ public class ShopController implements Runnable, SCCommunicationConstants {
 	/**
 	 * Generic method that returns a cloned version of a given ArrayList.
 	 * Requires T to be cloneable.
-	 *
 	 * @param ogList The original list to clone.
 	 * @return a cloned list.
 	 */
