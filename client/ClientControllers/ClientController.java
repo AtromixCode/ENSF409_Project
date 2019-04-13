@@ -96,7 +96,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * throws an error if there is an error in the server interaction.
 	 *
 	 * @return An ArrayList of the items.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted.
 	 */
 	public ArrayList<ItemModel> retrieveItemListFromServer() throws IOException {
 		try {
@@ -124,7 +124,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * throws an error if there is an error in the server.
 	 *
 	 * @return An ArrayList of the suppliers.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted or read from.
 	 */
 	public ArrayList<SupplierModel> retrieveSupplierListFromServer() throws IOException {
 		try {
@@ -152,7 +152,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * throws an error if there is an error in the server.
 	 *
 	 * @return An ArrayList of the orders.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted or read from.
 	 */
 	public ArrayList<OrderLineModel> retrieveOrderListFromServer() throws IOException {
 		try {
@@ -180,7 +180,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * server items in the database.
 	 *
 	 * @param itemList An ArrayList of ItemModel to update the database.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted or read from.
 	 */
 	public void sendItemListToServer(ArrayList<ItemModel> itemList) throws IOException {
 		try {
@@ -200,7 +200,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * server Suppliers in the database.
 	 *
 	 * @param supplierList An ArrayList of SupplierModel to update the database.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted or read from.
 	 */
 	public void sendSupplierListToServer(ArrayList<SupplierModel> supplierList) throws IOException {
 		try {
@@ -219,7 +219,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * server Orders in the database.
 	 *
 	 * @param orderList An ArrayList of OrderLineModel to update the database.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted or read from.
 	 */
 	public void sendOrderListToServer(ArrayList<OrderLineModel> orderList) throws IOException {
 		try {
@@ -238,7 +238,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * such as items that have had their quantity decreased.
 	 *
 	 * @param updateItem The item to update in the server.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted or read from.
 	 */
 	public void sendItemUpdate(ItemModel updateItem) throws IOException {
 		try {
@@ -263,7 +263,7 @@ public class ClientController implements SCCommunicationConstants {
 	 *
 	 * @param itemToOrder The item being ordered.
 	 * @param quantityToOrder The quantity of the item to be ordered.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted or read from.
 	 */
 	public void sendItemOrderUpdate(ItemModel itemToOrder, int quantityToOrder) throws IOException {
 
@@ -288,7 +288,7 @@ public class ClientController implements SCCommunicationConstants {
 	 *
 	 * @param itemId The ID of the item being searched for.
 	 * @return The found item or null.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted or read from.
 	 */
 	public ItemModel sendItemSearch(int itemId) throws IOException {
 		try {
@@ -320,7 +320,7 @@ public class ClientController implements SCCommunicationConstants {
 	 *
 	 * @param itemName The name of the item being searched for.
 	 * @return The found item or null.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted or read from.
 	 */
 	public ItemModel sendItemSearch(String itemName) throws IOException {
 		try {
@@ -352,7 +352,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * should be used to remove the item from the server properly.
 	 *
 	 * @param deleteItem The item to remove in the server.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted or read from.
 	 */
 	public void sendDeletedItemUpdate(ItemModel deleteItem) throws IOException {
 		try {
@@ -374,7 +374,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * Automatically returns the possibly updated order list.
 	 *
 	 * @return A list of orders after the quantity check.
-	 * @throws IOException
+	 * @throws IOException If the server cannot be contacted or read from.
 	 */
 	public ArrayList<OrderLineModel> sendQuantityCheck() throws IOException {
 		try {
@@ -436,6 +436,7 @@ public class ClientController implements SCCommunicationConstants {
 
 	/**
 	 * Gets all data from server and inputs into display models.
+	 * @param search The name of the item to search for.
 	 * @return true if communication with server was successful, false if otherwise.
 	 */
 	public boolean fetchAndDisplayItems(String search)
@@ -500,6 +501,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * If the file cannot be read, nothing else happens.
 	 *
 	 * @param fileName The name of the file to be read.
+	 * @param search Item String to search with.
 	 * @return A description of how the attempt went.
 	 */
 	public String readItems(String fileName, String search)
@@ -564,6 +566,7 @@ public class ClientController implements SCCommunicationConstants {
 	/**
 	 * Fills/overwrites a given list model with the strings of
 	 * the item list.
+	 * @param search String to search for.
 	 */
 	public void displayItems(String search)
 	{
@@ -611,6 +614,7 @@ public class ClientController implements SCCommunicationConstants {
 	/**
 	 * Removes an item from the item list on the server and client.
 	 * @param id the id of the item to be removed.
+	 * @param search Item string to search for.
 	 * @return a string giving the result of the removal.
 	 */
 	public String removeItem(int id, String search)
@@ -671,6 +675,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * @param quantity the quantity of the item to be added.
 	 * @param price the price of the item to be added.
 	 * @param supId the supplier id of the item to be added.
+	 * @param search for the item to be added.
 	 * @return the result of the item addition.
 	 */
 	public String addItem(int id, String name, int quantity, float price, int supId, String search)
@@ -745,6 +750,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * Orders a certain amount of a particular item, updating this on the server and client.
 	 * @param id the id of the item to be ordered.
 	 * @param quantity the amount of the item that will be ordered.
+	 * @param search item String to search with.
 	 * @return The result of the item order.
 	 */
 	public String orderItem(int id, int quantity, String search)
@@ -808,7 +814,7 @@ public class ClientController implements SCCommunicationConstants {
 	 * on port 8428.
 	 *
 	 * @param args Command line arguments when starting the program.
-	 * @throws IOException
+	 * @throws IOException If the client cannot be created.
 	 */
 	public static void main(String[] args) throws IOException {
 		ClientController client = new ClientController("localhost", 8428);
