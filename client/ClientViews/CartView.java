@@ -111,7 +111,7 @@ public class CartView {
 
 	/**
 	 * Set the visibility of the cart window.
-	 * @param visibly True if the window should be clickable, false if not.
+	 * @param visible True if the window should be clickable, false if not.
 	 */
 	protected void setCartWindowVisibility(boolean visible) { cartWindow.setVisible(visible); }
 

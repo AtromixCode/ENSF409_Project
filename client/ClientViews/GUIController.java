@@ -38,7 +38,7 @@ class GUIController {
 	 * Constructor, using a given client.
 	 * Creates the views of the GUI.
 	 *
-	 * @param controller
+	 * @param controller The client controller to communicate with the server.
 	 */
 	protected GUIController(ClientController controller) {
 		mv = new MainView();
